@@ -16,7 +16,7 @@ For example:
 ### Branch naming
 Branch names should be written in kebab-case
 
-Branch names should be composed of three parts:
+Branch names should be composed of two parts:
 - Applicable word
     - "feature" when the adding a new feature
     - "fix" when fixing a bug
@@ -36,7 +36,7 @@ For example:
 
 ### Code style
 
-All code is written using a code style based on our preference. We use pylint to lint the code. Pylint rules can be found in ```setup.cfg```
+All code is written using a code style based on the PEP8 style guide. We use pylint to lint the code. Pylint rules can be found in ```setup.cfg```
 
     
 ### Documentation Styleguide
