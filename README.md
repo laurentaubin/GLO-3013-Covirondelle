@@ -38,6 +38,13 @@ run all tests:
 make test
 ```
 
+run formatter on src and test files: 
+```bash
+make format
+```
+
+If you are using Pycharm and want to format the code on save, follow these [instructions](https://black.readthedocs.io/en/stable/editor_integration.html) (Black documentation)
+
 linting:
 ```bash
 make lint

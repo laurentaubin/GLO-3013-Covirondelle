@@ -1,8 +1,8 @@
-from .context import main
+from .context import src
 
 
 def test_app(capsys):
-    main.HelloWorld.run()
+    src.HelloWorld.run()
     captured = capsys.readouterr()
 
     assert "Hello World..." in captured.out
