@@ -1,4 +1,4 @@
-MODULE := main
+MODULE := src
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
