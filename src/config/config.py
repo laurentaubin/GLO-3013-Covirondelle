@@ -1,0 +1,2 @@
+SOCKET_BASE_ADDRESS = "tcp://*:"
+PING_PORT = "5555"
