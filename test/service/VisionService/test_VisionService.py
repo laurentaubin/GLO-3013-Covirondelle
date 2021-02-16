@@ -6,7 +6,7 @@ from service.vision.VisionService import VisionService
 
 class TestVisionService(TestCase):
 
-    image = 'an image'
+    image = "an image"
 
     def setUp(self):
         self.detector = Mock()

@@ -1,9 +1,3 @@
-# inspired from: https://towardsdatascience.com/ultimate-setup-for-your-next-python-project-179bda8a7c2c
-
-MODULE := src
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
-
 run:
 	python src/__main__.py
 
