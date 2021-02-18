@@ -5,14 +5,9 @@ from service.vision.VisionService import VisionService
 
 
 class TestVisionService(TestCase):
-
-    image = "an image"
-
     def setUp(self):
-        self.detector = Mock()
-        self.visionService = VisionService(self.detector)
-
-    def test_givenAnImage_whenDetect_thenDetectorDetectItemsOnImage(self):
-        self.visionService.detect(self.image)
-
-        self.detector.detect.assert_called_with(self.image)
+        self.puck_center_detector = Mock()
+        self.starting_zone_corner_detector = Mock()
+        self.visionService = VisionService(
+            self.puck_center_detector, self.starting_zone_corner_detector
+        )

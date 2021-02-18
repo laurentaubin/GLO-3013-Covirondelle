@@ -1,9 +1,9 @@
-from domain.vision.IDetector import IDetector
+from domain.vision.IPuckCenterDetector import IPuckCenterDetector
 
 import cv2
 
 
-class PuckCenterDetector(IDetector):
+class OpenCvPuckCenterDetector(IPuckCenterDetector):
     def detect(self, image):
 
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
