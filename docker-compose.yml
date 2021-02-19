@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  robot:
+    container_name: covirondelle-robot
+    restart: always
+    build:
+      context: .
+    ports:
+      - 13191:13191
+    networks:
+      - covirondelle-station_default
+    volumes:
+      - ./src:/app/src
+
+networks:
+  covirondelle-station_default:
+    external: true
