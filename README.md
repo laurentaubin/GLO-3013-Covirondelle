@@ -3,8 +3,8 @@
 ## Get started
 Follow these instructions to get a copy of the project up and running on your local machine
 
-
-### Install packages
+### Run the app locally
+#### Install packages
 For of all, you need to install ``virtualenv``. To do so,  run the following command:
 ```bash
 pip install virtualenv
@@ -27,11 +27,30 @@ All the dependencies should be installed and the app is ready to run.
 
 To deactivate the virtual environment, just run ```deactivate``` in your command line.
 
-### Run the app
-run the app:  
+#### Run the app
 ```bash
 make run
 ```
+
+### Run the app using Docker
+Make sure you have the latest versions of [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/).
+
+build the app:
+```bash
+docker-compose build
+```
+
+run the app:
+```bash
+docker-compose up
+```
+
+Additionally, you can do both at the same time:
+```bash
+docker-compose up --build
+```
+
+### Testing and linting
 
 run all tests:
 ```bash

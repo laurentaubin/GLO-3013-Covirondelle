@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  station:
+    container_name: covirondelle-station
+    restart: always
+    build: .
+    ports:
+      - 13190:13190
+    networks:
+      - covirondelle-station_default
+    volumes:
+      - ./src:/app/src
+
+networks:
+  covirondelle-station_default:
+    name: covirondelle-station_default
