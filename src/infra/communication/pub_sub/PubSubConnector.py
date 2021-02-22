@@ -1,3 +1,5 @@
+import time
+from threading import Lock
 import zmq
 
 from domain.communication.IConnector import IConnector
@@ -6,17 +8,25 @@ from domain.communication.IConnector import IConnector
 class PubSubConnector(IConnector):
     def __init__(self, socket_address: str):
         context = zmq.Context()
-        self._ping_socket = context.socket(zmq.SUB)
+        self._ping_socket = context.socket(zmq.PUB)
         self._ping_socket.connect(socket_address)
-        self._ping_socket.setsockopt_string(zmq.SUBSCRIBE, "ping")
+        self.lock = Lock()
 
-    def send_message(self):
-        pass
+    def send_message(self, message):
+        while True:
+            topic = "ping"
+            message_data = "Ping pong"
+            # self._print_data_to_send(topic, message_data)
+            self._ping_socket.send_string("%s %s" % (topic, message_data))
+            time.sleep(1)
 
     def receive_message(self):
-        for i in range(5):
-            topic, message = self._ping_socket.recv().split(maxsplit=1)
-            print(topic, message)
+        pass
 
     def get_sockets(self):
         return self._ping_socket
+
+    def _print_data_to_send(self, topic, data):
+        self.lock.acquire()
+        print("%s %s" % (topic, data))
+        self.lock.release()

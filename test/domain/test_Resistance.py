@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from domain.Resistance import Resistance
-from domain.ResistanceColor import ResistanceColor
+from domain.resistance.Resistance import Resistance
+from domain.resistance.ResistanceColor import ResistanceColor
 
 
 class TestResistance(TestCase):

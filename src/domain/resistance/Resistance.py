@@ -1,4 +1,4 @@
-from domain.ResistanceColor import ResistanceColor
+from domain.resistance.ResistanceColor import ResistanceColor
 
 
 class Resistance:
