@@ -1,22 +1,100 @@
+from application.ApplicationServer import ApplicationServer
+from application.RobotStatusReceiver import RobotStatusReceiver
 from infra.communication.pub_sub.PubSubConnector import PubSubConnector
-from config.config import SOCKET_BASE_ADDRESS, PING_PORT
+from config.config import (
+    SOCKET_BASE_ADDRESS,
+    PING_PORT,
+    SOCKET_ANY_ADDRESS,
+    GAME_CYCLE_PORT,
+)
+from infra.communication.socket.ReqRepSocketConnector import ReqRepSocketConnector
+from infra.game.MasterGameCycle import MasterGameCycle
 from infra.vision.OpenCvPuckCenterDetector import OpenCvPuckCenterDetector
 from infra.vision.OpenCvSCornerDetector import (
     OpenCvCornerDetector,
 )
 from service.communication.CommunicationService import CommunicationService
+from service.game.StageHandlerSelector import StageHandlerSelector
+from service.game.StageRequestRouter import StageRequestRouter
+from service.game.StageService import StageService
+from service.handler.FindCommandPanelHandler import FindCommandPanelHandler
+from service.handler.GoParkHandler import GoParkHandler
+from service.handler.GoToOhmmeterHandler import GoToOhmmeterHandler
+from service.handler.StopHandler import StopHandler
+from service.handler.TransportPuckHandler import TransportPuckHandler
+from service.path.PathService import PathService
 from service.vision.VisionService import VisionService
 
 
 class StationContext:
     def __init__(self):
-        connector = PubSubConnector(SOCKET_BASE_ADDRESS + PING_PORT)
-        self.communication_service = CommunicationService(connector)
+        game_cycle_connector = ReqRepSocketConnector(
+            SOCKET_ANY_ADDRESS + GAME_CYCLE_PORT
+        )
+        pub_sub_connector = PubSubConnector(SOCKET_BASE_ADDRESS + PING_PORT)
+        self.communication_service = CommunicationService(
+            game_cycle_connector, pub_sub_connector
+        )
         puck_center_detector = OpenCvPuckCenterDetector()
         starting_zone_corners_detector = OpenCvCornerDetector()
         self.vision_service = VisionService(
             puck_center_detector, starting_zone_corners_detector
         )
 
+        self.path_service = PathService()
+        self.stage_request_router = StageRequestRouter(
+            self.communication_service, self.path_service
+        )
+
+        self.stage_service = self._create_stage_service()
+
+        self.game_cycle = MasterGameCycle(
+            self.communication_service, self.stage_request_router, self.stage_service
+        )
+
+        self.robot_status_receiver = RobotStatusReceiver(self.communication_service)
+        self.application_server = ApplicationServer(
+            self.robot_status_receiver, self.game_cycle
+        )
+
     def run(self):
-        self.communication_service.send_message()
+        self.application_server.run()
+
+    def _create_stage_service(self):
+        self.stage_handler_selector = self._create_stage_handler_selector()
+        return StageService(self.stage_handler_selector)
+
+    def _create_stage_handler_selector(self):
+        go_to_ohmmeter_handler = self._create_go_to_ohmmeter_handler()
+        find_command_panel_handler = self._create_find_command_panel_handler()
+        transport_puck_handler = self._create_transport_puck_handler()
+        go_park_handler = self._create_go_park_handler()
+        stop_handler = self._create_stop_handler()
+        return StageHandlerSelector(
+            go_to_ohmmeter_handler,
+            find_command_panel_handler,
+            transport_puck_handler,
+            go_park_handler,
+            stop_handler,
+        )
+
+    def _create_go_to_ohmmeter_handler(self):
+        return GoToOhmmeterHandler(
+            self.communication_service, self.stage_request_router
+        )
+
+    def _create_find_command_panel_handler(self):
+        return FindCommandPanelHandler(
+            self.communication_service, self.stage_request_router
+        )
+
+    def _create_transport_puck_handler(self):
+        return TransportPuckHandler(
+            self.communication_service, self.stage_request_router
+        )
+
+    def _create_go_park_handler(self):
+        return GoParkHandler(self.communication_service, self.stage_request_router)
+
+    def _create_stop_handler(self):
+        return StopHandler(self.communication_service, self.stage_request_router)

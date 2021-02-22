@@ -1,8 +1,8 @@
+import cv2
+
 from domain.Position import Position
 from domain.StartingZone import StartingZone
 from domain.vision.ICornerDetector import ICornerDetector
-
-import cv2
 
 
 class OpenCvCornerDetector(ICornerDetector):

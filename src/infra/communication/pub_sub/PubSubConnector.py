@@ -1,5 +1,4 @@
 import zmq
-import time
 
 from domain.communication.IConnector import IConnector
 
@@ -7,19 +6,14 @@ from domain.communication.IConnector import IConnector
 class PubSubConnector(IConnector):
     def __init__(self, socket_address: str):
         context = zmq.Context()
-        self._ping_socket = context.socket(zmq.PUB)
+        self._ping_socket = context.socket(zmq.SUB)
         self._ping_socket.bind(socket_address)
+        self._ping_socket.setsockopt_string(zmq.SUBSCRIBE, "ping")
 
-    def send_message(self):
-        while True:
-            topic = "ping"
-            message_data = "Ping pong"
-            print("%s %s" % (topic, message_data))
-            self._ping_socket.send_string("%s %s" % (topic, message_data))
-            time.sleep(1)
-
-    def receive_message(self):
+    def send_message(self, message):
         pass
 
-    def get_sockets(self):
-        return self._ping_socket
+    def receive_message(self):
+        while True:
+            topic, message = self._ping_socket.recv().split(maxsplit=1)
+            print(topic, message)

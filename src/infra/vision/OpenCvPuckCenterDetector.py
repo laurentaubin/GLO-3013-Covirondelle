@@ -1,6 +1,6 @@
-from domain.vision.IPuckCenterDetector import IPuckCenterDetector
-
 import cv2
+
+from domain.vision.IPuckCenterDetector import IPuckCenterDetector
 
 
 class OpenCvPuckCenterDetector(IPuckCenterDetector):
