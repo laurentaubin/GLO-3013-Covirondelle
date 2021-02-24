@@ -13,6 +13,10 @@ class CommunicationService:
     def receive_robot_status(self) -> None:
         self.robot_status_update_connector.receive_message()
 
+    def get_first_corner_letter(self):
+        # TODO
+        pass
+
     def receive_game_cycle_request(self):
         return self.game_cycle_connector.receive_message()
 

@@ -1,6 +1,7 @@
 from typing import List
 
 from domain.Position import Position
+from domain.StartingZoneCorner import StartingZoneCorner
 
 
 def take_x_coordinate(position: Position) -> int:
@@ -28,7 +29,7 @@ class StartingZone:
         corner_positions.sort(key=take_y_coordinate)
         return sorted(corner_positions[2:4], key=take_x_coordinate)
 
-    def __eq__(self, other: {"StartingZone"}) -> bool:
+    def __eq__(self, other: "StartingZone") -> bool:
         if not isinstance(other, StartingZone):
             return False
 
@@ -38,3 +39,15 @@ class StartingZone:
             and self._lower_left_corner == other._lower_left_corner
             and self._lower_right_corner == other._lower_right_corner
         )
+
+    def find_corner_position_from_letter(
+        self, corner_letter: StartingZoneCorner
+    ) -> Position:
+        starting_zone_letter_to_corner = {
+            StartingZoneCorner.A: self._upper_left_corner,
+            StartingZoneCorner.B: self._upper_right_corner,
+            StartingZoneCorner.C: self._lower_right_corner,
+            StartingZoneCorner.D: self._lower_left_corner,
+        }
+
+        return starting_zone_letter_to_corner.get(corner_letter)

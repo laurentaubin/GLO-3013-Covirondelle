@@ -1,26 +1,76 @@
 from unittest import TestCase
+from unittest.mock import MagicMock
 
 from domain.Position import Position
 from domain.StartingZone import StartingZone
+from domain.StartingZoneCorner import StartingZoneCorner
 
 
 class TestStartingZone(TestCase):
-    def test_whenInstantiatingStartingZone_thenCornersAreSorted(self):
-        upper_left_corner = Position(23, 23)
-        upper_right_corner = Position(500, 23)
-        lower_left_corner = Position(23, 500)
-        lower_right_corner = Position(500, 500)
+    A_POSITION = MagicMock()
+    UPPER_LEFT_CORNER = Position(23, 23)
+    UPPER_RIGHT_CORNER = Position(500, 23)
+    LOWER_LEFT_CORNER = Position(23, 500)
+    LOWER_RIGHT_CORNER = Position(500, 500)
 
-        starting_zone = StartingZone(
+    def setUp(self) -> None:
+        self.starting_zone = StartingZone(
             [
-                lower_right_corner,
-                lower_left_corner,
-                upper_right_corner,
-                upper_left_corner,
+                self.UPPER_RIGHT_CORNER,
+                self.UPPER_LEFT_CORNER,
+                self.LOWER_LEFT_CORNER,
+                self.LOWER_RIGHT_CORNER,
             ]
         )
 
-        self.assertEqual(upper_left_corner, starting_zone._upper_left_corner)
-        self.assertEqual(upper_right_corner, starting_zone._upper_right_corner)
-        self.assertEqual(lower_left_corner, starting_zone._lower_left_corner)
-        self.assertEqual(lower_right_corner, starting_zone._lower_right_corner)
+    def test_whenInstantiatingStartingZone_thenCornersAreSorted(self):
+        starting_zone = StartingZone(
+            [
+                self.LOWER_RIGHT_CORNER,
+                self.LOWER_LEFT_CORNER,
+                self.UPPER_RIGHT_CORNER,
+                self.UPPER_LEFT_CORNER,
+            ]
+        )
+
+        self.assertEqual(self.UPPER_LEFT_CORNER, starting_zone._upper_left_corner)
+        self.assertEqual(self.UPPER_RIGHT_CORNER, starting_zone._upper_right_corner)
+        self.assertEqual(self.LOWER_LEFT_CORNER, starting_zone._lower_left_corner)
+        self.assertEqual(self.LOWER_RIGHT_CORNER, starting_zone._lower_right_corner)
+
+    def test_givenLetterA_whenFindCornerPositionFromLetter_thenReturnUpperLeftCorner(
+        self,
+    ):
+
+        corner_position = self.starting_zone.find_corner_position_from_letter(
+            StartingZoneCorner.A
+        )
+
+        self.assertEqual(self.UPPER_LEFT_CORNER, corner_position)
+
+    def test_givenLetterB_whenFindCornerPositionFromLetter_thenReturnUpperRightCorner(
+        self,
+    ):
+        corner_position = self.starting_zone.find_corner_position_from_letter(
+            StartingZoneCorner.B
+        )
+
+        self.assertEqual(self.UPPER_RIGHT_CORNER, corner_position)
+
+    def test_givenLetterC_whenFindCornerPositionFromLetter_thenReturnLowerRightCorner(
+        self,
+    ):
+        corner_position = self.starting_zone.find_corner_position_from_letter(
+            StartingZoneCorner.C
+        )
+
+        self.assertEqual(self.LOWER_RIGHT_CORNER, corner_position)
+
+    def test_givenLetterD_whenFindCornerPositionFromLetter_thenReturnLowerLeftCorner(
+        self,
+    ):
+        corner_position = self.starting_zone.find_corner_position_from_letter(
+            StartingZoneCorner.D
+        )
+
+        self.assertEqual(self.LOWER_LEFT_CORNER, corner_position)

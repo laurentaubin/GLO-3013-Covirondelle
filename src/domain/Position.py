@@ -3,7 +3,7 @@ class Position:
         self._x_coordinate = x_coordinate
         self._y_coordinate = y_coordinate
 
-    def __eq__(self, other: {"Position"}) -> bool:
+    def __eq__(self, other: "Position") -> bool:
         if not isinstance(other, Position):
             return False
 
@@ -17,3 +17,6 @@ class Position:
 
     def get_y_coordinate(self) -> int:
         return self._y_coordinate
+
+    def to_tuple(self):
+        return self._x_coordinate, self._y_coordinate

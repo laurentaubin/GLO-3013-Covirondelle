@@ -18,7 +18,7 @@ class StageRequestRouter:
             request_response = self._route(request)
             self.communication_service.send_game_cycle_response(request_response)
 
-    def _route(self, request):
+    def _route(self, _request):
         # Route request to the right service, example:
         # if (request == GameCycleRequest.GET_PATH_TO_OHMMETER):
         #       return self.path_service.get_path_to_ohmmeter

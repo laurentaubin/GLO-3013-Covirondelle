@@ -4,7 +4,7 @@ import numpy as np
 
 from domain.Position import Position
 from domain.StartingZone import StartingZone
-from infra.vision.OpenCvSCornerDetector import OpenCvCornerDetector
+from infra.vision.OpenCvCornerDetector import OpenCvCornerDetector
 
 
 class TestOpenCvCornerDetector(TestCase):
@@ -14,7 +14,7 @@ class TestOpenCvCornerDetector(TestCase):
     @patch("cv2.cvtColor")
     @patch("cv2.goodFeaturesToTrack")
     def test_givenFourPointsInsideStartingZoneRange_whenDetect_thenAllFourPointsAreReturned(
-        self, goodFeaturesToTrack_mock, cvtColor_mock
+        self, goodFeaturesToTrack_mock, _cvtColor_mock
     ):
         board_image = np.array([])
         goodFeaturesToTrack_mock.return_value = np.array(
@@ -35,7 +35,7 @@ class TestOpenCvCornerDetector(TestCase):
     @patch("cv2.cvtColor")
     @patch("cv2.goodFeaturesToTrack")
     def test_givenPointsInsideAndOutsideStartingZoneRange_whenDetect_thenOnlyPointsInsideStartingZoneRangeAreReturned(
-        self, goodFeaturesToTrack_mock, cvtColor_mock
+        self, goodFeaturesToTrack_mock, _cvtColor_mock
     ):
         board_image = np.array([])
         all_coordinates = np.array(

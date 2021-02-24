@@ -1,16 +1,16 @@
-from application.ApplicationServer import ApplicationServer
-from application.RobotStatusReceiver import RobotStatusReceiver
-from infra.communication.pub_sub.PubSubConnector import PubSubConnector
 from config.config import (
     SOCKET_BASE_ADDRESS,
     PING_PORT,
     SOCKET_ANY_ADDRESS,
     GAME_CYCLE_PORT,
 )
+from application.ApplicationServer import ApplicationServer
+from application.RobotStatusReceiver import RobotStatusReceiver
+from infra.communication.pub_sub.PubSubConnector import PubSubConnector
 from infra.communication.socket.ReqRepSocketConnector import ReqRepSocketConnector
 from infra.game.MasterGameCycle import MasterGameCycle
 from infra.vision.OpenCvPuckCenterDetector import OpenCvPuckCenterDetector
-from infra.vision.OpenCvSCornerDetector import (
+from infra.vision.OpenCvCornerDetector import (
     OpenCvCornerDetector,
 )
 from service.communication.CommunicationService import CommunicationService
@@ -24,6 +24,7 @@ from service.handler.StopHandler import StopHandler
 from service.handler.TransportPuckHandler import TransportPuckHandler
 from service.path.PathService import PathService
 from service.vision.VisionService import VisionService
+from domain.pathfinding.AStarShortestPathAlgorithm import AStarShortestPathAlgorithm
 
 
 class StationContext:
@@ -41,7 +42,13 @@ class StationContext:
             puck_center_detector, starting_zone_corners_detector
         )
 
-        self.path_service = PathService()
+        # TODO Instantiate algorithm with non empty maze
+        self.shortest_path_algorithm = AStarShortestPathAlgorithm(None)
+        self.path_service = PathService(
+            self.vision_service,
+            self.communication_service,
+            self.shortest_path_algorithm,
+        )
         self.stage_request_router = StageRequestRouter(
             self.communication_service, self.path_service
         )

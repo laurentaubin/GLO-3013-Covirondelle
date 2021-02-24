@@ -1,0 +1,2 @@
+class InvalidMazeException(Exception):
+    pass

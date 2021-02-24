@@ -6,7 +6,7 @@ from domain.vision.ICornerDetector import ICornerDetector
 
 
 class OpenCvCornerDetector(ICornerDetector):
-    def detect_starting_zone(self, image) -> {"StartingZone"}:
+    def detect_starting_zone(self, image) -> StartingZone:
 
         image_coordinate_y_axis = 700
         image_coordinate_x_axis = 800

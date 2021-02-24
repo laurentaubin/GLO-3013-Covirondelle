@@ -1,0 +1,2 @@
+class InvalidStartPointException(Exception):
+    pass
