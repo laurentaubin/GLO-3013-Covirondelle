@@ -1,0 +1,2 @@
+class StartingZoneCenterNotFound(Exception):
+    pass

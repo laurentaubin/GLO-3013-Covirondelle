@@ -1,0 +1,2 @@
+class StartingZoneCornersNotFound(Exception):
+    pass

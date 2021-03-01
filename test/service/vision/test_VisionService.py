@@ -9,14 +9,14 @@ class TestVisionService(TestCase):
     AN_IMAGE = MagicMock()
 
     def setUp(self):
-        self.puck_center_detector = MagicMock()
-        self.starting_zone_corner_detector = MagicMock()
+
+        self.starting_zone_detector = MagicMock()
         self.vision_service = VisionService(
-            self.puck_center_detector, self.starting_zone_corner_detector
+            self.starting_zone_detector
         )
 
     def test_whenFindStartingZone_thenReturnStartingZoneFoundByDetector(self):
-        self.starting_zone_corner_detector.detect_starting_zone.return_value = (
+        self.starting_zone_detector.detect.return_value = (
             self.A_STARTING_ZONE
         )
 

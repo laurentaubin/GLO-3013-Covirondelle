@@ -12,6 +12,7 @@ class TestStartingZone(TestCase):
     UPPER_RIGHT_CORNER = Position(500, 23)
     LOWER_LEFT_CORNER = Position(23, 500)
     LOWER_RIGHT_CORNER = Position(500, 500)
+    STARTING_ZONE_CENTER = Position(426, 449)
 
     def setUp(self) -> None:
         self.starting_zone = StartingZone(
@@ -20,7 +21,8 @@ class TestStartingZone(TestCase):
                 self.UPPER_LEFT_CORNER,
                 self.LOWER_LEFT_CORNER,
                 self.LOWER_RIGHT_CORNER,
-            ]
+            ],
+            self.STARTING_ZONE_CENTER
         )
 
     def test_whenInstantiatingStartingZone_thenCornersAreSorted(self):
@@ -30,7 +32,8 @@ class TestStartingZone(TestCase):
                 self.LOWER_LEFT_CORNER,
                 self.UPPER_RIGHT_CORNER,
                 self.UPPER_LEFT_CORNER,
-            ]
+            ],
+            self.STARTING_ZONE_CENTER
         )
 
         self.assertEqual(self.UPPER_LEFT_CORNER, starting_zone._upper_left_corner)
