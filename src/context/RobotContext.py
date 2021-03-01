@@ -1,6 +1,6 @@
 from application.ApplicationServer import ApplicationServer
 from application.CommunicationRunner import CommunicationRunner
-from config.config import SOCKET_BASE_ADDRESS, PING_PORT, SOCKET_ANY_ADDRESS_LOCAL, GAME_CYCLE_PORT
+from config.config import SOCKET_DOCKER_BASE_ADDRESS, PING_PORT, SOCKET_STATION_ADDRESS, GAME_CYCLE_PORT
 from infra.communication.pub_sub.PubSubConnector import PubSubConnector
 from infra.communication.socket.ReqRepSocketConnector import ReqRepSocketConnector
 from infra.game.SlaveGameCycle import SlaveGameCycle
@@ -17,10 +17,15 @@ from service.resistance.ResistanceService import ResistanceService
 
 
 class RobotContext:
-    def __init__(self):
-        game_cycle_connector = ReqRepSocketConnector(SOCKET_ANY_ADDRESS_LOCAL + GAME_CYCLE_PORT)
-        self.pub_sub_connector = PubSubConnector(SOCKET_BASE_ADDRESS + PING_PORT)
-        self.communication_service = CommunicationService(game_cycle_connector, self.pub_sub_connector)
+    def __init__(self, local_flag):
+        if local_flag:
+            self.game_cycle_connector = ReqRepSocketConnector(SOCKET_DOCKER_BASE_ADDRESS + GAME_CYCLE_PORT)
+            self.pub_sub_connector = PubSubConnector(SOCKET_DOCKER_BASE_ADDRESS + PING_PORT)
+        else:
+            self.game_cycle_connector = ReqRepSocketConnector(SOCKET_STATION_ADDRESS + GAME_CYCLE_PORT)
+            self.pub_sub_connector = PubSubConnector(SOCKET_STATION_ADDRESS + PING_PORT)
+
+        self.communication_service = CommunicationService(self.game_cycle_connector, self.pub_sub_connector)
         self.movement_service = MovementService()
 
         self.stage_service = self._create_stage_service()
