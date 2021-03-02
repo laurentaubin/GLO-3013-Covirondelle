@@ -1,11 +1,12 @@
 import cv2
 
 from src.domain.vision.camera.CameraConfig import CameraConfig
-from src.domain.vision.camera.exception.InvalidCameraConfigException import InvalidCameraConfigException
+from src.domain.vision.camera.exception.InvalidCameraConfigException import (
+    InvalidCameraConfigException,
+)
 
 
 class WorldCamera:
-
     def __init__(self, camera_index: CameraConfig):
         self.camera_index = camera_index
         self.capture = None
