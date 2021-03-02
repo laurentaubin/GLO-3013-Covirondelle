@@ -3,3 +3,5 @@ PING_PORT = "5555"
 
 SOCKET_ANY_ADDRESS = "tcp://*:"
 GAME_CYCLE_PORT = "5556"
+
+CALIBRATION_FILE_PATH = "src/config/numpy.npz"

@@ -1,11 +1,14 @@
+from application.ApplicationServer import ApplicationServer
+from application.RobotStatusReceiver import RobotStatusReceiver
 from config.config import (
     SOCKET_BASE_ADDRESS,
     PING_PORT,
     SOCKET_ANY_ADDRESS,
     GAME_CYCLE_PORT,
+    CALIBRATION_FILE_PATH,
 )
-from application.ApplicationServer import ApplicationServer
-from application.RobotStatusReceiver import RobotStatusReceiver
+from domain.pathfinding.AStarShortestPathAlgorithm import AStarShortestPathAlgorithm
+from infra.camera.OpenCvCalibrator import OpenCvCalibrator
 from infra.communication.pub_sub.PubSubConnector import PubSubConnector
 from infra.communication.socket.ReqRepSocketConnector import ReqRepSocketConnector
 from infra.game.MasterGameCycle import MasterGameCycle
@@ -21,7 +24,6 @@ from service.handler.StopHandler import StopHandler
 from service.handler.TransportPuckHandler import TransportPuckHandler
 from service.path.PathService import PathService
 from service.vision.VisionService import VisionService
-from domain.pathfinding.AStarShortestPathAlgorithm import AStarShortestPathAlgorithm
 
 
 class StationContext:
@@ -33,8 +35,7 @@ class StationContext:
         self.communication_service = CommunicationService(
             game_cycle_connector, pub_sub_connector
         )
-        starting_zone_detector = OpenCvStartingZoneDetector()
-        self.vision_service = VisionService(starting_zone_detector)
+        self.vision_service = self._create_vision_service()
 
         # TODO Instantiate algorithm with non empty maze
         self.shortest_path_algorithm = AStarShortestPathAlgorithm(None)
@@ -99,3 +100,8 @@ class StationContext:
 
     def _create_stop_handler(self):
         return StopHandler(self.communication_service, self.stage_request_router)
+
+    def _create_vision_service(self):
+        starting_zone_corners_detector = OpenCvStartingZoneDetector()
+        image_calibrator = OpenCvCalibrator(CALIBRATION_FILE_PATH)
+        return VisionService(starting_zone_corners_detector, image_calibrator)
