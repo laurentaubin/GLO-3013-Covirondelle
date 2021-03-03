@@ -1,4 +1,4 @@
-SOCKET_BASE_ADDRESS = "tcp://0.0.0.0:"
+SOCKET_DOCKER_ADDRESS = "tcp://0.0.0.0:"
 PING_PORT = "5555"
 
 SOCKET_ANY_ADDRESS = "tcp://*:"

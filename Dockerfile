@@ -11,4 +11,4 @@ COPY resources/ ressources
 
 EXPOSE 5555
 
-CMD ["python", "-u", "src/__main__.py"]
+CMD ["python", "-u", "src/__main__.py", "--local"]

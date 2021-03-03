@@ -1,7 +1,7 @@
 from application.ApplicationServer import ApplicationServer
 from application.RobotStatusReceiver import RobotStatusReceiver
 from config.config import (
-    SOCKET_BASE_ADDRESS,
+    SOCKET_DOCKER_ADDRESS,
     PING_PORT,
     SOCKET_ANY_ADDRESS,
     GAME_CYCLE_PORT,
@@ -27,13 +27,20 @@ from service.vision.VisionService import VisionService
 
 
 class StationContext:
-    def __init__(self):
-        game_cycle_connector = ReqRepSocketConnector(
-            SOCKET_ANY_ADDRESS + GAME_CYCLE_PORT
-        )
-        pub_sub_connector = PubSubConnector(SOCKET_BASE_ADDRESS + PING_PORT)
+    def __init__(self, local_flag):
+        if local_flag:
+            self.game_cycle_connector = ReqRepSocketConnector(
+                SOCKET_DOCKER_ADDRESS + GAME_CYCLE_PORT
+            )
+            self.pub_sub_connector = PubSubConnector(SOCKET_DOCKER_ADDRESS + PING_PORT)
+        else:
+            self.game_cycle_connector = ReqRepSocketConnector(
+                SOCKET_ANY_ADDRESS + GAME_CYCLE_PORT
+            )
+            self.pub_sub_connector = PubSubConnector(SOCKET_ANY_ADDRESS + PING_PORT)
+
         self.communication_service = CommunicationService(
-            game_cycle_connector, pub_sub_connector
+            self.game_cycle_connector, self.pub_sub_connector
         )
         self.vision_service = self._create_vision_service()
 
