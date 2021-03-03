@@ -6,13 +6,16 @@ from config.config import (
     SOCKET_ANY_ADDRESS,
     GAME_CYCLE_PORT,
     CALIBRATION_FILE_PATH,
+    PC_CAMERA_INDEX,
 )
 from domain.pathfinding.AStarShortestPathAlgorithm import AStarShortestPathAlgorithm
 from infra.camera.OpenCvCalibrator import OpenCvCalibrator
+from infra.camera.OpenCvWorldCamera import OpenCvWorldCamera
 from infra.communication.pub_sub.PubSubConnector import PubSubConnector
 from infra.communication.socket.ReqRepSocketConnector import ReqRepSocketConnector
 from infra.game.MasterGameCycle import MasterGameCycle
 from infra.vision.OpenCvStartingZoneDetector import OpenCvStartingZoneDetector
+from infra.vision.OpenCvTableDetector import OpenCvTableDetector
 from service.communication.CommunicationService import CommunicationService
 from service.game.StageHandlerSelector import StageHandlerSelector
 from service.game.StageRequestRouter import StageRequestRouter
@@ -111,4 +114,14 @@ class StationContext:
     def _create_vision_service(self):
         starting_zone_corners_detector = OpenCvStartingZoneDetector()
         image_calibrator = OpenCvCalibrator(CALIBRATION_FILE_PATH)
-        return VisionService(starting_zone_corners_detector, image_calibrator)
+        table_detector = OpenCvTableDetector()
+        world_camera = self._create_world_camera()
+        return VisionService(
+            starting_zone_corners_detector,
+            image_calibrator,
+            table_detector,
+            world_camera,
+        )
+
+    def _create_world_camera(self):
+        return OpenCvWorldCamera(PC_CAMERA_INDEX)
