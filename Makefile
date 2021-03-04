@@ -10,8 +10,7 @@ format:
 
 lint:
 	pylint --rcfile=setup.cfg src; \
-	pylint --rcfile=setup.cfg test; \
-	flake8; \
+	pylint --rcfile=setup.cfg test --disable="W0613";
 
 clean:
 	rm -rf .pytest_cache .coverage .pytest_cache coverage.xml
