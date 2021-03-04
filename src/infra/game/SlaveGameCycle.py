@@ -8,7 +8,7 @@ STAGE_COMPLETED = True
 
 class SlaveGameCycle(IGameCycle):
     def __init__(
-            self, communicationService: CommunicationService, stage_service: StageService
+        self, communicationService: CommunicationService, stage_service: StageService
     ):
         self.communication_service = communicationService
         self.stage_service = stage_service
@@ -32,7 +32,9 @@ class SlaveGameCycle(IGameCycle):
             message = self.communication_service.receive_game_cycle_message()
             print("Message received in game cycle: " + message)
             if message == Stage.START_CYCLE.value:
-                self.communication_service.send_game_cycle_message(Stage.CYCLE_STARTED.value)
+                self.communication_service.send_game_cycle_message(
+                    Stage.CYCLE_STARTED.value
+                )
                 break
 
     def _go_to_ohmmeter(self):
@@ -43,7 +45,9 @@ class SlaveGameCycle(IGameCycle):
                 print("Starting go_to_ohmmeter stage")
                 try:
                     self.stage_service.execute(Stage.GO_TO_OHMMETER)
-                    self.communication_service.send_game_cycle_message(Stage.STAGE_COMPLETED.value)
+                    self.communication_service.send_game_cycle_message(
+                        Stage.STAGE_COMPLETED.value
+                    )
                     break
                 except RuntimeError:
                     pass
@@ -56,7 +60,9 @@ class SlaveGameCycle(IGameCycle):
                 print("Starting find_command_panel stage")
                 try:
                     self.stage_service.execute(Stage.FIND_COMMAND_PANEL)
-                    self.communication_service.send_game_cycle_message(Stage.STAGE_COMPLETED.value)
+                    self.communication_service.send_game_cycle_message(
+                        Stage.STAGE_COMPLETED.value
+                    )
                     break
                 except RuntimeError:
                     pass
@@ -69,7 +75,9 @@ class SlaveGameCycle(IGameCycle):
                 try:
                     print("Starting transport_puck stage")
                     self.stage_service.execute(Stage.TRANSPORT_PUCK)
-                    self.communication_service.send_game_cycle_message(Stage.STAGE_COMPLETED.value)
+                    self.communication_service.send_game_cycle_message(
+                        Stage.STAGE_COMPLETED.value
+                    )
                     break
                 except RuntimeError:
                     pass
@@ -82,7 +90,9 @@ class SlaveGameCycle(IGameCycle):
                 try:
                     print("Starting go_park stage")
                     self.stage_service.execute(Stage.GO_PARK)
-                    self.communication_service.send_game_cycle_message(Stage.STAGE_COMPLETED.value)
+                    self.communication_service.send_game_cycle_message(
+                        Stage.STAGE_COMPLETED.value
+                    )
                     break
                 except RuntimeError:
                     pass
@@ -95,7 +105,9 @@ class SlaveGameCycle(IGameCycle):
                 try:
                     print("Starting stop sequence")
                     self.stage_service.execute(Stage.STOP)
-                    self.communication_service.send_game_cycle_message(Stage.STAGE_COMPLETED.value)
+                    self.communication_service.send_game_cycle_message(
+                        Stage.STAGE_COMPLETED.value
+                    )
                     break
                 except RuntimeError:
                     pass
