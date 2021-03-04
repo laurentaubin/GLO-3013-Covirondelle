@@ -1,7 +1,5 @@
 from typing import Dict, Optional, List
 
-import numpy as np
-
 from domain.Position import Position
 from domain.PriorityQueue import PriorityQueue
 from domain.exception.InvalidMazeException import InvalidMazeException
@@ -9,23 +7,28 @@ from domain.exception.InvalidDestinationException import InvalidDestinationExcep
 from domain.exception.InvalidStartPointException import InvalidStartPointException
 from domain.pathfinding.GridLocation import GridLocation
 from domain.pathfinding.IShortestPathAlgorithm import IShortestPathAlgorithm
+from domain.pathfinding.Maze import Maze
 from domain.pathfinding.Path import Path
 
 
 class AStarShortestPathAlgorithm(IShortestPathAlgorithm):
+    def __init__(self):
+        self._maze: Maze = None
+        self._size_x = int()
+        self._size_y = int()
+
     def get_dimensions(self) -> tuple:
-        return self.maze.shape
+        return self._maze.get_shape()
 
-    def __init__(self, maze: np.ndarray):
-        # TODO Change context to pass non empty maze
-        if maze is None:
-            return
-
-        self.maze = self._validate_maze(maze)
-        self.size_x = self.maze.shape[0]
-        self.size_y = self.maze.shape[1]
+    def set_maze(self, maze: Maze):
+        self._maze = self._validate_maze(maze)
+        self._size_x = self._maze.get_shape()[0]
+        self._size_y = self._maze.get_shape()[1]
 
     def find_shortest_path(self, start_position: Position, goal_position: Position):
+        if self._maze is None:
+            raise InvalidMazeException
+
         start = start_position.to_tuple()
         goal = goal_position.to_tuple()
         start_x, start_y = start
@@ -36,9 +39,9 @@ class AStarShortestPathAlgorithm(IShortestPathAlgorithm):
             raise InvalidStartPointException
         if goal_x not in range(0, size_x + 1) or goal_y not in range(0, size_y + 1):
             raise InvalidDestinationException
-        if self.maze[start_x][start_y] == 1:
+        if self._maze[start_x][start_y] == 1:
             raise InvalidStartPointException
-        if self.maze[goal_x][goal_y] == 1:
+        if self._maze[goal_x][goal_y] == 1:
             raise InvalidDestinationException
 
         came_from = self._a_star_search(start, goal)
@@ -81,11 +84,11 @@ class AStarShortestPathAlgorithm(IShortestPathAlgorithm):
                 )
 
             for next_node in neighbours:
-                if next_node[0] > self.size_x or next_node[1] > self.size_y:
+                if next_node[0] > self._size_x or next_node[1] > self._size_y:
                     continue
                 new_cost = (
                     cost_so_far[current]
-                    + self.maze[current_x, current_y] * infinity
+                    + self._maze[current_x, current_y] * infinity
                     + cost_of_visiting_one_node
                 )
                 if next_node not in cost_so_far or new_cost < cost_so_far[next_node]:
@@ -140,7 +143,7 @@ class AStarShortestPathAlgorithm(IShortestPathAlgorithm):
         (x2, y2) = b
         return abs(x1 - x2) + abs(y1 - y2)
 
-    def _validate_maze(self, maze):
-        if maze.shape != (0,) and len(maze.shape) <= 2:
+    def _validate_maze(self, maze: Maze) -> Maze:
+        if maze.get_shape() != (0,) and len(maze.get_shape()) <= 2:
             return maze
         raise InvalidMazeException

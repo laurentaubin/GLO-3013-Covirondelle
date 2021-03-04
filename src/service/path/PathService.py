@@ -12,20 +12,21 @@ class PathService:
         communication_service: CommunicationService,
         shortest_path_algorithm: IShortestPathAlgorithm,
     ) -> None:
-        # TODO Find real board image once the necessary infra is here
-        initial_board_image = None
-        self._starting_zone = vision_service.find_starting_zone(initial_board_image)
         self._vision_service = vision_service
+        self._game_table = vision_service.create_game_table()
         self._communication_service = communication_service
         self._shortest_path_algorithm = shortest_path_algorithm
         self._current_corner_letter = (
             self._communication_service.get_first_corner_letter()
         )
+        self._shortest_path_algorithm.set_maze(self._game_table.get_maze())
 
     def find_path_to_next_starting_zone_corner(self) -> Path:
         current_robot_position = self._vision_service.find_robot_position()
-        corner_position = self._starting_zone.find_corner_position_from_letter(
-            self._current_corner_letter
+        corner_position = (
+            self._game_table.get_starting_zone().find_corner_position_from_letter(
+                self._current_corner_letter
+            )
         )
 
         self._current_corner_letter = StartingZoneCorner.get_next_corner(

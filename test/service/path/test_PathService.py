@@ -14,22 +14,41 @@ class TestPathService(TestCase):
 
     def setUpMocks(self) -> None:
         self.vision_service = MagicMock()
+        self.game_table = MagicMock()
         self.communication_service = MagicMock()
         self.shortest_path_algorithm = MagicMock()
         self.a_starting_zone = MagicMock()
         self.a_position = MagicMock()
 
+        self.vision_service.create_game_table.return_value = self.game_table
+        self.game_table.get_starting_zone.return_value = self.a_starting_zone
+
     def setUp(self) -> None:
         self.setUpMocks()
 
-    def test_whenInitializingPathService_thenStartingZoneIsDetected(self):
+        self.path_service = PathService(
+            self.vision_service,
+            self.communication_service,
+            self.shortest_path_algorithm,
+        )
+
+    def test_whenInitializingPathService_thenGameTableIsCreated(self):
         PathService(
             self.vision_service,
             self.communication_service,
             self.shortest_path_algorithm,
         )
 
-        self.vision_service.find_starting_zone.assert_called()
+        self.vision_service.create_game_table.assert_called()
+
+    def test_whenInitializingPathService_thenPathFindingAlgorithmMazeIsSet(self):
+        PathService(
+            self.vision_service,
+            self.communication_service,
+            self.shortest_path_algorithm,
+        )
+
+        self.shortest_path_algorithm.set_maze.assert_called()
 
     def test_givenRobotSendsLetterA_whenFindPathToNextStartingZoneCorner_thenFindPositionOfCornerA(
         self,
@@ -54,7 +73,6 @@ class TestPathService(TestCase):
     def test_givenTwoSuccessiveCalls_whenFindPathToNextStartingZoneCorner_thenCornerOrderIsFollowed(
         self, startingZoneCorner_mock
     ):
-        self.vision_service.find_starting_zone.return_value = self.a_starting_zone
         self.communication_service.get_first_corner_letter.return_value = (
             self.A_CORNER_LETTER
         )
@@ -78,20 +96,15 @@ class TestPathService(TestCase):
     def test_whenFindPathToNextStartingZoneCorner_thenPathIsCalculatedWithRightCornerPositionAndRobotPosition(
         self,
     ):
-        self.a_starting_zone.find_corner_position_from_letter = MagicMock(
-            return_value=self.A_CORNER_POSITION
+        self.a_starting_zone.find_corner_position_from_letter.return_value = (
+            self.A_CORNER_POSITION
         )
+
         self.vision_service.find_robot_position = MagicMock(
             return_value=self.A_ROBOT_POSITION
         )
-        self.vision_service.find_starting_zone.return_value = self.a_starting_zone
-        path_service = PathService(
-            self.vision_service,
-            self.communication_service,
-            self.shortest_path_algorithm,
-        )
 
-        path_service.find_path_to_next_starting_zone_corner()
+        self.path_service.find_path_to_next_starting_zone_corner()
 
         self.shortest_path_algorithm.find_shortest_path.assert_called_with(
             self.A_ROBOT_POSITION, self.A_CORNER_POSITION

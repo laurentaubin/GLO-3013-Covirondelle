@@ -7,7 +7,7 @@ from domain.vision.ITableDetector import ITableDetector
 # https://docs.opencv.org/master/d7/d4d/tutorial_py_thresholding.html
 # https://stackoverflow.com/questions/37177811/crop-rectangle-returned-by-minarearect-opencv-python
 class OpenCvTableDetector(ITableDetector):
-    MARGIN = 150
+    MARGIN = 0
 
     def __init__(self):
         pass
@@ -19,7 +19,7 @@ class OpenCvTableDetector(ITableDetector):
         box = cv2.boxPoints(bounding_rectangle)
 
         bounding_rectangle_width = bounding_rectangle[1][0] + self.MARGIN / 2
-        bouding_rectangle_height = bounding_rectangle[1][1] + self.MARGIN / 2
+        bounding_rectangle_height = bounding_rectangle[1][1] + self.MARGIN / 2
 
         box = self._add_margin(box, self.MARGIN)
 
@@ -41,7 +41,7 @@ class OpenCvTableDetector(ITableDetector):
         cropped = cv2.warpAffine(cropped, rotation_matrix, size)
         cropped = cv2.getRectSubPix(
             cropped,
-            (int(bounding_rectangle_width), int(bouding_rectangle_height)),
+            (int(bounding_rectangle_width), int(bounding_rectangle_height)),
             (size[0] / 2, size[1] / 2),
         )
         return cropped
@@ -49,11 +49,9 @@ class OpenCvTableDetector(ITableDetector):
     def _get_table_contour(self, image):
         grey_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         blur = cv2.GaussianBlur(grey_image, (5, 5), 0)
-        ret, threshold = cv2.threshold(
-            blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU
-        )
+        _, threshold = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
-        contours, hierarchy = cv2.findContours(
+        contours, _ = cv2.findContours(
             threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
         )
         approximate_contours = []

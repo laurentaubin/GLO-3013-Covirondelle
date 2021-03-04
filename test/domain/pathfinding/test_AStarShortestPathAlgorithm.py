@@ -6,48 +6,63 @@ from domain.exception.InvalidMazeException import InvalidMazeException
 from domain.exception.InvalidDestinationException import InvalidDestinationException
 from domain.exception.InvalidStartPointException import InvalidStartPointException
 from domain.pathfinding.AStarShortestPathAlgorithm import AStarShortestPathAlgorithm
+from domain.pathfinding.Maze import Maze
 from domain.pathfinding.Path import Path
 
 
 class TestAStarShortestPathAlgorithm(TestCase):
-    A_BAD_MAZE = np.array([])
-    A_MAZE = np.array(
-        [
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        ]
+    A_BAD_MAZE = Maze(array=np.array([]))
+    A_MAZE = Maze(
+        array=np.array(
+            [
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            ]
+        )
     )
     AN_HORIZONTALLY_OUT_OF_BOUND_POSITION = Position(25, 1)
     A_VERTICALLY_OUT_OF_BOUND_POSITION = Position(1, 12)
     A_NEGATIVE_HORIZONTAL_POSITION = Position(-1, 1)
     A_NEGATIVE_VERTICAL_POSITION = Position(1, -1)
     A_VALID_POSITION = Position(1, 1)
+    ANOTHER_VALID_POSITION = Position(2, 2)
     AN_OBSTACLE_POSITION = Position(0, 4)
 
     def setUp(self) -> None:
-        self.a_start_algorithm = AStarShortestPathAlgorithm(self.A_MAZE)
+        self.a_start_algorithm = AStarShortestPathAlgorithm()
+        self.a_start_algorithm.set_maze(self.A_MAZE)
 
-    def test_givenABadMaze_whenInitializingAlgorithm_thenRaiseInvalidBoardException(
+    def test_givenABadMaze_whenInitializingAlgorithm_thenRaiseInvalidMazeException(
         self,
     ):
+        algorithm = AStarShortestPathAlgorithm()
+
         with self.assertRaises(InvalidMazeException):
-            AStarShortestPathAlgorithm(self.A_BAD_MAZE)
+            algorithm.set_maze(self.A_BAD_MAZE)
+
+    def test_givenNoneMazeSet_whenFindPath_thenRaiseInvalidMazeException(self):
+        algorithm = AStarShortestPathAlgorithm()
+
+        with self.assertRaises(InvalidMazeException):
+            algorithm.find_shortest_path(
+                self.A_VALID_POSITION, self.ANOTHER_VALID_POSITION
+            )
 
     def test_givenStartPositionWithNegativeCoordinate_whenFindPath_thenRaiseInvalidStartPointException(
         self,
