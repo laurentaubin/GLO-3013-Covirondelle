@@ -36,9 +36,6 @@ class VisionService:
         self._calibrator.calibrate(image)
 
     def _find_starting_zone(self, image) -> StartingZone:
-        # TODO Make sure image is not null once infra is here
-        if not image:
-            return None
         table_image = self._get_calibrated_table_image(image)
 
         return self._starting_zone_corner_detector.detect(table_image)

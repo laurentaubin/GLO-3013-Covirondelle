@@ -6,7 +6,7 @@ from config.config import (
     SOCKET_ANY_ADDRESS,
     GAME_CYCLE_PORT,
     CALIBRATION_FILE_PATH,
-    PC_CAMERA_INDEX,
+    LAPTOP_CAMERA_INDEX,
 )
 from domain.pathfinding.AStarShortestPathAlgorithm import AStarShortestPathAlgorithm
 from infra.camera.OpenCvCalibrator import OpenCvCalibrator
@@ -48,7 +48,7 @@ class StationContext:
         self.vision_service = self._create_vision_service()
 
         # TODO Instantiate algorithm with non empty maze
-        self.shortest_path_algorithm = AStarShortestPathAlgorithm(None)
+        self.shortest_path_algorithm = AStarShortestPathAlgorithm()
         self.path_service = PathService(
             self.vision_service,
             self.communication_service,
@@ -124,4 +124,4 @@ class StationContext:
         )
 
     def _create_world_camera(self):
-        return OpenCvWorldCamera(PC_CAMERA_INDEX)
+        return OpenCvWorldCamera(LAPTOP_CAMERA_INDEX)

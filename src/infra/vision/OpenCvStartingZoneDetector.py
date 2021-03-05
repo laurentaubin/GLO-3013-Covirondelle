@@ -44,7 +44,6 @@ class OpenCvStartingZoneDetector(IStartingZoneDetector):
         )
 
         for contour in contours:
-
             minimum_area = 9000
             area = cv2.contourArea(contour)
             if area > minimum_area:
@@ -53,8 +52,8 @@ class OpenCvStartingZoneDetector(IStartingZoneDetector):
                 y_coordinate = int(square_moment["m01"] / square_moment["m00"])
 
                 return Position(x_coordinate, y_coordinate)
-            else:
-                raise StartingZoneCenterNotFound
+
+        raise StartingZoneCenterNotFound
 
     def _validate_center(self, corners_list, starting_zone_center):
         if (
