@@ -66,6 +66,11 @@ run all tests:
 make test
 ```
 
+If you are on Windows and cant use `make`, you can try to run:
+```bash
+python -m nose test
+```
+
 run formatter on source and test files: 
 ```bash
 make format

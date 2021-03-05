@@ -8,10 +8,10 @@ from service.resistance.ResistanceService import ResistanceService
 
 class GoToOhmmeterHandler(IStageHandler):
     def __init__(
-            self,
-            communication_service: CommunicationService,
-            movement_service: MovementService,
-            resistance_service: ResistanceService,
+        self,
+        communication_service: CommunicationService,
+        movement_service: MovementService,
+        resistance_service: ResistanceService,
     ):
         self.communication_service = communication_service
         self.movement_service = movement_service
