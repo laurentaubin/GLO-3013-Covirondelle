@@ -10,12 +10,13 @@ class OpenCvTableDetector(ITableDetector):
     MARGIN = 0
 
     def __init__(self):
-        pass
+        self._contour = None
 
     def crop_table(self, image):
-        contour = self._get_table_contour(image)
+        if self._contour is None:
+            self._contour = self._get_table_contour(image)
 
-        bounding_rectangle = cv2.minAreaRect(contour)
+        bounding_rectangle = cv2.minAreaRect(self._contour)
         box = cv2.boxPoints(bounding_rectangle)
 
         bounding_rectangle_width = bounding_rectangle[1][0] + self.MARGIN / 2
