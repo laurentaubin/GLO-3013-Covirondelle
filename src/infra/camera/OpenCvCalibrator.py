@@ -8,30 +8,31 @@ from domain.camera.ICalibrator import ICalibrator
 class OpenCvCalibrator(ICalibrator):
     def __init__(self, calibration_file_path):
         calibration_matrix = np.load(calibration_file_path)
-        self.camera_matrix = calibration_matrix["camera_matrix"]
-        self.distortion_coefficients = calibration_matrix["distortion_coefficients"]
+        self._camera_matrix = calibration_matrix["camera_matrix"]
+        self._distortion_coefficients = calibration_matrix["distortion_coefficients"]
 
     def calibrate(self, image):
-        h, w = image.shape[:2]
-        new_camera_matrix, roi = cv2.getOptimalNewCameraMatrix(
-            self.camera_matrix, self.distortion_coefficients, (w, h), 1, (w, h)
+        height, width = image.shape[:2]
+        new_camera_matrix, region_of_interest = cv2.getOptimalNewCameraMatrix(
+            self._camera_matrix,
+            self._distortion_coefficients,
+            (width, height),
+            1,
+            (width, height),
         )
         undistorted_image = cv2.undistort(
             image,
-            self.camera_matrix,
-            self.distortion_coefficients,
+            self._camera_matrix,
+            self._distortion_coefficients,
             None,
             new_camera_matrix,
         )
-        x, y, w, h = roi
-        undistorted_image = undistorted_image[y : y + h, x : x + w]
+        x, y, width, height = region_of_interest
+        undistorted_image = undistorted_image[y : y + height, x : x + width]
         return undistorted_image
 
+    def get_camera_matrix(self):
+        return self._camera_matrix
 
-if __name__ == "__main__":
-    calibrator = OpenCvCalibrator("../../config/numpy.npz")
-    image = cv2.imread("chessboard.jpg")
-    calibrated_image = calibrator.calibrate(image)
-    cv2.imshow("original", image)
-    cv2.imshow("calibrated", calibrated_image)
-    cv2.waitKey(0)
+    def get_distortion_coefficients(self):
+        return self._distortion_coefficients

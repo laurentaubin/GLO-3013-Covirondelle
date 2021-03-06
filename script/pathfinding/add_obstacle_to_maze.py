@@ -8,7 +8,7 @@ from infra.vision.OpenCvTableDetector import OpenCvTableDetector
 
 if __name__ == "__main__":
     table_image = cv2.imread("../../resources/obstacle3.jpg")
-    calibrated_image = OpenCvCalibrator("../../src/config/numpy.npz").calibrate(
+    calibrated_image = OpenCvCalibrator("../../src/config/numpy-640x480.npz").calibrate(
         table_image
     )
     cropped_image = OpenCvTableDetector().crop_table(calibrated_image)

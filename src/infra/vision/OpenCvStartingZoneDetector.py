@@ -1,5 +1,5 @@
-import cv2
 from typing import List
+import cv2
 
 from domain.Position import Position
 from domain.StartingZone import StartingZone
@@ -39,7 +39,7 @@ class OpenCvStartingZoneDetector(IStartingZoneDetector):
         blurred_image = cv2.GaussianBlur(image, (7, 7), 1)
         gray_image = cv2.cvtColor(blurred_image, cv2.COLOR_BGR2GRAY)
         canny_image = cv2.Canny(gray_image, 50, 190)
-        contours, hierarchy = cv2.findContours(
+        contours, _ = cv2.findContours(
             canny_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE
         )
 
