@@ -1,5 +1,6 @@
 import cv2
 
+from config.config import WORLD_CAMERA_IMAGE_SIZE
 from domain.camera.IWorldCamera import IWorldCamera
 from domain.camera.exception.InvalidCameraConfigException import (
     InvalidCameraConfigException,
@@ -23,6 +24,8 @@ class OpenCvWorldCamera(IWorldCamera):
 
     def _open_capture(self):
         self._capture = cv2.VideoCapture(self._camera_index)
+        self._capture.set(cv2.CAP_PROP_FRAME_WIDTH, WORLD_CAMERA_IMAGE_SIZE[0])
+        self._capture.set(cv2.CAP_PROP_FRAME_HEIGHT, WORLD_CAMERA_IMAGE_SIZE[1])
 
     def _close_capture(self):
         self._capture.release()
