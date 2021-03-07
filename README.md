@@ -54,34 +54,38 @@ make run
 ```
 
 ### Testing and linting
-
-run all tests:
+#### Run all tests
 ```bash
 make test
 ```
 
-run formatter on src and test files: 
+If you are on Windows and can't use `make`, you can try to run:
+```bash
+python -m nose test
+```
+
+#### Run formatter on source and test files: 
 ```bash
 make format
 ```
 
 If you are using Pycharm and want to format the code on save, follow these [instructions](https://black.readthedocs.io/en/stable/editor_integration.html) (Black documentation)
 
-linting:
+#### Linting
 ```bash
 make lint
 ```
 
-generate coverage report
+#### Generate coverage report
+To generate a command line report, run:
 ```bash
-coverage
-or
-coverage html
-or 
-coverage xml
+make coverage
 ```
-
-
+To generate an html report, run:
+```bash
+make coverage-html
+```
+Then, navigate to the `reports/` directory and open `index.html`
 
 
 
