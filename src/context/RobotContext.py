@@ -1,3 +1,5 @@
+import serial
+
 from application.ApplicationServer import ApplicationServer
 from application.CommunicationRunner import CommunicationRunner
 from config.config import (
@@ -5,7 +7,15 @@ from config.config import (
     PING_PORT,
     SOCKET_STATION_ADDRESS,
     GAME_CYCLE_PORT,
+    STM_PORT_NAME,
+    STM_BAUD_RATE,
+    ROBOT_MAXIMUM_SPEED,
+    SERVOING_CONSTANT,
+    BASE_COMMAND_DURATION,
 )
+from domain.movement.MovementCommandFactory import MovementCommandFactory
+from domain.movement.MovementFactory import MovementFactory
+from infra.communication.StmMotorController import StmMotorController
 from infra.communication.pub_sub.PubSubConnector import PubSubConnector
 from infra.communication.socket.ReqRepSocketConnector import ReqRepSocketConnector
 from infra.game.SlaveGameCycle import SlaveGameCycle
@@ -17,7 +27,7 @@ from service.handler.GoParkHandler import GoParkHandler
 from service.handler.GoToOhmmeterHandler import GoToOhmmeterHandler
 from service.handler.StopHandler import StopHandler
 from service.handler.TransportPuckHandler import TransportPuckHandler
-from service.mouvement.MovementService import MovementService
+from service.movement.MovementService import MovementService
 from service.resistance.ResistanceService import ResistanceService
 
 
@@ -39,7 +49,18 @@ class RobotContext:
         self.communication_service = CommunicationService(
             self.game_cycle_connector, self.pub_sub_connector
         )
-        self.movement_service = MovementService()
+        movement_command_factory = MovementCommandFactory(
+            ROBOT_MAXIMUM_SPEED,
+            SERVOING_CONSTANT,
+            BASE_COMMAND_DURATION,
+        )
+        motor_controller = StmMotorController(
+            serial.Serial(port=STM_PORT_NAME, baudrate=STM_BAUD_RATE),
+            movement_command_factory,
+        )
+
+        movement_factory = MovementFactory()
+        self.movement_service = MovementService(movement_factory, motor_controller)
 
         self.stage_service = self._create_stage_service()
         self.slave_game_cycle = SlaveGameCycle(

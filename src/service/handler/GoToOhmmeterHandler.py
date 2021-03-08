@@ -2,7 +2,7 @@ import time
 
 from domain.game.IStageHandler import IStageHandler
 from service.communication.CommunicationService import CommunicationService
-from service.mouvement.MovementService import MovementService
+from service.movement.MovementService import MovementService
 from service.resistance.ResistanceService import ResistanceService
 
 
