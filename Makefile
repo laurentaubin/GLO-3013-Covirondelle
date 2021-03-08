@@ -2,7 +2,7 @@ run:
 	python src/__main__.py
 
 test:
-	nosetests
+	nosetests -v
 
 format:
 	black src; \
