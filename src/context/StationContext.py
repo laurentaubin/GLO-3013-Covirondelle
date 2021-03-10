@@ -6,7 +6,7 @@ from config.config import (
     SOCKET_ANY_ADDRESS,
     GAME_CYCLE_PORT,
     CALIBRATION_FILE_PATH,
-    LAPTOP_CAMERA_INDEX,
+    LAPTOP_CAMERA_INDEX
 )
 from domain.pathfinding.AStarShortestPathAlgorithm import AStarShortestPathAlgorithm
 from infra.camera.OpenCvCalibrator import OpenCvCalibrator

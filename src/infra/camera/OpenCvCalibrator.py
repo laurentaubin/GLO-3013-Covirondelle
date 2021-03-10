@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+
 # https://docs.opencv.org/master/dc/dbb/tutorial_py_calibration.html
 from domain.camera.ICalibrator import ICalibrator
 

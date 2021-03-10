@@ -1,4 +1,5 @@
 from domain import StartingZone
+from domain.Position import Position
 from domain.GameTable import GameTable
 from domain.Position import Position
 from domain.camera.ICalibrator import ICalibrator
@@ -23,6 +24,16 @@ class VisionService:
         self._world_camera = world_camera
         self._world_image = world_camera.take_world_image()
 
+    def find_starting_zone(self, image) -> StartingZone:
+        # TODO Make sure image is not null once infra is here
+        if not image:
+            return None
+        undistorted_image = self._calibrator.calibrate(image)
+        return self._starting_zone_corner_detector.detect(undistorted_image)
+
+    def find_robot_position(self, image) -> Position:
+        self._calibrator.calibrate(image)
+
     def create_game_table(self) -> GameTable:
         table_image = self._get_calibrated_table_image(self._world_image)
 
@@ -31,9 +42,6 @@ class VisionService:
         # TODO add pucks to game table
 
         return GameTable(starting_zone, maze)
-
-    def find_robot_position(self, image) -> Position:
-        self._calibrator.calibrate(image)
 
     def _find_starting_zone(self, image) -> StartingZone:
         table_image = self._get_calibrated_table_image(image)

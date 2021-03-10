@@ -8,6 +8,7 @@ class TestVisionService(TestCase):
     A_STARTING_ZONE = MagicMock()
     AN_IMAGE = MagicMock()
     UNDISTORTED_IMAGE = MagicMock()
+
     UNDISTORTED_TABLE_IMAGE = MagicMock()
     AN_IMAGE_SHAPE = [120, 200, 3]
 
