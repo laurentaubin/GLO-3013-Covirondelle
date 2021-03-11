@@ -31,46 +31,50 @@ from service.vision.VisionService import VisionService
 
 class StationContext:
     def __init__(self, local_flag):
+        self._game_cycle_connector, self._pub_sub_connector = self._create_connectors(local_flag)
+        self._communication_service = CommunicationService(
+            self._game_cycle_connector, self.pub_sub_connector
+        )
+
+        self._vision_service = self._create_vision_service()
+
+        # TODO Instantiate algorithm with non empty maze
+        self._shortest_path_algorithm = AStarShortestPathAlgorithm()
+        self._path_service = PathService(
+            self._vision_service,
+            self._communication_service,
+            self._shortest_path_algorithm,
+        )
+        self._stage_request_router = StageRequestRouter(
+            self._communication_service, self._path_service
+        )
+
+        self._stage_service = self._create_stage_service()
+
+        self._game_cycle = MasterGameCycle(
+            self._communication_service, self._stage_request_router, self._stage_service
+        )
+
+        self._robot_status_receiver = RobotStatusReceiver(self._communication_service)
+        self._application_server = ApplicationServer(
+            self._robot_status_receiver, self._game_cycle
+        )
+
+    def run(self):
+        self._application_server.run()
+
+    def _create_connectors(self, local_flag):
         if local_flag:
-            self.game_cycle_connector = ReqRepSocketConnector(
+            self._game_cycle_connector = ReqRepSocketConnector(
                 SOCKET_DOCKER_ADDRESS + GAME_CYCLE_PORT
             )
             self.pub_sub_connector = PubSubConnector(SOCKET_DOCKER_ADDRESS + PING_PORT)
         else:
-            self.game_cycle_connector = ReqRepSocketConnector(
+            self._game_cycle_connector = ReqRepSocketConnector(
                 SOCKET_ANY_ADDRESS + GAME_CYCLE_PORT
             )
             self.pub_sub_connector = PubSubConnector(SOCKET_ANY_ADDRESS + PING_PORT)
-
-        self.communication_service = CommunicationService(
-            self.game_cycle_connector, self.pub_sub_connector
-        )
-        self.vision_service = self._create_vision_service()
-
-        # TODO Instantiate algorithm with non empty maze
-        self.shortest_path_algorithm = AStarShortestPathAlgorithm()
-        self.path_service = PathService(
-            self.vision_service,
-            self.communication_service,
-            self.shortest_path_algorithm,
-        )
-        self.stage_request_router = StageRequestRouter(
-            self.communication_service, self.path_service
-        )
-
-        self.stage_service = self._create_stage_service()
-
-        self.game_cycle = MasterGameCycle(
-            self.communication_service, self.stage_request_router, self.stage_service
-        )
-
-        self.robot_status_receiver = RobotStatusReceiver(self.communication_service)
-        self.application_server = ApplicationServer(
-            self.robot_status_receiver, self.game_cycle
-        )
-
-    def run(self):
-        self.application_server.run()
+        return self._game_cycle_connector, self._pub_sub_connector
 
     def _create_stage_service(self):
         self.stage_handler_selector = self._create_stage_handler_selector()
@@ -92,24 +96,24 @@ class StationContext:
 
     def _create_go_to_ohmmeter_handler(self):
         return GoToOhmmeterHandler(
-            self.communication_service, self.stage_request_router
+            self._communication_service, self._stage_request_router
         )
 
     def _create_find_command_panel_handler(self):
         return FindCommandPanelHandler(
-            self.communication_service, self.stage_request_router
+            self._communication_service, self._stage_request_router
         )
 
     def _create_transport_puck_handler(self):
         return TransportPuckHandler(
-            self.communication_service, self.stage_request_router
+            self._communication_service, self._stage_request_router
         )
 
     def _create_go_park_handler(self):
-        return GoParkHandler(self.communication_service, self.stage_request_router)
+        return GoParkHandler(self._communication_service, self._stage_request_router)
 
     def _create_stop_handler(self):
-        return StopHandler(self.communication_service, self.stage_request_router)
+        return StopHandler(self._communication_service, self._stage_request_router)
 
     def _create_vision_service(self):
         starting_zone_corners_detector = OpenCvStartingZoneDetector()
