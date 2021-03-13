@@ -15,13 +15,17 @@ class TestOpenCvRobotDetector(TestCase):
     AN_IMAGE = "resources/test/robot-detector-test-image-1.jpg"
 
     def setUp(self) -> None:
-        self.robot_detector = OpenCvRobotDetector(self.ARUCO_DICTIONARY, self.ROBOT_ARUCO_MARKER_ID)
+        self.robot_detector = OpenCvRobotDetector(
+            self.ARUCO_DICTIONARY, self.ROBOT_ARUCO_MARKER_ID
+        )
 
     def test_givenAnImage_whenDetectRobot_thenReturnCorrectRobotPose(self):
         an_image = cv2.imread(self.AN_IMAGE)
         expected_robot_position = Position(719, 663)
         expected_robot_orientation = Orientation(11)
-        expected_robot_pose = RobotPose(expected_robot_position, expected_robot_orientation)
+        expected_robot_pose = RobotPose(
+            expected_robot_position, expected_robot_orientation
+        )
 
         actual_robot_pose = self.robot_detector.detect(an_image)
 

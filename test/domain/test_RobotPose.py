@@ -13,25 +13,39 @@ class TestRobotPose(TestCase):
     AN_ORIENTATION = 254
     ANOTHER_ORIENTATION = 83
 
-    def test_givenTwoRobotPosesWithSameOrientationAndPosition_whenEqual_thenReturnTrue(self):
-        a_robot_pose = _create_robot_pose(self.A_X_POSITION, self.A_Y_POSITION, self.AN_ORIENTATION)
-        another_robot_pose = _create_robot_pose(self.A_X_POSITION, self.A_Y_POSITION, self.AN_ORIENTATION)
+    def test_givenTwoRobotPosesWithSameOrientationAndPosition_whenEqual_thenReturnTrue(
+        self,
+    ):
+        a_robot_pose = _create_robot_pose(
+            self.A_X_POSITION, self.A_Y_POSITION, self.AN_ORIENTATION
+        )
+        another_robot_pose = _create_robot_pose(
+            self.A_X_POSITION, self.A_Y_POSITION, self.AN_ORIENTATION
+        )
 
         are_robot_poses_equal = a_robot_pose == another_robot_pose
 
         self.assertTrue(are_robot_poses_equal)
 
     def test_givenTwoRobotPosesWithDifferentPosition_whenEqual_thenReturnFalse(self):
-        a_robot_pose = _create_robot_pose(self.A_X_POSITION, self.A_Y_POSITION, self.AN_ORIENTATION)
-        another_robot_pose = _create_robot_pose(self.ANOTHER_X_POSITION, self.ANOTHER_Y_POSITION, self.AN_ORIENTATION)
+        a_robot_pose = _create_robot_pose(
+            self.A_X_POSITION, self.A_Y_POSITION, self.AN_ORIENTATION
+        )
+        another_robot_pose = _create_robot_pose(
+            self.ANOTHER_X_POSITION, self.ANOTHER_Y_POSITION, self.AN_ORIENTATION
+        )
 
         are_robot_poses_equal = a_robot_pose == another_robot_pose
 
         self.assertFalse(are_robot_poses_equal)
 
     def test_givenTwoRobotPosesWithDifferentOrientation_whenEqual_thenReturnFalse(self):
-        a_robot_pose = _create_robot_pose(self.A_X_POSITION, self.A_Y_POSITION, self.AN_ORIENTATION)
-        another_robot_pose = _create_robot_pose(self.A_X_POSITION, self.A_Y_POSITION, self.ANOTHER_ORIENTATION)
+        a_robot_pose = _create_robot_pose(
+            self.A_X_POSITION, self.A_Y_POSITION, self.AN_ORIENTATION
+        )
+        another_robot_pose = _create_robot_pose(
+            self.A_X_POSITION, self.A_Y_POSITION, self.ANOTHER_ORIENTATION
+        )
 
         are_robot_poses_equal = a_robot_pose == another_robot_pose
 

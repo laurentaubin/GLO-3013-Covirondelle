@@ -5,12 +5,13 @@ from domain.UnitOfMeasure import UnitOfMeasure
 
 
 class TestPosition(unittest.TestCase):
-
     def setUp(self) -> None:
         self.A_POSITION = Position(20, 30)
         self.ANOTHER_POSITION = Position(40, 7)
         self.AN_EQUIVALENT_PIXEL_POSITION = Position(60, 120, UnitOfMeasure.PIXEL)
-        self.AN_EQUIVALENT_CENTIMETER_POSITION = Position(10, 20, UnitOfMeasure.CENTIMETERS)
+        self.AN_EQUIVALENT_CENTIMETER_POSITION = Position(
+            10, 20, UnitOfMeasure.CENTIMETERS
+        )
         self.NEGATIVE_POSITION = Position(-20, -29)
         self.POSITIVE_POSITION = Position(20, 29)
         self.EXPECTED_SUBSTRACTED_POSITION = Position(-20, 23)
@@ -33,17 +34,32 @@ class TestPosition(unittest.TestCase):
         self.assertEqual(abs(self.NEGATIVE_POSITION), self.POSITIVE_POSITION)
 
     def test_whenComparingPositionsTwoDifferentTypes_thenReturnCorrectPosition(self):
-        self.assertEqual(self.AN_EQUIVALENT_CENTIMETER_POSITION, self.AN_EQUIVALENT_PIXEL_POSITION)
-        self.assertEqual(self.AN_EQUIVALENT_PIXEL_POSITION, self.AN_EQUIVALENT_CENTIMETER_POSITION)
-        self.assertEqual(self.AN_EQUIVALENT_CENTIMETER_POSITION, self.AN_EQUIVALENT_CENTIMETER_POSITION)
-        self.assertEqual(self.AN_EQUIVALENT_PIXEL_POSITION, self.AN_EQUIVALENT_PIXEL_POSITION)
+        self.assertEqual(
+            self.AN_EQUIVALENT_CENTIMETER_POSITION, self.AN_EQUIVALENT_PIXEL_POSITION
+        )
+        self.assertEqual(
+            self.AN_EQUIVALENT_PIXEL_POSITION, self.AN_EQUIVALENT_CENTIMETER_POSITION
+        )
+        self.assertEqual(
+            self.AN_EQUIVALENT_CENTIMETER_POSITION,
+            self.AN_EQUIVALENT_CENTIMETER_POSITION,
+        )
+        self.assertEqual(
+            self.AN_EQUIVALENT_PIXEL_POSITION, self.AN_EQUIVALENT_PIXEL_POSITION
+        )
 
-    def test_whenSubstractionTwoPositionsWithDifferentTypes_thenReturnsCorrectPosition(self):
+    def test_whenSubstractionTwoPositionsWithDifferentTypes_thenReturnsCorrectPosition(
+        self,
+    ):
         substraction_result = self.A_PIXEL_POSITION - self.A_CENTIMETERS_POSITION
-        another_substraction_result = self.A_CENTIMETERS_POSITION - self.A_PIXEL_POSITION
+        another_substraction_result = (
+            self.A_CENTIMETERS_POSITION - self.A_PIXEL_POSITION
+        )
 
         self.assertEqual(substraction_result, self.A_SUBSTRACTION_EXPECTED_VALUE)
-        self.assertEqual(another_substraction_result, self.ANOTHER_SUBSTRACTION_EXPECTED_VALUE)
+        self.assertEqual(
+            another_substraction_result, self.ANOTHER_SUBSTRACTION_EXPECTED_VALUE
+        )
 
     def test_whenAddingTwoPositionsWithDifferentTypes_thenReturnsCorrectPosition(self):
         addition_result = self.A_PIXEL_POSITION + self.A_CENTIMETERS_POSITION

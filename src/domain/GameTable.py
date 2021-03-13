@@ -1,4 +1,6 @@
 from domain.StartingZone import StartingZone
+
+
 from domain.pathfinding.Maze import Maze
 
 

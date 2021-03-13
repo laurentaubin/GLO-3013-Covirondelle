@@ -10,11 +10,11 @@ class GameState:
     _instance = None
 
     def __init__(self):
-        self._puck_colors = list[ResistanceColor]
+        self._puck_colors: List[ResistanceColor] = list()
         self._current_puck = None
         self._current_stage = None
         self._prehensor_state = None
-        self._starting_zone_corner_order = list[StartingZoneCorner]
+        self._starting_zone_corner_order: List[StartingZoneCorner] = list()
         self._robot_pose = None
         self._table_image = None
         self._battery_consumption = None
@@ -51,7 +51,9 @@ class GameState:
     def get_starting_zone_corners(self) -> List[StartingZoneCorner]:
         return self._starting_zone_corner_order
 
-    def set_starting_zone_corners(self, starting_zone_corners: List[StartingZoneCorner]):
+    def set_starting_zone_corners(
+        self, starting_zone_corners: List[StartingZoneCorner]
+    ):
         self._starting_zone_corner_order = starting_zone_corners
 
     def get_robot_pose(self) -> RobotPose:

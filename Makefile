@@ -8,6 +8,10 @@ format:
 	black src; \
 	black test; \
 
+check-format:
+	black --check src
+	black --check test
+
 lint:
 	pylint --rcfile=setup.cfg src; \
 	pylint --rcfile=setup.cfg test --disable="W0613";

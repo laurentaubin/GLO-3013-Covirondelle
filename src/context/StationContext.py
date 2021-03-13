@@ -6,7 +6,7 @@ from config.config import (
     SOCKET_ANY_ADDRESS,
     GAME_CYCLE_PORT,
     CALIBRATION_FILE_PATH,
-    LAPTOP_CAMERA_INDEX
+    LAPTOP_CAMERA_INDEX,
 )
 from domain.pathfinding.AStarShortestPathAlgorithm import AStarShortestPathAlgorithm
 from infra.camera.OpenCvCalibrator import OpenCvCalibrator
@@ -31,7 +31,9 @@ from service.vision.VisionService import VisionService
 
 class StationContext:
     def __init__(self, local_flag):
-        self._game_cycle_connector, self._pub_sub_connector = self._create_connectors(local_flag)
+        self._game_cycle_connector, self._pub_sub_connector = self._create_connectors(
+            local_flag
+        )
         self._communication_service = CommunicationService(
             self._game_cycle_connector, self.pub_sub_connector
         )

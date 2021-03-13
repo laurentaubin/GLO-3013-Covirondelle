@@ -1,5 +1,4 @@
 from domain import StartingZone
-from domain.Position import Position
 from domain.GameTable import GameTable
 from domain.Position import Position
 from domain.camera.ICalibrator import ICalibrator

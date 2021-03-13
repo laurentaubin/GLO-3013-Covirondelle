@@ -21,6 +21,6 @@ jobs:
       - name: Run Makefile test
         run: make test
       - name: Run formatter
-        run: make format
+        run: make check-format
       - name: Run Linters
         run: make lint

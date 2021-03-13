@@ -10,13 +10,12 @@ from domain.vision.exception import ObstacleNotFoundException
 
 
 class OpenCvObstacleDetector(IObstacleDetector):
-
     def __init__(self, aruco_dictionary, obstacle_aruco_marker_id):
         self._detector_parameters = aruco.DetectorParameters_create()
         self._aruco_dictionary = aruco.Dictionary_get(aruco_dictionary)
         self._obstacle_aruco_marker_id = obstacle_aruco_marker_id
 
-    def detect(self, image)  -> List[Position]:
+    def detect(self, image) -> List[Position]:
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         corners, ids, _ = aruco.detectMarkers(
@@ -44,8 +43,16 @@ class OpenCvObstacleDetector(IObstacleDetector):
         raise ObstacleNotFoundException
 
     def _get_marker_center_in_pixel(self, marker_corner):
-        x_center = (marker_corner[0][0][0] + marker_corner[0][1][0] + marker_corner[0][2][0] + marker_corner[0][3][0]) / 4
-        y_center = (marker_corner[0][0][1] + marker_corner[0][1][1] + marker_corner[0][2][1] + marker_corner[0][3][1]) / 4
+        x_center = (
+            marker_corner[0][0][0]
+            + marker_corner[0][1][0]
+            + marker_corner[0][2][0]
+            + marker_corner[0][3][0]
+        ) / 4
+        y_center = (
+            marker_corner[0][0][1]
+            + marker_corner[0][1][1]
+            + marker_corner[0][2][1]
+            + marker_corner[0][3][1]
+        ) / 4
         return x_center, y_center
-
-

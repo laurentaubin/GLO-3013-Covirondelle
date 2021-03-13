@@ -1,5 +1,6 @@
 from typing import Dict, Optional, List
 
+
 from domain.Position import Position
 from domain.PriorityQueue import PriorityQueue
 from domain.exception.InvalidMazeException import InvalidMazeException

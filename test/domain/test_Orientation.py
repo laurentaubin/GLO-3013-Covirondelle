@@ -20,7 +20,9 @@ class TestOrientation(TestCase):
 
         self.assertFalse(are_orientations_equal)
 
-    def test_givenAnOrientationInDegree_whenGetOrientationInRadians_thenOrientationIsConvertedCorrectly(self):
+    def test_givenAnOrientationInDegree_whenGetOrientationInRadians_thenOrientationIsConvertedCorrectly(
+        self,
+    ):
         an_orientation = Orientation(self.AN_ORIENTATION_IN_DEGREE)
         expected_orientation_in_radians = 0.9250245035569946
 

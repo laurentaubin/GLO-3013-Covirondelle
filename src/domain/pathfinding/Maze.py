@@ -3,6 +3,7 @@ import numpy as np
 from config import config
 from domain.Position import Position
 
+
 ROBOT_RADIUS = config.ROBOT_RADIUS
 OBSTACLE_RADIUS = config.OBSTACLE_RADIUS
 
