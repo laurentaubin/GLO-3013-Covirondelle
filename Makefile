@@ -7,6 +7,10 @@ test:
 format:
 	black src; \
 	black test; \
+	
+check-format:
+	black --check src
+	black --check test
 
 lint:
 	pylint --rcfile=setup.cfg src; \
