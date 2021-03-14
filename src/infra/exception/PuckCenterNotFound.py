@@ -1,0 +1,2 @@
+class PuckCenterNotFound(Exception):
+    pass

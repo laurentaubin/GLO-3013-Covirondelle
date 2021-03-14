@@ -13,7 +13,7 @@ if __name__ == "__main__":
         table_image
     )
     cropped_image = OpenCvTableDetector().crop_table(calibrated_image)
-    cv2.imshow("original image",cropped_image)
+    cv2.imshow("original image", cropped_image)
     cv2.waitKey(0)
 
     image_width, image_height, _ = cropped_image.shape
@@ -38,7 +38,11 @@ if __name__ == "__main__":
                 cropped_image[i][j] = [255, 0, 255]
 
     for element in path:
-        cropped_image[element.get_x_coordinate()][element.get_y_coordinate()] = [0, 255, 0]
+        cropped_image[element.get_x_coordinate()][element.get_y_coordinate()] = [
+            0,
+            255,
+            0,
+        ]
 
     cv2.imshow("astar pathfinding algorithm", cropped_image)
     cv2.waitKey(0)
