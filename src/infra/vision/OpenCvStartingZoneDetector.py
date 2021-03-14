@@ -1,4 +1,6 @@
 from typing import List
+
+import numpy as np
 import cv2
 
 from domain.Position import Position
@@ -7,53 +9,28 @@ from domain.vision.IStartingZoneDetector import IStartingZoneDetector
 from infra.exception.StartingZoneCenterDetectedOutsideStartingZone import (
     StartingZoneCenterDetectedOutsideStartingZone,
 )
-from infra.exception.StartingZoneCenterNotFound import StartingZoneCenterNotFound
 from infra.exception.StartingZoneCornersNotFound import StartingZoneCornersNotFound
+from infra.utils.VisionUtils import VisionUtils
+
+AREA_MIN = 2500
 
 
 class OpenCvStartingZoneDetector(IStartingZoneDetector):
     def detect(self, image) -> StartingZone:
-        corners_list = self._detect_starting_zone_corners(image)
-        starting_zone_center = self._detect_starting_zone_center(image)
+        corners_list = self._find_starting_zone_corners(image)
+        upper_left_corner = corners_list[0]
+        bottom_right_corner = corners_list[3]
+        center_x_coordinate = int(
+            upper_left_corner.get_x_coordinate()
+            + bottom_right_corner.get_x_coordinate() / 2
+        )
+        center_y_coordinate = int(
+            upper_left_corner.get_y_coordinate()
+            + bottom_right_corner.get_y_coordinate() / 2
+        )
+        starting_zone_center = Position(center_x_coordinate, center_y_coordinate)
         self._validate_center(corners_list, starting_zone_center)
         return StartingZone(corners_list, starting_zone_center)
-
-    def _detect_starting_zone_corners(self, image) -> List[Position]:
-        image_coordinate_y_axis = 700
-        image_coordinate_x_axis = 800
-
-        gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        corners = cv2.goodFeaturesToTrack(gray_image, 4, 0.01, 50)
-
-        corners_list = []
-        for corner in corners:
-            x, y = corner.ravel()
-
-            if y < image_coordinate_y_axis and x < image_coordinate_x_axis:
-                corners_list.append(Position(x, y))
-        if len(corners_list) != 4:
-            raise StartingZoneCornersNotFound
-        return corners_list
-
-    def _detect_starting_zone_center(self, image) -> Position:
-        blurred_image = cv2.GaussianBlur(image, (7, 7), 1)
-        gray_image = cv2.cvtColor(blurred_image, cv2.COLOR_BGR2GRAY)
-        canny_image = cv2.Canny(gray_image, 50, 190)
-        contours, _ = cv2.findContours(
-            canny_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE
-        )
-
-        for contour in contours:
-            minimum_area = 9000
-            area = cv2.contourArea(contour)
-            if area > minimum_area:
-                square_moment = cv2.moments(contour)
-                x_coordinate = int(square_moment["m10"] / square_moment["m00"])
-                y_coordinate = int(square_moment["m01"] / square_moment["m00"])
-
-                return Position(x_coordinate, y_coordinate)
-
-        raise StartingZoneCenterNotFound
 
     def _validate_center(self, corners_list, starting_zone_center):
         if (
@@ -65,3 +42,65 @@ class OpenCvStartingZoneDetector(IStartingZoneDetector):
             < corners_list[1].get_y_coordinate()
         ):
             raise StartingZoneCenterDetectedOutsideStartingZone
+
+    def _find_starting_zone_corners(self, image) -> List[Position]:
+        mask = self._prepare_mask(image)
+        contours, hierarchy = cv2.findContours(
+            mask, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE
+        )
+        corners_list = []
+        for _, contour in enumerate(contours):
+            contours_poly = cv2.approxPolyDP(contour, 3, True)
+            bounding_rect = cv2.boundingRect(contours_poly)
+            rect_X = bounding_rect[0]
+            rect_y = bounding_rect[1]
+            rect_width = bounding_rect[2]
+            rect_height = bounding_rect[3]
+            rectangle_area = rect_width * rect_height
+            aspect_ratio = rect_width / rect_height
+            delta = abs(1.0 - aspect_ratio)
+            epsilon = 0.2
+            if rectangle_area > AREA_MIN and delta < epsilon:
+                top_left_corner = Position(rect_X, rect_y)
+                corners_list.append(top_left_corner)
+                top_right_corner = Position(rect_X + rect_width, rect_y)
+                corners_list.append(top_right_corner)
+                bottom_left_corner = Position(rect_X, rect_y + rect_height)
+                corners_list.append(bottom_left_corner)
+                bottom_right_corner = Position(
+                    rect_X + rect_width, rect_y + rect_height
+                )
+                corners_list.append(bottom_right_corner)
+        if len(corners_list) != 4:
+            raise StartingZoneCornersNotFound
+        return corners_list
+
+    def _prepare_mask(self, image):
+        lower_values = np.array([58, 151, 25])
+        upper_values = np.array([86, 255, 75])
+        hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        mask = cv2.inRange(hsv_image, lower_values, upper_values)
+        minimum_area = 50
+        mask = VisionUtils.apply_area_filter(minimum_area, mask)
+        kernel = 3
+        structuringElement = cv2.getStructuringElement(cv2.MORPH_RECT, (kernel, kernel))
+        iterations = 2
+        mask = cv2.morphologyEx(
+            mask,
+            cv2.MORPH_DILATE,
+            structuringElement,
+            None,
+            None,
+            iterations,
+            cv2.BORDER_REFLECT101,
+        )
+        mask = cv2.morphologyEx(
+            mask,
+            cv2.MORPH_ERODE,
+            structuringElement,
+            None,
+            None,
+            iterations,
+            cv2.BORDER_REFLECT101,
+        )
+        return mask
