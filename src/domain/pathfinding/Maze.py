@@ -24,7 +24,7 @@ class Maze:
 
         for i in range(-total_obstacle_radius, total_obstacle_radius + 1):
             for j in range(-total_obstacle_radius, total_obstacle_radius + 1):
-                if i ** 2 + j ** 2 < total_obstacle_radius ** 2:
+                if i + j < total_obstacle_radius * 2:
                     try:
                         self.array[y_coordinate + i][x_coordinate + j] = 1
                     except IndexError:
