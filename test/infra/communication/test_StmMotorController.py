@@ -7,7 +7,7 @@ from domain.movement.Distance import Distance
 from domain.movement.Movement import Movement
 from domain.movement.MovementCommand import MovementCommand
 from domain.movement.Speed import Speed
-from infra.communication.StmMotorController import StmMotorController
+from infra.communication.motor_controller.StmMotorController import StmMotorController
 
 
 @patch("serial.time.sleep", MagicMock())

@@ -3,7 +3,6 @@ import serial
 from application.ApplicationServer import ApplicationServer
 from application.CommunicationRunner import CommunicationRunner
 from config.config import (
-    SOCKET_DOCKER_BASE_ADDRESS,
     PING_PORT,
     SOCKET_STATION_ADDRESS,
     GAME_CYCLE_PORT,
@@ -12,10 +11,12 @@ from config.config import (
     ROBOT_MAXIMUM_SPEED,
     SERVOING_CONSTANT,
     BASE_COMMAND_DURATION,
+    SOCKET_LOCAL_BASE_ADDRESS,
 )
 from domain.movement.MovementCommandFactory import MovementCommandFactory
 from domain.movement.MovementFactory import MovementFactory
-from infra.communication.StmMotorController import StmMotorController
+from infra.communication.motor_controller.FakeMotorController import FakeMotorController
+from infra.communication.motor_controller.StmMotorController import StmMotorController
 from infra.communication.pub_sub.PubSubConnector import PubSubConnector
 from infra.communication.socket.ReqRepSocketConnector import ReqRepSocketConnector
 from infra.game.SlaveGameCycle import SlaveGameCycle
@@ -33,31 +34,19 @@ from service.resistance.ResistanceService import ResistanceService
 
 class RobotContext:
     def __init__(self, local_flag):
-        if local_flag:
-            self.game_cycle_connector = ReqRepSocketConnector(
-                SOCKET_DOCKER_BASE_ADDRESS + GAME_CYCLE_PORT
-            )
-            self.pub_sub_connector = PubSubConnector(
-                SOCKET_DOCKER_BASE_ADDRESS + PING_PORT
-            )
-        else:
-            self.game_cycle_connector = ReqRepSocketConnector(
-                SOCKET_STATION_ADDRESS + GAME_CYCLE_PORT
-            )
-            self.pub_sub_connector = PubSubConnector(SOCKET_STATION_ADDRESS + PING_PORT)
+        self._local_flag = local_flag
+
+        game_cycle_connector, pub_sub_connector = self._create_connectors()
 
         self.communication_service = CommunicationService(
-            self.game_cycle_connector, self.pub_sub_connector
+            game_cycle_connector, pub_sub_connector
         )
         movement_command_factory = MovementCommandFactory(
             ROBOT_MAXIMUM_SPEED,
             SERVOING_CONSTANT,
             BASE_COMMAND_DURATION,
         )
-        motor_controller = StmMotorController(
-            serial.Serial(port=STM_PORT_NAME, baudrate=STM_BAUD_RATE),
-            movement_command_factory,
-        )
+        motor_controller = self._create_motor_controller(movement_command_factory)
 
         movement_factory = MovementFactory()
         self.movement_service = MovementService(movement_factory, motor_controller)
@@ -72,6 +61,29 @@ class RobotContext:
         self.application_server = ApplicationServer(
             self.communication_runner, self.slave_game_cycle
         )
+
+    def _create_motor_controller(self, movement_command_factory):
+        if self._local_flag:
+            return FakeMotorController()
+
+        return StmMotorController(
+            serial.Serial(port=STM_PORT_NAME, baudrate=STM_BAUD_RATE),
+            movement_command_factory,
+        )
+
+    def _create_connectors(self):
+        if self._local_flag:
+            game_cycle_connector = ReqRepSocketConnector(
+                SOCKET_LOCAL_BASE_ADDRESS + GAME_CYCLE_PORT
+            )
+            pub_sub_connector = PubSubConnector(SOCKET_LOCAL_BASE_ADDRESS + PING_PORT)
+            return game_cycle_connector, pub_sub_connector
+
+        game_cycle_connector = ReqRepSocketConnector(
+            SOCKET_STATION_ADDRESS + GAME_CYCLE_PORT
+        )
+        pub_sub_connector = PubSubConnector(SOCKET_STATION_ADDRESS + PING_PORT)
+        return game_cycle_connector, pub_sub_connector
 
     def run(self):
         self.application_server.run()
