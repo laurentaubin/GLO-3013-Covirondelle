@@ -19,3 +19,4 @@ OBSTACLE_ARUCO_MARKER_ID = 0
 ROBOT_ARUCO_MARKER_ID = 1
 
 WORLD_CAMERA_IMAGE_SIZE = (1600, 1200)
+BASE_TABLE_IMAGE = "resources/test/puck-detector-test-marker-3.jpg"

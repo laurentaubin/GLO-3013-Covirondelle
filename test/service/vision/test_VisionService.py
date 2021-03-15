@@ -25,6 +25,7 @@ class TestVisionService(TestCase):
             self.world_camera,
         )
 
+        self.image_calibrator.calibrate.return_value = self.AN_IMAGE
         self.table_detector.crop_table.return_value = self.AN_IMAGE
         self.AN_IMAGE.shape = self.AN_IMAGE_SHAPE
 
@@ -33,15 +34,8 @@ class TestVisionService(TestCase):
 
         self.image_calibrator.calibrate.assert_called_with(self.AN_IMAGE)
 
-    def test_whenCreateGameTable_thenTableIsDetectedFromUndistortedImage(self):
-        self.image_calibrator.calibrate.return_value = self.UNDISTORTED_IMAGE
-
-        self.vision_service.create_game_table()
-
-        self.table_detector.crop_table.assert_called_with(self.UNDISTORTED_IMAGE)
-
     def test_whenCreateGameTable_thenStartingZoneDetectorUseUndistortedTableImage(self):
-        self.table_detector.crop_table.return_value = self.UNDISTORTED_TABLE_IMAGE
+        self.image_calibrator.calibrate.return_value = self.UNDISTORTED_TABLE_IMAGE
         self.UNDISTORTED_TABLE_IMAGE.shape = self.AN_IMAGE_SHAPE
 
         self.vision_service.create_game_table()

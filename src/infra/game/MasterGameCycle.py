@@ -34,6 +34,9 @@ class MasterGameCycle(IGameCycle):
 
         print("Game cycle complete!")
 
+    def stop(self):
+        pass
+
     def _send_start_signal(self):
         while True:
             start_signal = input("send start signal (y/n): ")
@@ -42,6 +45,3 @@ class MasterGameCycle(IGameCycle):
         self.communication_service.send_game_cycle_response(Stage.START_CYCLE.value)
         time.sleep(1)
         self.communication_service.receive_game_cycle_request()
-
-    def stop(self):
-        pass

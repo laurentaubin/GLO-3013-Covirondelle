@@ -1,6 +1,9 @@
 run:
 	python src/__main__.py
 
+dev:
+	python src/__main__.py --local
+
 test:
 	nosetests -v
 

@@ -7,8 +7,10 @@ from config.config import (
     GAME_CYCLE_PORT,
     CALIBRATION_FILE_PATH,
     LAPTOP_CAMERA_INDEX,
+    BASE_TABLE_IMAGE,
 )
 from domain.pathfinding.AStarShortestPathAlgorithm import AStarShortestPathAlgorithm
+from infra.camera.ImageBasedWorldCamera import ImageBasedWorldCamera
 from infra.camera.OpenCvCalibrator import OpenCvCalibrator
 from infra.camera.OpenCvWorldCamera import OpenCvWorldCamera
 from infra.communication.pub_sub.PubSubConnector import PubSubConnector
@@ -31,16 +33,14 @@ from service.vision.VisionService import VisionService
 
 class StationContext:
     def __init__(self, local_flag):
-        self._game_cycle_connector, self._pub_sub_connector = self._create_connectors(
-            local_flag
-        )
+        self._local_flag = local_flag
+        self._game_cycle_connector, self._pub_sub_connector = self._create_connectors()
         self._communication_service = CommunicationService(
-            self._game_cycle_connector, self.pub_sub_connector
+            self._game_cycle_connector, self._pub_sub_connector
         )
 
         self._vision_service = self._create_vision_service()
 
-        # TODO Instantiate algorithm with non empty maze
         self._shortest_path_algorithm = AStarShortestPathAlgorithm()
         self._path_service = PathService(
             self._vision_service,
@@ -65,18 +65,19 @@ class StationContext:
     def run(self):
         self._application_server.run()
 
-    def _create_connectors(self, local_flag):
-        if local_flag:
-            self._game_cycle_connector = ReqRepSocketConnector(
+    def _create_connectors(self):
+        if self._local_flag:
+            game_cycle_connector = ReqRepSocketConnector(
                 SOCKET_DOCKER_ADDRESS + GAME_CYCLE_PORT
             )
-            self.pub_sub_connector = PubSubConnector(SOCKET_DOCKER_ADDRESS + PING_PORT)
-        else:
-            self._game_cycle_connector = ReqRepSocketConnector(
-                SOCKET_ANY_ADDRESS + GAME_CYCLE_PORT
-            )
-            self.pub_sub_connector = PubSubConnector(SOCKET_ANY_ADDRESS + PING_PORT)
-        return self._game_cycle_connector, self._pub_sub_connector
+            pub_sub_connector = PubSubConnector(SOCKET_DOCKER_ADDRESS + PING_PORT)
+            return game_cycle_connector, pub_sub_connector
+
+        game_cycle_connector = ReqRepSocketConnector(
+            SOCKET_ANY_ADDRESS + GAME_CYCLE_PORT
+        )
+        pub_sub_connector = PubSubConnector(SOCKET_ANY_ADDRESS + PING_PORT)
+        return game_cycle_connector, pub_sub_connector
 
     def _create_stage_service(self):
         self.stage_handler_selector = self._create_stage_handler_selector()
@@ -130,4 +131,7 @@ class StationContext:
         )
 
     def _create_world_camera(self):
+        if self._local_flag:
+            return ImageBasedWorldCamera(BASE_TABLE_IMAGE)
+
         return OpenCvWorldCamera(LAPTOP_CAMERA_INDEX)
