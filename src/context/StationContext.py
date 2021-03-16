@@ -1,3 +1,5 @@
+from cv2.aruco import DICT_4X4_50
+
 from application.ApplicationServer import ApplicationServer
 from application.RobotStatusReceiver import RobotStatusReceiver
 from config.config import (
@@ -6,6 +8,7 @@ from config.config import (
     SOCKET_ANY_ADDRESS,
     GAME_CYCLE_PORT,
     CALIBRATION_FILE_PATH,
+    ROBOT_ARUCO_MARKER_ID,
     LAPTOP_CAMERA_INDEX,
     BASE_TABLE_IMAGE,
 )
@@ -16,6 +19,7 @@ from infra.camera.OpenCvWorldCamera import OpenCvWorldCamera
 from infra.communication.pub_sub.PubSubConnector import PubSubConnector
 from infra.communication.socket.ReqRepSocketConnector import ReqRepSocketConnector
 from infra.game.MasterGameCycle import MasterGameCycle
+from infra.vision.OpenCvRobotDetector import OpenCvRobotDetector
 from infra.vision.OpenCvStartingZoneDetector import OpenCvStartingZoneDetector
 from infra.vision.OpenCvTableDetector import OpenCvTableDetector
 from service.communication.CommunicationService import CommunicationService
@@ -120,18 +124,16 @@ class StationContext:
 
     def _create_vision_service(self):
         starting_zone_corners_detector = OpenCvStartingZoneDetector()
-        image_calibrator = OpenCvCalibrator(CALIBRATION_FILE_PATH)
         table_detector = OpenCvTableDetector()
         world_camera = self._create_world_camera()
+        robot_detector = OpenCvRobotDetector(DICT_4X4_50, ROBOT_ARUCO_MARKER_ID)
         return VisionService(
-            starting_zone_corners_detector,
-            image_calibrator,
-            table_detector,
-            world_camera,
+            starting_zone_corners_detector, table_detector, world_camera, robot_detector
         )
 
     def _create_world_camera(self):
+        camera_calibrator = OpenCvCalibrator(CALIBRATION_FILE_PATH)
         if self._local_flag:
             return ImageBasedWorldCamera(BASE_TABLE_IMAGE)
 
-        return OpenCvWorldCamera(LAPTOP_CAMERA_INDEX)
+        return OpenCvWorldCamera(LAPTOP_CAMERA_INDEX, camera_calibrator)
