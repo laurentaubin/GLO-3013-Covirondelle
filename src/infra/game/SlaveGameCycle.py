@@ -33,7 +33,7 @@ class SlaveGameCycle(IGameCycle):
             print("Message received in game cycle: " + message)
             if message == Stage.START_CYCLE.value:
                 self.communication_service.send_game_cycle_message(
-                    Stage.CYCLE_STARTED.value
+                    Stage.STAGE_COMPLETED.value
                 )
                 break
 
