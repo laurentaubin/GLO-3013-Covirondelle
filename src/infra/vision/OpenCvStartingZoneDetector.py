@@ -1,7 +1,7 @@
 from typing import List
 
-import numpy as np
 import cv2
+import numpy as np
 
 from domain.Position import Position
 from domain.StartingZone import StartingZone
@@ -45,11 +45,9 @@ class OpenCvStartingZoneDetector(IStartingZoneDetector):
 
     def _find_starting_zone_corners(self, image) -> List[Position]:
         mask = self._prepare_mask(image)
-        contours, hierarchy = cv2.findContours(
-            mask, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE
-        )
+        contours, _ = cv2.findContours(mask, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
         corners_list = []
-        for _, contour in enumerate(contours):
+        for contour in contours:
             contours_poly = cv2.approxPolyDP(contour, 3, True)
             bounding_rect = cv2.boundingRect(contours_poly)
             rect_X = bounding_rect[0]

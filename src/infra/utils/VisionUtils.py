@@ -9,7 +9,7 @@ class VisionUtils:
             componentsNumber,
             labeledImage,
             componentStats,
-            componentCentroids,
+            _,
         ) = cv2.connectedComponentsWithStats(image, connectivity=4)
         remainingComponentLabels = [
             i
@@ -17,7 +17,7 @@ class VisionUtils:
             if componentStats[i][4] >= minimum_area
         ]
         filtered_image = np.where(
-            np.isin(labeledImage, remainingComponentLabels) == True, 255, 0
+            np.isin(labeledImage, remainingComponentLabels), 255, 0
         ).astype("uint8")
 
         return filtered_image

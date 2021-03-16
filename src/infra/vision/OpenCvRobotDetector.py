@@ -4,13 +4,14 @@ import cv2
 import cv2.aruco as aruco
 
 from domain.Orientation import Orientation
-from domain.Position import Position
 from domain.RobotPose import RobotPose
 from domain.vision.IRobotDetector import IRobotDetector
 from domain.vision.exception import RobotNotFoundException
 
-
 # https://stackoverflow.com/questions/22780757/how-can-i-get-angle-and-line-length-in-python-opencv
+from infra.utils.GeometryUtils import GeometryUtils
+
+
 class OpenCvRobotDetector(IRobotDetector):
     RAD_TO_DEG_FACTOR = 180 / math.pi
 
@@ -26,12 +27,15 @@ class OpenCvRobotDetector(IRobotDetector):
             gray, self._aruco_dictionary, parameters=self._detector_parameters
         )
 
-        robot_marker_corner = self._get_robot_marker_corners(corners, ids)
-        center_x, center_y = self._get_robot_marker_center_in_pixel(robot_marker_corner)
+        robot_marker_corners = self._get_robot_marker_corners(corners, ids)
         robot_orientation = Orientation(
-            self._get_robot_orientation_in_degree(robot_marker_corner)
+            self._get_robot_orientation_in_degree(robot_marker_corners)
         )
-        robot_position = Position(int(center_x), int(center_y))
+        robot_position = (
+            GeometryUtils.get_quadrangle_center_coordinates_from_corner_coordinates(
+                robot_marker_corners[0]
+            )
+        )
         return RobotPose(robot_position, robot_orientation)
 
     def _get_robot_marker_corners(self, corners, ids):
@@ -39,28 +43,6 @@ class OpenCvRobotDetector(IRobotDetector):
             if ids[i] == self._robot_aruco_marker_id:
                 return corners[i]
         raise RobotNotFoundException
-
-    def _get_robot_marker_center_in_pixel(self, robot_marker_corner):
-        return (
-            self._get_x_center_coordinate(robot_marker_corner),
-            self._get_y_center_coordinate(robot_marker_corner),
-        )
-
-    def _get_x_center_coordinate(self, robot_marker_corner):
-        return (
-            robot_marker_corner[0][0][0]
-            + robot_marker_corner[0][1][0]
-            + robot_marker_corner[0][2][0]
-            + robot_marker_corner[0][3][0]
-        ) / 4
-
-    def _get_y_center_coordinate(self, robot_marker_corner):
-        return (
-            robot_marker_corner[0][0][1]
-            + robot_marker_corner[0][1][1]
-            + robot_marker_corner[0][2][1]
-            + robot_marker_corner[0][3][1]
-        ) / 4
 
     def _get_robot_orientation_in_degree(self, robot_marker_corner) -> int:
         marker_upper_left_corner = (

@@ -21,5 +21,4 @@ class Path:
             result = self._path[self.n]
             self.n += 1
             return result
-        else:
-            raise StopIteration
+        raise StopIteration

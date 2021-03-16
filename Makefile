@@ -16,8 +16,8 @@ check-format:
 	black --check test
 
 lint:
-	pylint --rcfile=setup.cfg src; \
-	pylint --rcfile=setup.cfg test --disable="W0613";
+	pylint --rcfile=setup.cfg src --fail-under=9.5; \
+	pylint --rcfile=setup.cfg test --disable="W0613" --fail-under=9.5;
 
 clean:
 	rm -rf .pytest_cache .coverage .pytest_cache coverage.xml

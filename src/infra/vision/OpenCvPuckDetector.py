@@ -43,8 +43,7 @@ class OpenCvPuckDetector(IPuckDetector):
                         int(rectangle_y + rectangle_height / 2),
                     )
                     return puck_center
-        else:
-            raise PuckCenterNotFound
+        raise PuckCenterNotFound
 
     def _prepare_mask(self, image, color):
         frame_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
