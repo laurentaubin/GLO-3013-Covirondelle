@@ -2,6 +2,7 @@ from cv2.aruco import DICT_4X4_50
 
 from application.ApplicationServer import ApplicationServer
 from application.RobotStatusReceiver import RobotStatusReceiver
+from application.VisionWorker import VisionWorker
 from config.config import (
     SOCKET_DOCKER_ADDRESS,
     PING_PORT,
@@ -11,14 +12,23 @@ from config.config import (
     ROBOT_ARUCO_MARKER_ID,
     LAPTOP_CAMERA_INDEX,
     BASE_TABLE_IMAGE,
+    OBSTACLE_ARUCO_MARKER_ID,
+    CAMERA_MATRIX,
+    DISTORTION_COEFFICIENTS,
+    OBSTACLE_ARUCO_MARKER_SIZE,
+    OBSTACLE_HEIGHT,
+    OBSTACLE_RADIUS,
+    ROBOT_RADIUS,
 )
 from domain.pathfinding.AStarShortestPathAlgorithm import AStarShortestPathAlgorithm
+from domain.pathfinding.MazeFactory import MazeFactory
 from infra.camera.ImageBasedWorldCamera import ImageBasedWorldCamera
 from infra.camera.OpenCvCalibrator import OpenCvCalibrator
 from infra.camera.OpenCvWorldCamera import OpenCvWorldCamera
 from infra.communication.pub_sub.PubSubConnector import PubSubConnector
 from infra.communication.socket.ReqRepSocketConnector import ReqRepSocketConnector
 from infra.game.MasterGameCycle import MasterGameCycle
+from infra.vision.OpenCvObstacleDetector import OpenCvObstacleDetector
 from infra.vision.OpenCvRobotDetector import OpenCvRobotDetector
 from infra.vision.OpenCvStartingZoneDetector import OpenCvStartingZoneDetector
 from infra.vision.OpenCvTableDetector import OpenCvTableDetector
@@ -29,6 +39,7 @@ from service.game.StageService import StageService
 from service.handler.FindCommandPanelHandler import FindCommandPanelHandler
 from service.handler.GoParkHandler import GoParkHandler
 from service.handler.GoToOhmmeterHandler import GoToOhmmeterHandler
+from service.handler.StartCycleHandler import StartCycleHandler
 from service.handler.StopHandler import StopHandler
 from service.handler.TransportPuckHandler import TransportPuckHandler
 from service.path.PathService import PathService
@@ -46,24 +57,20 @@ class StationContext:
         self._vision_service = self._create_vision_service()
 
         self._shortest_path_algorithm = AStarShortestPathAlgorithm()
-        self._path_service = PathService(
-            self._vision_service,
-            self._communication_service,
-            self._shortest_path_algorithm,
-        )
+        self._path_service = PathService(self._shortest_path_algorithm)
+
         self._stage_request_router = StageRequestRouter(
             self._communication_service, self._path_service
         )
 
         self._stage_service = self._create_stage_service()
 
-        self._game_cycle = MasterGameCycle(
-            self._communication_service, self._stage_request_router, self._stage_service
-        )
-
+        self._game_cycle = MasterGameCycle(self._stage_service)
         self._robot_status_receiver = RobotStatusReceiver(self._communication_service)
+        self._vision_worker = VisionWorker(self._vision_service)
+
         self._application_server = ApplicationServer(
-            self._robot_status_receiver, self._game_cycle
+            self._robot_status_receiver, self._game_cycle, self._vision_worker
         )
 
     def run(self):
@@ -88,17 +95,26 @@ class StationContext:
         return StageService(self.stage_handler_selector)
 
     def _create_stage_handler_selector(self):
+        start_game_cycle_handler = self._create_start_game_cycle_handler()
         go_to_ohmmeter_handler = self._create_go_to_ohmmeter_handler()
         find_command_panel_handler = self._create_find_command_panel_handler()
         transport_puck_handler = self._create_transport_puck_handler()
         go_park_handler = self._create_go_park_handler()
         stop_handler = self._create_stop_handler()
         return StageHandlerSelector(
+            start_game_cycle_handler,
             go_to_ohmmeter_handler,
             find_command_panel_handler,
             transport_puck_handler,
             go_park_handler,
             stop_handler,
+        )
+
+    def _create_start_game_cycle_handler(self):
+        return StartCycleHandler(
+            self._communication_service,
+            self._path_service,
+            self._vision_service,
         )
 
     def _create_go_to_ohmmeter_handler(self):
@@ -124,11 +140,27 @@ class StationContext:
 
     def _create_vision_service(self):
         starting_zone_corners_detector = OpenCvStartingZoneDetector()
+        obstacle_detector = OpenCvObstacleDetector(
+            OBSTACLE_ARUCO_MARKER_ID,
+            DICT_4X4_50,
+            CAMERA_MATRIX,
+            DISTORTION_COEFFICIENTS,
+            OBSTACLE_ARUCO_MARKER_SIZE,
+            OBSTACLE_HEIGHT,
+        )
+        image_calibrator = OpenCvCalibrator(CALIBRATION_FILE_PATH)
+        maze_factory = MazeFactory(ROBOT_RADIUS, OBSTACLE_RADIUS)
         table_detector = OpenCvTableDetector()
         world_camera = self._create_world_camera()
         robot_detector = OpenCvRobotDetector(DICT_4X4_50, ROBOT_ARUCO_MARKER_ID)
         return VisionService(
-            starting_zone_corners_detector, table_detector, world_camera, robot_detector
+            starting_zone_corners_detector,
+            obstacle_detector,
+            image_calibrator,
+            table_detector,
+            world_camera,
+            maze_factory,
+            robot_detector,
         )
 
     def _create_world_camera(self):

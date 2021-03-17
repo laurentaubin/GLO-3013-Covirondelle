@@ -11,61 +11,33 @@ class TestPathService(TestCase):
     ANOTHER_CORNER_LETTER = StartingZoneCorner.B
     A_CORNER_POSITION = Position(12, 12)
     A_ROBOT_POSITION = Position(200, 200)
+    A_GAME_TABLE = MagicMock()
+    A_STARTING_ZONE = MagicMock()
+    A_POSITION = MagicMock()
 
     def setUpMocks(self) -> None:
-        self.vision_service = MagicMock()
         self.game_table = MagicMock()
-        self.communication_service = MagicMock()
         self.shortest_path_algorithm = MagicMock()
-        self.a_starting_zone = MagicMock()
-        self.a_position = MagicMock()
 
-        self.vision_service.create_game_table.return_value = self.game_table
-        self.game_table.get_starting_zone.return_value = self.a_starting_zone
+        self.game_table.get_starting_zone.return_value = self.A_STARTING_ZONE
 
     def setUp(self) -> None:
         self.setUpMocks()
 
         self.path_service = PathService(
-            self.vision_service,
-            self.communication_service,
             self.shortest_path_algorithm,
         )
-
-    def test_whenInitializingPathService_thenGameTableIsCreated(self):
-        PathService(
-            self.vision_service,
-            self.communication_service,
-            self.shortest_path_algorithm,
-        )
-
-        self.vision_service.create_game_table.assert_called()
-
-    def test_whenInitializingPathService_thenPathFindingAlgorithmMazeIsSet(self):
-        PathService(
-            self.vision_service,
-            self.communication_service,
-            self.shortest_path_algorithm,
-        )
-
-        self.shortest_path_algorithm.set_maze.assert_called()
+        self.path_service.set_game_table(self.A_GAME_TABLE)
+        self.path_service.set_first_corner_letter(self.A_CORNER_LETTER)
 
     def test_givenRobotSendsLetterA_whenFindPathToNextStartingZoneCorner_thenFindPositionOfCornerA(
         self,
     ):
-        self.vision_service.find_starting_zone.return_value = self.a_starting_zone
-        self.communication_service.get_first_corner_letter.return_value = (
-            self.A_CORNER_LETTER
-        )
-        path_service = PathService(
-            self.vision_service,
-            self.communication_service,
-            self.shortest_path_algorithm,
-        )
+        self.A_GAME_TABLE.get_starting_zone.return_value = self.A_STARTING_ZONE
 
-        path_service.find_path_to_next_starting_zone_corner()
+        self.path_service.find_path_to_next_starting_zone_corner(self.A_ROBOT_POSITION)
 
-        self.a_starting_zone.find_corner_position_from_letter.assert_called_with(
+        self.A_STARTING_ZONE.find_corner_position_from_letter.assert_called_with(
             self.A_CORNER_LETTER
         )
 
@@ -73,22 +45,15 @@ class TestPathService(TestCase):
     def test_givenTwoSuccessiveCalls_whenFindPathToNextStartingZoneCorner_thenCornerOrderIsFollowed(
         self, startingZoneCorner_mock
     ):
-        self.communication_service.get_first_corner_letter.return_value = (
-            self.A_CORNER_LETTER
-        )
+        self.A_GAME_TABLE.get_starting_zone.return_value = self.A_STARTING_ZONE
         startingZoneCorner_mock.return_value = self.ANOTHER_CORNER_LETTER
-        path_service = PathService(
-            self.vision_service,
-            self.communication_service,
-            self.shortest_path_algorithm,
-        )
 
-        path_service.find_path_to_next_starting_zone_corner()
-        path_service.find_path_to_next_starting_zone_corner()
+        self.path_service.find_path_to_next_starting_zone_corner(self.A_ROBOT_POSITION)
+        self.path_service.find_path_to_next_starting_zone_corner(self.A_ROBOT_POSITION)
 
-        self.a_starting_zone.find_corner_position_from_letter.assert_has_calls(
-            self.a_starting_zone.find_corner_position_from_letter(self.A_CORNER_LETTER),
-            self.a_starting_zone.find_corner_position_from_letter(
+        self.A_STARTING_ZONE.find_corner_position_from_letter.assert_has_calls(
+            self.A_STARTING_ZONE.find_corner_position_from_letter(self.A_CORNER_LETTER),
+            self.A_STARTING_ZONE.find_corner_position_from_letter(
                 self.ANOTHER_CORNER_LETTER
             ),
         )
@@ -96,16 +61,21 @@ class TestPathService(TestCase):
     def test_whenFindPathToNextStartingZoneCorner_thenPathIsCalculatedWithRightCornerPositionAndRobotPosition(
         self,
     ):
-        self.a_starting_zone.find_corner_position_from_letter.return_value = (
+        self.A_GAME_TABLE.get_starting_zone.return_value = self.A_STARTING_ZONE
+        self.A_STARTING_ZONE.find_corner_position_from_letter.return_value = (
             self.A_CORNER_POSITION
         )
 
-        self.vision_service.find_robot_position = MagicMock(
-            return_value=self.A_ROBOT_POSITION
-        )
-
-        self.path_service.find_path_to_next_starting_zone_corner()
+        self.path_service.find_path_to_next_starting_zone_corner(self.A_ROBOT_POSITION)
 
         self.shortest_path_algorithm.find_shortest_path.assert_called_with(
             self.A_ROBOT_POSITION, self.A_CORNER_POSITION
         )
+
+    def test_givenGameTable_whenSetGameTable_thenShortestPathAlgorithmMazeIsSet(self):
+        a_maze = MagicMock()
+        self.A_GAME_TABLE.get_maze.return_value = a_maze
+
+        self.path_service.set_game_table(self.A_GAME_TABLE)
+
+        self.shortest_path_algorithm.set_maze.assert_called_with(a_maze)

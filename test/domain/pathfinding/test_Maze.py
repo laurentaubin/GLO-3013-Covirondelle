@@ -1,15 +1,16 @@
 from unittest import TestCase
-from unittest.mock import patch
 
 import numpy as np
 
 from domain.Position import Position
 from domain.pathfinding.Maze import Maze
+from domain.pathfinding.MazeFactory import MazeFactory
 
 
-@patch("domain.pathfinding.Maze.ROBOT_RADIUS", 3)
-@patch("domain.pathfinding.Maze.OBSTACLE_RADIUS", 2)
 class TestMaze(TestCase):
+    A_ROBOT_RADIUS = 2
+    AN_OBSTACLE_RADIUS = 3
+
     A_MAZE_ARRAY = np.array(
         [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -25,6 +26,7 @@ class TestMaze(TestCase):
     AN_INDEX = 2
 
     def setUp(self) -> None:
+        self.maze_factory = MazeFactory(self.A_ROBOT_RADIUS, self.AN_OBSTACLE_RADIUS)
         self.maze = Maze(self.A_MAZE_ARRAY)
 
     def test_whenGetShape_thenReturnNumpyShape(self) -> None:
@@ -40,26 +42,6 @@ class TestMaze(TestCase):
         actual_item = self.maze[self.AN_INDEX][self.AN_INDEX]
 
         self.assertEqual(expected_item, actual_item)
-
-    def test_whenInstantiatingMazeWithHeightAndWidth_thenMazeHasBorderOfOnes(
-        self,
-    ):
-        maze_width = 5
-        maze_height = 10
-        expected_maze = Maze(
-            np.array(
-                [
-                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                ]
-            )
-        )
-
-        maze = Maze(width=maze_width, height=maze_height)
-        self.assertEqual(maze, expected_maze)
 
     def test_givenEmptyMazeAndRobotRadius_whenAddObstacle_thenRobotRadiusIsTakenIntoAccountWhenAddingObstacle(
         self,
@@ -81,16 +63,18 @@ class TestMaze(TestCase):
                     [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                     [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                     [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                    [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                 ]
             )
         )
         obstacle_position = Position(13, 9)
-        actual_maze = Maze(width=17, height=20)
+        actual_maze = self.maze_factory.create_from_shape((17, 20, 0))
 
-        actual_maze.add_obstacle(obstacle_position)
+        actual_maze.add_obstacle(
+            obstacle_position, self.A_ROBOT_RADIUS, self.AN_OBSTACLE_RADIUS
+        )
 
         self.assertEqual(expected_maze, actual_maze)
 
@@ -113,8 +97,9 @@ class TestMaze(TestCase):
         )
 
         obstacle_position = Position(6, 8)
-        actual_maze = Maze(width=8, height=10)
-
-        actual_maze.add_obstacle(obstacle_position)
+        actual_maze = self.maze_factory.create_from_shape((8, 10, 0))
+        actual_maze.add_obstacle(
+            obstacle_position, self.A_ROBOT_RADIUS, self.AN_OBSTACLE_RADIUS
+        )
 
         self.assertEqual(expected_maze, actual_maze)

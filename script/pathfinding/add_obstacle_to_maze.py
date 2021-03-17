@@ -29,7 +29,7 @@ if __name__ == "__main__":
     pathfinding.set_maze(maze)
     path = pathfinding.find_shortest_path(Position(250, 50), Position(117, 570))
 
-    maze_array = maze.array
+    maze_array = maze._array
     img_to_show = np.zeros((image_width, image_height, 3))
 
     for i, column in enumerate(maze_array):

@@ -6,13 +6,14 @@ import numpy as np
 
 from config.config import OBSTACLE_ARUCO_MARKER_SIZE
 from domain.Position import Position
+from domain.vision.IObstacleDetector import IObstacleDetector
 from domain.vision.exception.ObstacleNotFoundException import ObstacleNotFoundException
 from infra.utils.GeometryUtils import GeometryUtils
 
 
 # https://github.com/ddelago/Aruco-Marker-Calibration-and-Pose-Estimation/blob/master/pose_marker.py
 # https://docs.opencv.org/master/d7/d53/tutorial_py_pose.html
-class OpenCvObstacleDetector:
+class OpenCvObstacleDetector(IObstacleDetector):
     def __init__(
         self,
         aruco_dictionary,

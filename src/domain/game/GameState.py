@@ -1,5 +1,6 @@
 from typing import List
 
+from domain.GameTable import GameTable
 from domain.RobotPose import RobotPose
 from domain.StartingZoneCorner import StartingZoneCorner
 from domain.ResistanceColor import ResistanceColor
@@ -18,6 +19,7 @@ class GameState:
         self._robot_pose = None
         self._table_image = None
         self._battery_consumption = None
+        self._game_table = None
 
     def __new__(cls, *args, **kwargs):
         if not isinstance(cls._instance, cls):
@@ -51,6 +53,9 @@ class GameState:
     def get_starting_zone_corners(self) -> List[StartingZoneCorner]:
         return self._starting_zone_corner_order
 
+    def get_game_table(self) -> GameTable:
+        return self._game_table
+
     def set_starting_zone_corners(
         self, starting_zone_corners: List[StartingZoneCorner]
     ):
@@ -73,3 +78,6 @@ class GameState:
 
     def set_battery_consumption(self, battery_consumption):
         self._battery_consumption = battery_consumption
+
+    def set_game_table(self, game_table: GameTable):
+        self._game_table = game_table

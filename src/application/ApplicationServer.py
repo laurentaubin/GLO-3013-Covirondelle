@@ -15,7 +15,7 @@ class ApplicationServer:
         self._robot_status_receiver_thread = Thread(
             target=robot_status_receiver.run, daemon=True
         )
-        self._vision_worker_thread = Thread(target=vision_worker.run(), daemon=True)
+        self._vision_worker_thread = Thread(target=vision_worker.run, daemon=True)
 
         self.game_cycle = game_cycle
 
