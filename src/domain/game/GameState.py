@@ -1,5 +1,7 @@
 from typing import List
 
+import numpy as np
+
 from domain.GameTable import GameTable
 from domain.RobotPose import RobotPose
 from domain.StartingZoneCorner import StartingZoneCorner
@@ -11,15 +13,15 @@ class GameState:
     _instance = None
 
     def __init__(self):
-        self._puck_colors: List[ResistanceColor] = list()
-        self._current_puck = None
-        self._current_stage = None
-        self._prehensor_state = None
-        self._starting_zone_corner_order: List[StartingZoneCorner] = list()
-        self._robot_pose = None
-        self._table_image = None
-        self._battery_consumption = None
-        self._game_table = None
+        self._puck_colors: List[ResistanceColor]
+        self._current_puck: ResistanceColor
+        self._current_stage: Stage
+        self._prehensor_state: int
+        self._starting_zone_corner_order: List[StartingZoneCorner]
+        self._robot_pose: RobotPose
+        self._table_image: np.array
+        self._battery_consumption: float
+        self._game_table: GameTable
 
     def __new__(cls, *args, **kwargs):
         if not isinstance(cls._instance, cls):
