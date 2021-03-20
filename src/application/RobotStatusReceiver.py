@@ -6,4 +6,5 @@ class RobotStatusReceiver:
         self.communication_service = communication_service
 
     def run(self):
-        self.communication_service.receive_robot_status()
+        while True:
+            self.communication_service.receive_robot_status()

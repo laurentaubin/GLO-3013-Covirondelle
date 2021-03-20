@@ -25,8 +25,8 @@ from domain.pathfinding.MazeFactory import MazeFactory
 from infra.camera.ImageBasedWorldCamera import ImageBasedWorldCamera
 from infra.camera.OpenCvCalibrator import OpenCvCalibrator
 from infra.camera.OpenCvWorldCamera import OpenCvWorldCamera
-from infra.communication.pub_sub.PubSubConnector import PubSubConnector
-from infra.communication.socket.ReqRepSocketConnector import ReqRepSocketConnector
+from infra.communication.robot.ZmqSubscriberConnector import ZmqSubscriberConnector
+from infra.communication.robot.ZmqReqRepConnector import ZmqReqRepConnector
 from infra.game.MasterGameCycle import MasterGameCycle
 from infra.vision.OpenCvObstacleDetector import OpenCvObstacleDetector
 from infra.vision.OpenCvRobotDetector import OpenCvRobotDetector
@@ -78,16 +78,16 @@ class StationContext:
 
     def _create_connectors(self):
         if self._local_flag:
-            game_cycle_connector = ReqRepSocketConnector(
+            game_cycle_connector = ZmqReqRepConnector(
                 SOCKET_DOCKER_ADDRESS + GAME_CYCLE_PORT
             )
-            pub_sub_connector = PubSubConnector(SOCKET_DOCKER_ADDRESS + PING_PORT)
+            pub_sub_connector = ZmqSubscriberConnector(
+                SOCKET_DOCKER_ADDRESS + PING_PORT
+            )
             return game_cycle_connector, pub_sub_connector
 
-        game_cycle_connector = ReqRepSocketConnector(
-            SOCKET_ANY_ADDRESS + GAME_CYCLE_PORT
-        )
-        pub_sub_connector = PubSubConnector(SOCKET_ANY_ADDRESS + PING_PORT)
+        game_cycle_connector = ZmqReqRepConnector(SOCKET_ANY_ADDRESS + GAME_CYCLE_PORT)
+        pub_sub_connector = ZmqSubscriberConnector(SOCKET_ANY_ADDRESS + PING_PORT)
         return game_cycle_connector, pub_sub_connector
 
     def _create_stage_service(self):
