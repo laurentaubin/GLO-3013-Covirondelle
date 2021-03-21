@@ -12,6 +12,7 @@ class ResistanceColor(IntEnum):
     PURPLE = 7
     GREY = 8
     WHITE = 9
+    NONE = 10
 
     @staticmethod
     def valueOf(single_digit: int) -> "ResistanceColor":

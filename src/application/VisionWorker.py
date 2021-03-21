@@ -16,5 +16,5 @@ class VisionWorker:
     @staticmethod
     def update_vision_state(vision_service: VisionService):
         table_image, robot_pose = vision_service.get_vision_state()
-        GameState().set_table_image(table_image)
-        GameState().set_robot_pose(robot_pose)
+        GameState.get_instance().set_table_image(table_image)
+        GameState.get_instance().set_robot_pose(robot_pose)

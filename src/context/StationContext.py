@@ -1,8 +1,10 @@
 from cv2.aruco import DICT_4X4_50
 
 from application.ApplicationServer import ApplicationServer
+from application.GameStateDtoAssembler import GameStateDtoAssembler
 from application.RobotStatusReceiver import RobotStatusReceiver
 from application.VisionWorker import VisionWorker
+from application.WebServer import WebServer
 from config.config import (
     SOCKET_DOCKER_ADDRESS,
     PING_PORT,
@@ -68,9 +70,14 @@ class StationContext:
         self._game_cycle = MasterGameCycle(self._stage_service)
         self._robot_status_receiver = RobotStatusReceiver(self._communication_service)
         self._vision_worker = VisionWorker(self._vision_service)
+        game_state_dto_assembler = GameStateDtoAssembler()
+        self._web_server = WebServer(game_state_dto_assembler)
 
         self._application_server = ApplicationServer(
-            self._robot_status_receiver, self._game_cycle, self._vision_worker
+            self._robot_status_receiver,
+            self._game_cycle,
+            self._vision_worker,
+            self._web_server,
         )
 
     def run(self):

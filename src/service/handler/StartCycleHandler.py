@@ -20,7 +20,7 @@ class StartCycleHandler(IStageHandler):
         self._vision_service = vision_service
 
     def execute(self):
-        GameState().set_current_stage(Stage.START_CYCLE)
+        GameState.get_instance().set_current_stage(Stage.START_CYCLE)
 
         self._create_game_table()
         self._send_start_signal()
@@ -29,7 +29,7 @@ class StartCycleHandler(IStageHandler):
     def _create_game_table(self):
         game_table = self._vision_service.create_game_table()
         self._path_service.set_game_table(game_table)
-        GameState().set_game_table(game_table)
+        GameState.get_instance().set_game_table(game_table)
 
     def _send_start_signal(self):
         print("Sending start signal...")

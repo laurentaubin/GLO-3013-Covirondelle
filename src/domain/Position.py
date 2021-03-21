@@ -26,6 +26,9 @@ class Position:
     def to_tuple(self):
         return self._x_coordinate, self._y_coordinate
 
+    def to_dictionary(self):
+        return {"x_coordinate": self._x_coordinate, "y_coordinate": self._y_coordinate}
+
     def __eq__(self, other) -> bool:
         if not isinstance(other, Position):
             return False
