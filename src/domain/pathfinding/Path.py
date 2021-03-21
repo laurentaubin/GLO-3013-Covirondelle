@@ -1,7 +1,7 @@
 from typing import List
 
 from domain.exception.PositionNotAdjacentException import PositionNotAdjacentException
-from domain.movement.Position import Position
+from domain.Position import Position
 
 
 class Path:

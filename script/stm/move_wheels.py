@@ -9,8 +9,8 @@ from config.config import (
 )
 from domain.movement.MovementCommandFactory import MovementCommandFactory
 from domain.movement.MovementFactory import MovementFactory
-from domain.movement.Path import Path
-from domain.movement.Position import Position
+from domain.pathfinding.Path import Path
+from domain.Position import Position
 from infra.communication.motor_controller.StmMotorController import StmMotorController
 from service.movement.MovementService import MovementService
 

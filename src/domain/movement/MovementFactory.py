@@ -1,9 +1,9 @@
 from typing import List
 
 from domain.movement.Direction import Direction
-from domain.movement.Path import Path
+from domain.pathfinding.Path import Path
 from domain.movement.Movement import Movement
-from domain.movement.Position import Position
+from domain.Position import Position
 from domain.movement.Distance import Distance
 
 

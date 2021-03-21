@@ -1,8 +1,8 @@
 from unittest import TestCase
 
 from domain.exception.PositionNotAdjacentException import PositionNotAdjacentException
-from domain.movement.Path import Path
-from domain.movement.Position import Position
+from domain.pathfinding.Path import Path
+from domain.Position import Position
 
 
 class TestPath(TestCase):

@@ -17,8 +17,8 @@ from domain.movement.MovementCommandFactory import MovementCommandFactory
 from domain.movement.MovementFactory import MovementFactory
 from infra.communication.motor_controller.FakeMotorController import FakeMotorController
 from infra.communication.motor_controller.StmMotorController import StmMotorController
-from infra.communication.pub_sub.PubSubConnector import PubSubConnector
-from infra.communication.socket.ReqRepSocketConnector import ReqRepSocketConnector
+from infra.communication.station.ZmqPublisherConnector import ZmqPublisherConnector
+from infra.communication.station.ZmqReqRepConnector import ZmqReqRepConnector
 from infra.game.SlaveGameCycle import SlaveGameCycle
 from service.communication.CommunicationService import CommunicationService
 from service.game.StageHandlerSelector import StageHandlerSelector
@@ -73,17 +73,19 @@ class RobotContext:
 
     def _create_connectors(self):
         if self._local_flag:
-            game_cycle_connector = ReqRepSocketConnector(
+            game_cycle_connector = ZmqReqRepConnector(
                 SOCKET_LOCAL_BASE_ADDRESS + GAME_CYCLE_PORT
             )
-            pub_sub_connector = PubSubConnector(SOCKET_LOCAL_BASE_ADDRESS + PING_PORT)
-            return game_cycle_connector, pub_sub_connector
+            publisher_connector = ZmqPublisherConnector(
+                SOCKET_LOCAL_BASE_ADDRESS + PING_PORT
+            )
+            return game_cycle_connector, publisher_connector
 
-        game_cycle_connector = ReqRepSocketConnector(
+        game_cycle_connector = ZmqReqRepConnector(
             SOCKET_STATION_ADDRESS + GAME_CYCLE_PORT
         )
-        pub_sub_connector = PubSubConnector(SOCKET_STATION_ADDRESS + PING_PORT)
-        return game_cycle_connector, pub_sub_connector
+        publisher_connector = ZmqPublisherConnector(SOCKET_STATION_ADDRESS + PING_PORT)
+        return game_cycle_connector, publisher_connector
 
     def run(self):
         self.application_server.run()

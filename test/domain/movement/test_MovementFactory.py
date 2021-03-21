@@ -2,8 +2,8 @@ from unittest import TestCase
 
 from domain.movement.Direction import Direction
 from domain.movement.MovementFactory import MovementFactory
-from domain.movement.Path import Path
-from domain.movement.Position import Position
+from domain.pathfinding.Path import Path
+from domain.Position import Position
 from domain.movement.Distance import Distance
 
 
