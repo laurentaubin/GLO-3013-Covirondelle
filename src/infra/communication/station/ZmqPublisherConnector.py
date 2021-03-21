@@ -2,7 +2,7 @@ import time
 from threading import Lock
 import zmq
 
-from domain.communication.IPublisherConnector import IPublisherConnector
+from domain.communication.station.IPublisherConnector import IPublisherConnector
 
 
 class ZmqPublisherConnector(IPublisherConnector):

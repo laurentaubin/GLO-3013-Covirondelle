@@ -2,7 +2,7 @@ from typing import Any
 
 import zmq
 
-from domain.communication.IReqRepConnector import IReqRepConnector
+from domain.communication.station.IReqRepConnector import IReqRepConnector
 
 
 class ZmqReqRepConnector(IReqRepConnector):

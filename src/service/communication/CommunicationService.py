@@ -1,7 +1,7 @@
 from typing import Any
 
-from domain.communication.IPublisherConnector import IPublisherConnector
-from domain.communication.IReqRepConnector import IReqRepConnector
+from domain.communication.station.IPublisherConnector import IPublisherConnector
+from domain.communication.station.IReqRepConnector import IReqRepConnector
 
 
 class CommunicationService:

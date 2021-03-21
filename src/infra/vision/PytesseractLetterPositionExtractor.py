@@ -2,12 +2,12 @@ import cv2
 import pytesseract
 
 
-from src.domain.vision.ILetterPositionExtractor import ILetterPositionExtractor
-from src.infra.vision.CommandPannelPosition import CommandPannelPosition
-from src.config.config import TESSERACT_LOCATION
+from domain.vision.ILetterPositionExtractor import ILetterPositionExtractor
+from infra.vision.CommandPannelPosition import CommandPannelPosition
+from config.config import TESSERACT_LOCATION
 
 
-class PytesseractCommandPanelLetterPositionExtractor(ILetterPositionExtractor):
+class PytesseractLetterPositionExtractor(ILetterPositionExtractor):
     def __init__(self):
         self.extracted_letters = []
 
