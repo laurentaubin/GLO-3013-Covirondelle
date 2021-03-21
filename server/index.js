@@ -2,19 +2,27 @@ const express = require("express");
 const http = require("http");
 const socketIo = require("socket.io");
 const axios = require('axios')
+const path = require("path")
 
+
+const STATION_ENDPOINT_URL = "http://localhost:5000/information"
 const port = process.env.PORT || 4001;
-const router = require("./router.js");
 
 const app = express();
-app.use(router)
+app.use(express.static(path.join(__dirname, "..", "build")))
+app.use(express.static(path.join(__dirname, "..", "public")))
+
+
+app.use((req, res, next) => {
+  res.sendFile(path.join(__dirname, "..", "build", "index.html"));
+});
 
 const server = http.createServer(app);
 
 
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://localhost:4001",
     methods: ["GET", "POST"]
   }
 });
@@ -34,11 +42,11 @@ io.on("connection", (socket) => {
 });
 
 const getApiAndEmit = socket => {
-  axios.get("http://localhost:5000").then(function (response) {
-      socket.emit("FromAPI", response.data);
+  axios.get(STATION_ENDPOINT_URL).then(function (response) {
+      socket.emit("GameCycleUpdate", response.data);
     }
   ).catch(function (error) {
-    console.log(error);
+    console.log(`covirondelle-station webserver down: ${error.code}`);
   })
 };
 

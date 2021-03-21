@@ -7,7 +7,7 @@ import DataCard from "./DataCard";
 import PucksStepper from "./PucksStepper";
 import {AppContext} from "../context/context";
 import {io} from "socket.io-client";
-import {SERVER_ENDPOINT} from "../config/config"
+import {SERVER_ENDPOINT, UPDATE_EVENT} from "../config/config"
 import {ActionType} from "../context/reducer";
 
 
@@ -60,7 +60,7 @@ export const Dashboard = (props: any) => {
 
     useEffect(() => {
         const socket = io(SERVER_ENDPOINT);
-        socket.on("FromAPI", received_data => {
+        socket.on(UPDATE_EVENT, received_data => {
             dispatch({"type": ActionType.UPDATE_STATE, "payload": received_data})
         });
     }, []);

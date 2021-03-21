@@ -1,5 +1,5 @@
 {
-  "name": "untitled1",
+  "name": "covirondelle-interface",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -12,7 +12,7 @@
     "@types/node": "12.0.0",
     "@types/react": "17.0.0",
     "@types/react-dom": "17.0.0",
-    "cors": "^2.8.5",
+    "cors": "2.8.5",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-scripts": "4.0.2",
@@ -21,14 +21,16 @@
     "web-vitals": "1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "preinstall": "cd server && yarn install",
+    "start-client": "react-scripts start",
+    "start": "yarn run build && (cd server && yarn start)",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "coverage": "jest --coverage",
-    "eslint": "eslint --ext js,ts,tsx ..",
-    "eslint-quiet": "eslint --ext js,ts,tsx --quiet ..",
-    "eslint-fix": "eslint --ext js,ts,tsx --fix ..",
+    "eslint": "eslint --ext js,ts,tsx ",
+    "eslint-quiet": "eslint --ext js,ts,tsx --quiet ",
+    "eslint-fix": "eslint --ext js,ts,tsx --fix ",
     "check:ts": "tsc --noEmit"
   },
   "eslintConfig": {

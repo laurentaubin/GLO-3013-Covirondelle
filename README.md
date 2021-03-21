@@ -3,16 +3,21 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Before running any scripts
+You need to the run the following commands
+
+
 ## Available Scripts
 
 In the project directory, you can run:
 
 ### `yarn start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Builds the react app and serves the app through the node server.\
+Open [http://localhost:4001](http://localhost:4001) to view it in the browser.
 
-The page will reload if you make edits.\
+You don't need to restart the server if you make changes in the server/index.js, it will restart itself. \
+The page will reload if you make edits in the react app.\
 You will also see any lint errors in the console.
 
 ### `yarn test`
