@@ -40,6 +40,7 @@ class DataCard extends Component<AllProps> {
     public render() {
         const {classes} = this.props;
         const {title, value, unit} = this.props;
+
         return (
             <div className={classes.root}>
                         <Typography gutterBottom variant="h5" component="h2">

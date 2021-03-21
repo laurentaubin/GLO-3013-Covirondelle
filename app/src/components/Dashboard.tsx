@@ -1,10 +1,15 @@
 import {Grid, Paper, Theme} from '@material-ui/core';
 import {createStyles, withStyles, WithStyles} from '@material-ui/core/styles';
-import React, {Component} from 'react';
+import React, {useContext, useEffect} from 'react';
 import RobotStepper from "./RobotStepper";
 import StateCard from "./StateCard";
 import DataCard from "./DataCard";
 import PucksStepper from "./PucksStepper";
+import {AppContext} from "../context/context";
+import {io} from "socket.io-client";
+import {SERVER_ENDPOINT} from "../config/config"
+import {ActionType} from "../context/reducer";
+
 
 const styles = (theme: Theme) => createStyles({
     root: {
@@ -25,7 +30,6 @@ const styles = (theme: Theme) => createStyles({
     },
 });
 
-type Props = {};
 // TODO: make sure everything is there
 // Etape du cycle de jeu en cours DONE
 // Liste des étapes du jeu complétées DONE
@@ -50,20 +54,27 @@ type Props = {};
 // chronographe, mesurant le temps qui s’écoule pendant l’exécution de la tâche, est mis
 // en marche
 
-type AllProps = Props & WithStyles<typeof styles>;
+export const Dashboard = (props: any) => {
+    const {classes} = props
+    const {state, dispatch} = useContext(AppContext);
 
-class Dashboard extends Component<AllProps> {
+    useEffect(() => {
+        const socket = io(SERVER_ENDPOINT);
+        socket.on("FromAPI", received_data => {
+            dispatch({"type": ActionType.UPDATE_STATE, "payload": received_data})
+        });
+    }, []);
 
-    public render() {
-        const {classes} = this.props;
-        return (
+    return (
+        <>
+            {state.tableImage ? <img src={`data:image/jpeg;base64,${state.tableImage}`} alt={""}/> : ""}
             <div className={classes.root}>
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={4}>
                         <Paper className={classes.smallPaper}>
                             <DataCard
                                 title={'Charge électrique de la batterie'}
-                                value={0.0}
+                                value={state.batteryConsumption ? state.batteryConsumption : 0}
                                 unit={'Watt'}
                             />
                         </Paper>
@@ -72,7 +83,7 @@ class Dashboard extends Component<AllProps> {
                         <Paper className={classes.smallPaper}>
                             <DataCard
                                 title={'Consommation électrique du robot'}
-                                value={0.0}
+                                value={state.batteryConsumption ? state.batteryConsumption : 0}
                                 unit={'Watt'}
                             />
                         </Paper>
@@ -81,7 +92,7 @@ class Dashboard extends Component<AllProps> {
                         <Paper className={classes.smallPaper}>
                             <DataCard
                                 title={'Temps restant à la batterie'}
-                                value={0}
+                                value={state.batteryConsumption ? state.batteryConsumption : 0}
                                 unit={'secondes'}
                             />
                         </Paper>
@@ -89,7 +100,7 @@ class Dashboard extends Component<AllProps> {
                     <Grid item xs={12}>
                         <Paper className={classes.smallPaper}>
                             <PucksStepper
-                                steps={['rouge', 'orange', 'magenta', 'vert']}
+                                steps={state.puckColors ? state.puckColors: []}
                                 activeStep={1}
                             />
                         </Paper>
@@ -121,8 +132,8 @@ class Dashboard extends Component<AllProps> {
                     activeStep={7}
                 />
             </div>
-        );
-    }
+        </>
+    )
 }
 
 const componentWithStyles = withStyles(styles)(Dashboard);

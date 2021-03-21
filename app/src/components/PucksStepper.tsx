@@ -64,8 +64,8 @@ class RobotStepper extends Component<AllProps> {
                     {steps.map((puck) => (
                         <Step key={puck}>
                             <StepLabel>{puck}</StepLabel>
-                            <div className={classes.circle} style={{backgroundColor: getStepColor(puck)}}></div>
-                            <Typography style={{backgroundColor: getStepColor(puck)}}></Typography>
+                            <div className={classes.circle} style={{backgroundColor: getStepColor(puck)}} />
+                            <Typography style={{backgroundColor: getStepColor(puck)}} />
                         </Step>
                     ))}
                 </Stepper>
