@@ -19,9 +19,16 @@ from config.config import (
     HORIZONTAL_ANGLE_RANGE,
     VERTICAL_ANGLE_RANGE,
     MAESTRO_POLULU_PORT_NAME,
+    PUCK_ALIGNMENT_X_CENTER_POSITION,
+    PUCK_ALIGNMENT_Y_CENTER_POSITION,
+    PUCK_ALIGNMENT_THRESHOLD,
 )
+from domain.Position import Position
+from domain.alignment.IAlignmentCorrector import IAlignmentCorrector
 from domain.movement.MovementCommandFactory import MovementCommandFactory
 from domain.movement.MovementFactory import MovementFactory
+from domain.vision.IPuckDetector import IPuckDetector
+from infra.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
 from infra.communication.camera.IServoController import IServoController
 from infra.communication.camera.MaestroController import MaestroController
 from infra.communication.camera.MaestroEmbeddedCamera import MaestroEmbeddedCamera
@@ -49,6 +56,12 @@ from service.vision.VisionService import VisionService
 class RobotContext:
     def __init__(self, local_flag):
         self._local_flag = local_flag
+
+        # TODO à changer pour la bonne implémentation
+        self._puck_detector = IPuckDetector()
+        self._puck_alignment_corrector = self._create_puck_alignment_corrector(
+            self._puck_detector
+        )
 
         self._communication_service = self._create_communication_service()
         self._movement_service = self._create_movement_service()
@@ -156,3 +169,13 @@ class RobotContext:
     def _configure_maestro_channel(self, maestro, channel_id):
         maestro.setSpeed(channel_id, SERVO_SPEED)
         maestro.setAccel(channel_id, SERVO_ACCELERATION)
+
+    def _create_puck_alignment_corrector(
+        self, puck_detector: IPuckDetector
+    ) -> IAlignmentCorrector:
+        puck_center_position = Position(
+            PUCK_ALIGNMENT_X_CENTER_POSITION, PUCK_ALIGNMENT_Y_CENTER_POSITION
+        )
+        return PuckAlignmentCorrector(
+            puck_center_position, PUCK_ALIGNMENT_THRESHOLD, puck_detector
+        )
