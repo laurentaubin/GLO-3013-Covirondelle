@@ -6,7 +6,7 @@ import numpy as np
 
 from application.dto.GameStateDto import GameStateDto
 from domain.Position import Position
-from domain.ResistanceColor import ResistanceColor
+from domain.Color import Color
 from domain.RobotPose import RobotPose
 from domain.StartingZoneCorner import StartingZoneCorner
 from domain.game.GameState import GameState
@@ -46,14 +46,14 @@ class GameStateDtoAssembler:
             battery_consumption,
         )
 
-    def _get_puck_colors(self, puck_colors: List[ResistanceColor]) -> List[str]:
+    def _get_puck_colors(self, puck_colors: List[Color]) -> List[str]:
         return (
             [puck_color.value for puck_color in puck_colors]
             if puck_colors is not None
             else self.EMPTY_ARRAY
         )
 
-    def _get_current_colors(self, current_puck: ResistanceColor) -> str:
+    def _get_current_colors(self, current_puck: Color) -> str:
         return current_puck.value if current_puck is not None else self.EMPTY_ARRAY
 
     def _get_current_stage(self, current_stage: Stage) -> str:

@@ -3,7 +3,7 @@ from typing import List
 import numpy as np
 
 from domain.GameTable import GameTable
-from domain.ResistanceColor import ResistanceColor
+from domain.Color import Color
 from domain.RobotPose import RobotPose
 from domain.StartingZoneCorner import StartingZoneCorner
 from domain.game.Stage import Stage
@@ -17,8 +17,8 @@ class GameState:
             GameState.__instance__ = self
         else:
             raise Exception("You cannot create another GameState class")
-        self._puck_colors: List[ResistanceColor] = None
-        self._current_puck: ResistanceColor = None
+        self._puck_colors: List[Color] = None
+        self._current_puck: Color = None
         self._current_stage: Stage = None
         self._prehensor_state: int = None
         self._starting_zone_corner_order: List[StartingZoneCorner] = None
@@ -33,16 +33,16 @@ class GameState:
             GameState()
         return GameState.__instance__
 
-    def get_puck_colors(self) -> List[ResistanceColor]:
+    def get_puck_colors(self) -> List[Color]:
         return self._puck_colors
 
-    def set_puck_colors(self, puck_colors: List[ResistanceColor]) -> None:
+    def set_puck_colors(self, puck_colors: List[Color]) -> None:
         self._puck_colors = puck_colors
 
-    def get_current_puck(self) -> ResistanceColor:
+    def get_current_puck(self) -> Color:
         return self._current_puck
 
-    def set_current_puck(self, current_puck: ResistanceColor) -> None:
+    def set_current_puck(self, current_puck: Color) -> None:
         self._current_puck = current_puck
 
     def get_current_stage(self) -> Stage:

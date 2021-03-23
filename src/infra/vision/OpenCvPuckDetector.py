@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 from domain.Position import Position
-from domain.HsvValue import HsvValue
+from domain.Color import Color
 from domain.vision.IPuckDetector import IPuckDetector
 from infra.exception import PuckCenterNotFound
 from infra.utils.VisionUtils import VisionUtils
@@ -11,7 +11,7 @@ MINIMUM_AREA = 800
 
 
 class OpenCvPuckDetector(IPuckDetector):
-    def detect(self, image, color: HsvValue) -> Position:
+    def detect(self, image, color: Color) -> Position:
         mask = self._prepare_mask(image, color)
         contours, hierarchy = cv2.findContours(
             mask, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE
@@ -47,7 +47,7 @@ class OpenCvPuckDetector(IPuckDetector):
 
     def _prepare_mask(self, image, color):
         frame_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-        hsv_bounds = self._get_hsv_bounds(color)
+        hsv_bounds = color.get_hsv_bounds()
         lower_hsv = np.array(hsv_bounds[0])
         upper_hsv = np.array(hsv_bounds[1])
         mask = cv2.inRange(frame_hsv, lower_hsv, upper_hsv)
@@ -78,9 +78,3 @@ class OpenCvPuckDetector(IPuckDetector):
             cv2.BORDER_REFLECT101,
         )
         return mask
-
-    def _get_hsv_bounds(self, color):
-        lower_hsv = HsvValue.get_lower_bound(color)
-        upper_hsv = HsvValue.get_upper_bound(color)
-
-        return lower_hsv, upper_hsv
