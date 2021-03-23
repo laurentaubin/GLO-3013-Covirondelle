@@ -10,11 +10,9 @@ class TestVisionService(TestCase):
     def setUp(self) -> None:
         self.embedded_camera = MagicMock()
         self.letter_position_extractor = MagicMock()
-        self.robot_embedded_camera = MagicMock()
         self.vision_service = VisionService(
             self.embedded_camera,
             self.letter_position_extractor,
-            self.robot_embedded_camera,
         )
 
     def test_givenAnAngle_whenRotateCameraHorizontally_thenCameraIsRotated(self):
@@ -30,4 +28,4 @@ class TestVisionService(TestCase):
     def test_givenIndex_whenTakeImage_thenImageTaken(self):
         self.vision_service.take_image()
 
-        self.robot_embedded_camera.take_image.assert_called()
+        self.embedded_camera.take_image.assert_called()

@@ -28,6 +28,7 @@ from config.config import (
     PUCK_ALIGNMENT_X_CENTER_POSITION,
     PUCK_ALIGNMENT_Y_CENTER_POSITION,
     PUCK_ALIGNMENT_THRESHOLD,
+    CAMERA_INDEX,
 )
 from domain.Position import Position
 from domain.alignment.IAlignmentCorrector import IAlignmentCorrector
@@ -35,7 +36,6 @@ from domain.movement.MovementCommandFactory import MovementCommandFactory
 from domain.movement.MovementFactory import MovementFactory
 from infra.IServoController import IServoController
 from infra.MaestroController import MaestroController
-from infra.camera.MaestroEmbeddedCamera import MaestroEmbeddedCamera
 from infra.gripper.MaestroGripper import MaestroGripper
 from infra.motor_controller.FakeMotorController import FakeMotorController
 from infra.motor_controller.StmMotorController import StmMotorController
@@ -168,7 +168,8 @@ class RobotContext:
 
     def _create_vision_service(self):
 
-        embedded_camera = MaestroEmbeddedCamera(
+        embedded_camera = OpenCvEmbeddedCamera(
+            CAMERA_INDEX,
             self._maestro,
             CAMERA_HORIZONTAL_SERVO_ID,
             CAMERA_VERTICAL_SERVO_ID,
@@ -177,11 +178,7 @@ class RobotContext:
         )
         letter_position_detector = PytesseractLetterPositionExtractor()
 
-        robot_embedded_camera = OpenCvEmbeddedCamera(0)
-
-        return VisionService(
-            embedded_camera, letter_position_detector, robot_embedded_camera
-        )
+        return VisionService(embedded_camera, letter_position_detector)
 
     def _create_gripper_service(self):
         gripper = MaestroGripper(

@@ -10,9 +10,10 @@ from config.config import (
     CAMERA_VERTICAL_SERVO_ID,
     HORIZONTAL_ANGLE_RANGE,
     VERTICAL_ANGLE_RANGE,
+    CAMERA_INDEX,
 )
 from infra.MaestroController import MaestroController
-from infra.camera.MaestroEmbeddedCamera import MaestroEmbeddedCamera
+from infra.camera.OpenCvEmbeddedCamera import OpenCvEmbeddedCamera
 from service.vision.VisionService import VisionService
 
 
@@ -28,7 +29,8 @@ if __name__ == "__main__":
     configure_maestro_channel(maestro, GRIPPER_VERTICAL_SERVO_ID)
     configure_maestro_channel(maestro, CAMERA_HORIZONTAL_SERVO_ID)
     configure_maestro_channel(maestro, CAMERA_VERTICAL_SERVO_ID)
-    embedded_camera = MaestroEmbeddedCamera(
+    embedded_camera = OpenCvEmbeddedCamera(
+        CAMERA_INDEX,
         maestro,
         CAMERA_HORIZONTAL_SERVO_ID,
         CAMERA_VERTICAL_SERVO_ID,
