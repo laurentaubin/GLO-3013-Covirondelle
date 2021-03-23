@@ -3,7 +3,7 @@ from typing import List
 
 from serial import Serial, time
 
-from domain.communication.IMotorController import IMotorController
+from domain.IMotorController import IMotorController
 from domain.movement.Movement import Movement
 from domain.movement.MovementCommand import MovementCommand
 from domain.movement.MovementCommandFactory import MovementCommandFactory

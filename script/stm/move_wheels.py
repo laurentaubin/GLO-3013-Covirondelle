@@ -11,7 +11,7 @@ from domain.movement.MovementCommandFactory import MovementCommandFactory
 from domain.movement.MovementFactory import MovementFactory
 from domain.pathfinding.Path import Path
 from domain.Position import Position
-from infra.communication.motor_controller.StmMotorController import StmMotorController
+from infra.motor_controller import StmMotorController
 from service.movement.MovementService import MovementService
 
 if __name__ == "__main__":

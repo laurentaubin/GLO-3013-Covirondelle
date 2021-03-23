@@ -1,7 +1,7 @@
 from typing import Tuple
 
-from domain.communication.IEmbeddedCamera import IEmbeddedCamera
-from infra.communication.camera import MaestroController
+from domain.IEmbeddedCamera import IEmbeddedCamera
+from infra import MaestroController
 
 
 class MaestroEmbeddedCamera(IEmbeddedCamera):

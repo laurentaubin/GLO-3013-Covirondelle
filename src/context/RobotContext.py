@@ -12,13 +12,19 @@ from config.config import (
     SERVOING_CONSTANT,
     BASE_COMMAND_DURATION,
     SOCKET_LOCAL_BASE_ADDRESS,
-    HORIZONTAL_SERVO_ID,
-    VERTICAL_SERVO_ID,
+    CAMERA_HORIZONTAL_SERVO_ID,
+    CAMERA_VERTICAL_SERVO_ID,
     SERVO_SPEED,
     SERVO_ACCELERATION,
     HORIZONTAL_ANGLE_RANGE,
     VERTICAL_ANGLE_RANGE,
     MAESTRO_POLULU_PORT_NAME,
+    GRIPPER_HORIZONTAL_SERVO_ID,
+    GRIPPER_VERTICAL_SERVO_ID,
+    OPEN_GRIPPER_TARGET,
+    CLOSE_GRIPPER_TARGET,
+    MOVE_GRIPPER_UP_TARGET,
+    MOVE_GRIPPER_DOWN_TARGET,
     PUCK_ALIGNMENT_X_CENTER_POSITION,
     PUCK_ALIGNMENT_Y_CENTER_POSITION,
     PUCK_ALIGNMENT_THRESHOLD,
@@ -27,13 +33,14 @@ from domain.Position import Position
 from domain.alignment.IAlignmentCorrector import IAlignmentCorrector
 from domain.movement.MovementCommandFactory import MovementCommandFactory
 from domain.movement.MovementFactory import MovementFactory
+from infra.IServoController import IServoController
+from infra.MaestroController import MaestroController
+from infra.camera.MaestroEmbeddedCamera import MaestroEmbeddedCamera
+from infra.gripper.MaestroGripper import MaestroGripper
+from infra.motor_controller.FakeMotorController import FakeMotorController
+from infra.motor_controller.StmMotorController import StmMotorController
 from domain.vision.IPuckDetector import IPuckDetector
 from infra.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
-from infra.communication.camera.IServoController import IServoController
-from infra.communication.camera.MaestroController import MaestroController
-from infra.communication.camera.MaestroEmbeddedCamera import MaestroEmbeddedCamera
-from infra.communication.motor_controller.FakeMotorController import FakeMotorController
-from infra.communication.motor_controller.StmMotorController import StmMotorController
 from infra.communication.station.ZmqPublisherConnector import ZmqPublisherConnector
 from infra.communication.station.ZmqReqRepConnector import ZmqReqRepConnector
 from infra.game.SlaveGameCycle import SlaveGameCycle
@@ -43,6 +50,7 @@ from infra.vision.PytesseractLetterPositionExtractor import (
 from service.communication.CommunicationService import CommunicationService
 from service.game.StageHandlerSelector import StageHandlerSelector
 from service.game.StageService import StageService
+from service.gripper.GripperService import GripperService
 from service.handler.FindCommandPanelHandler import FindCommandPanelHandler
 from service.handler.GoParkHandler import GoParkHandler
 from service.handler.GoToOhmmeterHandler import GoToOhmmeterHandler
@@ -65,7 +73,9 @@ class RobotContext:
 
         self._communication_service = self._create_communication_service()
         self._movement_service = self._create_movement_service()
+        self._maestro = self._create_and_configure_maestro()
         self._vision_service = self._create_vision_service()
+        self._gripper_service = self._create_gripper_service()
 
         self.stage_service = self._create_stage_service()
         self.slave_game_cycle = SlaveGameCycle(
@@ -132,7 +142,9 @@ class RobotContext:
             ResistanceService(),
         )
         find_command_panel_handler = FindCommandPanelHandler()
-        transport_puck_handler = TransportPuckHandler()
+        transport_puck_handler = TransportPuckHandler(
+            self._vision_service, self._movement_service
+        )
         go_park_handler = GoParkHandler()
         stop_handler = StopHandler()
 
@@ -144,21 +156,40 @@ class RobotContext:
             stop_handler,
         )
 
-    def _create_vision_service(self):
+    def _create_and_configure_maestro(self):
         maestro = self._create_servo_controller()
-        self._configure_maestro_channel(maestro, HORIZONTAL_SERVO_ID)
-        self._configure_maestro_channel(maestro, VERTICAL_SERVO_ID)
+        self._configure_maestro_channel(maestro, GRIPPER_HORIZONTAL_SERVO_ID)
+        self._configure_maestro_channel(maestro, GRIPPER_VERTICAL_SERVO_ID)
+        self._configure_maestro_channel(maestro, CAMERA_HORIZONTAL_SERVO_ID)
+        self._configure_maestro_channel(maestro, CAMERA_VERTICAL_SERVO_ID)
+
+        return maestro
+
+    def _create_vision_service(self):
 
         embedded_camera = MaestroEmbeddedCamera(
-            maestro,
-            HORIZONTAL_SERVO_ID,
-            VERTICAL_SERVO_ID,
+            self._maestro,
+            CAMERA_HORIZONTAL_SERVO_ID,
+            CAMERA_VERTICAL_SERVO_ID,
             HORIZONTAL_ANGLE_RANGE,
             VERTICAL_ANGLE_RANGE,
         )
         letter_position_detector = PytesseractLetterPositionExtractor()
 
         return VisionService(embedded_camera, letter_position_detector)
+
+    def _create_gripper_service(self):
+        gripper = MaestroGripper(
+            self._maestro,
+            GRIPPER_HORIZONTAL_SERVO_ID,
+            GRIPPER_VERTICAL_SERVO_ID,
+            OPEN_GRIPPER_TARGET,
+            CLOSE_GRIPPER_TARGET,
+            MOVE_GRIPPER_UP_TARGET,
+            MOVE_GRIPPER_DOWN_TARGET,
+        )
+
+        return GripperService(gripper)
 
     def _create_servo_controller(self):
         if self._local_flag:

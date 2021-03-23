@@ -1,4 +1,4 @@
-from domain.communication.IEmbeddedCamera import IEmbeddedCamera
+from domain.IEmbeddedCamera import IEmbeddedCamera
 from domain.vision.ILetterPositionExtractor import ILetterPositionExtractor
 
 

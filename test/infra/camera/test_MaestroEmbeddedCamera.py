@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import MagicMock
 
-from infra.communication.camera.MaestroEmbeddedCamera import MaestroEmbeddedCamera
+from infra.camera.MaestroEmbeddedCamera import MaestroEmbeddedCamera
 
 
 class TestMaestroEmbeddedCamera(TestCase):

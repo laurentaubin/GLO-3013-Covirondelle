@@ -5,8 +5,8 @@ from config.config import (
     MIN_HORIZONTAL_ANGLE_VALUE,
     MAX_VERTICAL_ANGLE_VALUE,
     MIN_VERTICAL_ANGLE_VALUE,
-    HORIZONTAL_SERVO_ID,
-    VERTICAL_SERVO_ID,
+    CAMERA_HORIZONTAL_SERVO_ID,
+    CAMERA_VERTICAL_SERVO_ID,
 )
 
 
@@ -16,10 +16,10 @@ class CameraControl:
 
         self.horizontalAngle = 90
         self.verticalAngle = 90
-        self.maestro.setSpeed(HORIZONTAL_SERVO_ID, SERVO_SPEED)
-        self.maestro.setSpeed(VERTICAL_SERVO_ID, SERVO_SPEED)
-        self.maestro.setAccel(HORIZONTAL_SERVO_ID, SERVO_ACCELERATION)
-        self.maestro.setAccel(VERTICAL_SERVO_ID, SERVO_ACCELERATION)
+        self.maestro.setSpeed(CAMERA_HORIZONTAL_SERVO_ID, SERVO_SPEED)
+        self.maestro.setSpeed(CAMERA_VERTICAL_SERVO_ID, SERVO_SPEED)
+        self.maestro.setAccel(CAMERA_HORIZONTAL_SERVO_ID, SERVO_ACCELERATION)
+        self.maestro.setAccel(CAMERA_VERTICAL_SERVO_ID, SERVO_ACCELERATION)
 
         self.set_horizontal_angle(self.horizontalAngle)
 
@@ -29,7 +29,7 @@ class CameraControl:
             angle / 360 * (MAX_HORIZONTAL_ANGLE_VALUE - MIN_HORIZONTAL_ANGLE_VALUE)
             + MIN_HORIZONTAL_ANGLE_VALUE
         )
-        self.maestro.setTarget(HORIZONTAL_SERVO_ID, conversion)
+        self.maestro.setTarget(CAMERA_HORIZONTAL_SERVO_ID, conversion)
 
     def set_vertical_angle(self, angle):
         self.verticalAngle = angle
@@ -37,7 +37,7 @@ class CameraControl:
             angle / 360 * (MAX_VERTICAL_ANGLE_VALUE - MIN_VERTICAL_ANGLE_VALUE)
             + MIN_VERTICAL_ANGLE_VALUE
         )
-        self.maestro.setTarget(VERTICAL_SERVO_ID, conversion)
+        self.maestro.setTarget(CAMERA_VERTICAL_SERVO_ID, conversion)
 
     def get_horizontal_angle(self):
         return self.horizontalAngle

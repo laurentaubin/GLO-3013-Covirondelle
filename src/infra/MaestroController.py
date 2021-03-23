@@ -2,7 +2,7 @@
 import serial
 from sys import version_info
 
-from infra.communication.camera.IServoController import IServoController
+from infra.IServoController import IServoController
 
 PY2 = version_info[0] == 2  # Running Python 2.x?
 
@@ -34,7 +34,7 @@ class MaestroController(IServoController):
     # assumes.  If two or more controllers are connected to different serial
     # ports, or you are using a Windows OS, you can provide the tty port.  For
     # example, '/dev/ttyACM2' or for Windows, something like 'COM3'.
-    def __init__(self, ttyStr="/dev/ttyACM0", device=0x0C):
+    def __init__(self, ttyStr, device=0x0C):
         # Open the command port
         self.usb = serial.Serial(ttyStr)
         # Command lead-in and device number are sent for each Pololu serial command.
