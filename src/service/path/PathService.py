@@ -1,3 +1,4 @@
+from config.config import DEFAULT_OHMMETER_POSITION
 from domain.GameTable import GameTable
 from domain.Position import Position
 from domain.StartingZoneCorner import StartingZoneCorner
@@ -37,3 +38,9 @@ class PathService:
 
     def set_first_corner_letter(self, corner_letter: StartingZoneCorner):
         self._current_corner_letter = corner_letter
+
+    def find_path_to_ohmmeter(self, robot_position: Position) -> Path:
+        return self._shortest_path_algorithm.find_shortest_path(
+            robot_position,
+            Position(DEFAULT_OHMMETER_POSITION[0], DEFAULT_OHMMETER_POSITION[1]),
+        )

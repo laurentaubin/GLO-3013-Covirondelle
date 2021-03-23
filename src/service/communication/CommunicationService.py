@@ -22,8 +22,8 @@ class CommunicationService:
     def send_game_cycle_response(self, message):
         self._game_cycle_connector.send_message(message)
 
-    def send_object(self, path: Any):
-        self._game_cycle_connector.send_object(path)
+    def send_object(self, obj: Any):
+        self._game_cycle_connector.send_object(obj)
 
     def receive_object(self):
         return self._game_cycle_connector.receive_object()

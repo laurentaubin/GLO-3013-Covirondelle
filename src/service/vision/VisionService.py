@@ -32,7 +32,7 @@ class VisionService:
         self._robot_detector = robot_detector
 
     def find_robot_position(self, image) -> Position:
-        pass
+        return self._robot_detector.detect(image)
 
     def create_game_table(self) -> GameTable:
         table_image = self._get_calibrated_table_image(self._world_image)
@@ -44,7 +44,7 @@ class VisionService:
 
     def get_vision_state(self):
         world_image = self._world_camera.take_world_image()
-        robot_pose = self._robot_detector.detect(world_image)
+        robot_pose = self.find_robot_position(world_image)
         return world_image, robot_pose
 
     def _find_starting_zone(self, table_image) -> StartingZone:

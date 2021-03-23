@@ -7,6 +7,7 @@ from domain.Color import Color
 from domain.RobotPose import RobotPose
 from domain.StartingZoneCorner import StartingZoneCorner
 from domain.game.Stage import Stage
+from resistance.Resistance import Resistance
 
 
 class GameState:
@@ -26,6 +27,7 @@ class GameState:
         self._table_image: np.array = None
         self._battery_consumption: float = None
         self._game_table: GameTable = None
+        self._resistance_value: Resistance = None
 
     @staticmethod
     def get_instance():
@@ -88,3 +90,9 @@ class GameState:
 
     def set_game_table(self, game_table: GameTable) -> None:
         self._game_table = game_table
+
+    def get_resistance_value(self) -> Resistance:
+        return self._resistance_value
+
+    def set_resistance_value(self, value: Resistance):
+        self._resistance_value = value
