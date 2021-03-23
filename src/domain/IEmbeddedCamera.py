@@ -4,3 +4,6 @@ class IEmbeddedCamera:
 
     def rotate_vertically(self, degree: float) -> None:
         pass
+
+    def take_image(self):
+        pass

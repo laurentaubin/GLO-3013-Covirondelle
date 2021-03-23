@@ -47,6 +47,7 @@ from infra.game.SlaveGameCycle import SlaveGameCycle
 from infra.vision.PytesseractLetterPositionExtractor import (
     PytesseractLetterPositionExtractor,
 )
+from infra.camera.OpenCvEmbeddedCamera import OpenCvEmbeddedCamera
 from service.communication.CommunicationService import CommunicationService
 from service.game.StageHandlerSelector import StageHandlerSelector
 from service.game.StageService import StageService
@@ -176,7 +177,11 @@ class RobotContext:
         )
         letter_position_detector = PytesseractLetterPositionExtractor()
 
-        return VisionService(embedded_camera, letter_position_detector)
+        robot_embedded_camera = OpenCvEmbeddedCamera(0)
+
+        return VisionService(
+            embedded_camera, letter_position_detector, robot_embedded_camera
+        )
 
     def _create_gripper_service(self):
         gripper = MaestroGripper(
