@@ -1,0 +1,7 @@
+image-0.jpg:
+    Avant 7.5 cm
+image-1.jpg:
+    Avant 8.5 cm
+    Droite: 8.5 cm
+image-2.jpg:
+    Avant: 6 cm
