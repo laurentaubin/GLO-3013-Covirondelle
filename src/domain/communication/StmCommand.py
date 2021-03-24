@@ -1,0 +1,16 @@
+from enum import IntEnum
+
+
+class StmCommand(IntEnum):
+
+    MOTOR_STOP = 0
+    MOTOR_FORWARD = 1
+    MOTOR_BACKWARD = 2
+    MOTOR_RIGHT = 3
+    MOTOR_LEFT = 4
+    MOTOR_TURN_CLOCKWISE = 5
+    MOTOR_TURN_COUNTER_CLOCKWISE = 6
+    READ_RESISTANCE = 7
+    ASK_CURRENT = 8
+    ASK_VOLTAGE = 9
+    ASK_POWER = 10

@@ -32,10 +32,14 @@ from config.config import (
 )
 from domain.Position import Position
 from domain.alignment.IAlignmentCorrector import IAlignmentCorrector
+from domain.communication.IRobotInformation import IRobotInformation
 from domain.movement.MovementCommandFactory import MovementCommandFactory
 from domain.movement.MovementFactory import MovementFactory
 from infra.IServoController import IServoController
 from infra.MaestroController import MaestroController
+from infra.communication.robot_information.StmRobotInformation import (
+    StmRobotInformation,
+)
 from infra.gripper.MaestroGripper import MaestroGripper
 from infra.motor_controller.FakeMotorController import FakeMotorController
 from infra.motor_controller.StmMotorController import StmMotorController
@@ -72,6 +76,9 @@ class RobotContext:
             self._puck_detector
         )
 
+        if not self._local_flag:
+            self._serial = serial.Serial(port=STM_PORT_NAME, baudrate=STM_BAUD_RATE)
+
         self._communication_service = self._create_communication_service()
         self._movement_service = self._create_movement_service()
         self._maestro = self._create_and_configure_maestro()
@@ -91,7 +98,15 @@ class RobotContext:
 
     def _create_communication_service(self):
         game_cycle_connector, pub_sub_connector = self._create_connectors()
-        return CommunicationService(game_cycle_connector, pub_sub_connector)
+        robot_information = self._create_robot_information()
+        return CommunicationService(
+            game_cycle_connector, pub_sub_connector, robot_information
+        )
+
+    def _create_robot_information(self):
+        if self._local_flag:
+            return IRobotInformation()
+        return StmRobotInformation(self._serial)
 
     def _create_movement_service(self):
         movement_command_factory = MovementCommandFactory(
@@ -108,7 +123,7 @@ class RobotContext:
             return FakeMotorController()
 
         return StmMotorController(
-            serial.Serial(port=STM_PORT_NAME, baudrate=STM_BAUD_RATE),
+            self._serial,
             movement_command_factory,
         )
 

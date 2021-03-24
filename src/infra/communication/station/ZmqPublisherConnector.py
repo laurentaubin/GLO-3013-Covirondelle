@@ -1,4 +1,3 @@
-import time
 from threading import Lock
 import zmq
 
@@ -13,14 +12,16 @@ class ZmqPublisherConnector(IPublisherConnector):
         self.lock = Lock()
 
     def publish_message(self, message: str) -> None:
-        while True:
-            topic = "ping"
-            message_data = "Ping pong"
-            # self._print_data_to_send(topic, message_data)
-            self._ping_socket.send_string("%s %s" % (topic, message_data))
-            time.sleep(1)
+        topic = "ping"
+        message_data = "Ping pong"
+        # self._print_data_to_send(topic, message_data)
+        self._ping_socket.send_string("%s %s" % (topic, message_data))
 
     def _print_data_to_send(self, topic, data):
         self.lock.acquire()
         print("%s %s" % (topic, data))
         self.lock.release()
+
+    def publish_gripper_status(self, gripper_status):
+        topic = "gripper_status"
+        self._ping_socket.send_string("%s %s" % (topic, str(gripper_status)))
