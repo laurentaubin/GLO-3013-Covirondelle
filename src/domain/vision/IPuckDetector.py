@@ -1,9 +1,9 @@
 import numpy as np
 
 from domain.Position import Position
-from domain.resistance.ResistanceColor import ResistanceColor
+from domain.vision.Color import Color
 
 
 class IPuckDetector:
-    def detect(self, image: np.ndarray, puck_color: ResistanceColor) -> Position:
+    def detect(self, image: np.ndarray, puck_color: Color) -> Position:
         pass
