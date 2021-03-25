@@ -1,6 +1,7 @@
-import time
-
 from domain.game.IStageHandler import IStageHandler
+from domain.game.Stage import Stage
+from domain.pathfinding.Path import Path
+from domain.resistance.Resistance import Resistance
 from service.communication.CommunicationService import CommunicationService
 from service.movement.MovementService import MovementService
 from service.resistance.ResistanceService import ResistanceService
@@ -13,10 +14,27 @@ class GoToOhmmeterHandler(IStageHandler):
         movement_service: MovementService,
         resistance_service: ResistanceService,
     ):
-        self.communication_service = communication_service
-        self.movement_service = movement_service
-        self.resistance_service = resistance_service
+        self._communication_service = communication_service
+        self._movement_service = movement_service
+        self._resistance_service = resistance_service
 
     def execute(self):
-        print("In GoToOhmmeterHandler, doing stuff, waiting 3 sec")
-        time.sleep(3)
+        self._communication_service.send_game_cycle_message(Stage.GO_TO_OHMMETER.value)
+
+        path: Path = self._communication_service.receive_object()
+        self._movement_service.move(path)
+        resistance_value: Resistance = (
+            self._resistance_service.take_resistance_measurement()
+        )
+        self._communication_service.send_object(resistance_value)
+
+        self._route_station_response()
+        self._communication_service.send_game_cycle_message(Stage.STAGE_COMPLETED.value)
+
+    def _route_station_response(self):
+        game_cycle = self._communication_service.receive_game_cycle_message()
+
+        if game_cycle == Stage.STAGE_COMPLETED.value:
+            pass
+        else:
+            print("whoops")

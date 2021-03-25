@@ -45,9 +45,6 @@ class SlaveGameCycle(IGameCycle):
                 print("Starting go_to_ohmmeter stage")
                 try:
                     self.stage_service.execute(Stage.GO_TO_OHMMETER)
-                    self.communication_service.send_game_cycle_message(
-                        Stage.STAGE_COMPLETED.value
-                    )
                     break
                 except RuntimeError:
                     pass
