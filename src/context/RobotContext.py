@@ -114,17 +114,18 @@ class RobotContext:
             SERVOING_CONSTANT,
             BASE_COMMAND_DURATION,
         )
-        motor_controller = self._create_motor_controller(movement_command_factory)
+        motor_controller = self._create_motor_controller()
         movement_factory = MovementFactory()
-        return MovementService(movement_factory, motor_controller)
+        return MovementService(
+            movement_factory, movement_command_factory, motor_controller
+        )
 
-    def _create_motor_controller(self, movement_command_factory):
+    def _create_motor_controller(self):
         if self._local_flag:
             return FakeMotorController()
 
         return StmMotorController(
             self._serial,
-            movement_command_factory,
         )
 
     def _create_connectors(self):

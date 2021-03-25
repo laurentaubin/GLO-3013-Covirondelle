@@ -4,26 +4,14 @@ from typing import List
 from serial import Serial, time
 
 from domain.IMotorController import IMotorController
-from domain.movement.Movement import Movement
 from domain.movement.MovementCommand import MovementCommand
-from domain.movement.MovementCommandFactory import MovementCommandFactory
 
 
 class StmMotorController(IMotorController):
-    def __init__(
-        self, serial: Serial, movement_command_factory: MovementCommandFactory
-    ) -> None:
+    def __init__(self, serial: Serial) -> None:
         self._serial = serial
-        self._movement_command_factory = movement_command_factory
 
-    def actuate_wheels(self, movements: List[Movement]) -> None:
-
-        commands = list()
-        for movement in movements:
-            commands += self._movement_command_factory.generate_commands_from_movement(
-                movement
-            )
-
+    def actuate_wheels(self, commands: List[MovementCommand]) -> None:
         for command in commands:
             self._send_command_to_motor(command)
 
@@ -37,7 +25,7 @@ class StmMotorController(IMotorController):
             )
         )
 
-        encoded_direction = bytes(chr(command.get_direction()), "utf-8")
+        encoded_direction = bytes(([command.get_direction()]))
         encoded_speed = struct.pack("f", command.get_speed().get_speed())
         self._serial.write(encoded_direction + encoded_speed)
         time.sleep(command.get_duration().get_duration())

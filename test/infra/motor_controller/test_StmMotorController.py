@@ -23,17 +23,28 @@ class TestStmMotorController(TestCase):
 
     def setUp(self) -> None:
         self.serial_communication = MagicMock()
-        self.movement_command_factory = MagicMock()
-        self.stm_motor_controller = StmMotorController(
-            self.serial_communication, self.movement_command_factory
+        self.stm_motor_controller = StmMotorController(self.serial_communication)
+
+    def test_givenMultipleMovementCommands_whenActuateWheels_thenWriteOnSerialOncePerCommand(
+        self,
+    ):
+        commands = self.A_MOVEMENT_COMMAND_LIST
+
+        self.stm_motor_controller.actuate_wheels(commands)
+
+        self.assertEqual(
+            len(self.A_MOVEMENT_COMMAND_LIST),
+            self.serial_communication.write.call_count,
         )
 
-    def test_whenActuateWheels_thenSerialCommunicationIsUsedToTalkToStm(self):
-        self.movement_command_factory.generate_commands_from_movement.return_value = (
-            self.A_MOVEMENT_COMMAND_LIST
-        )
-        movements = [self.A_MOVEMENT]
+    def test_givenSingleMovementCommand_whenActuateWheels_thenSerializeCommandBeforeWritingOnSerial(
+        self,
+    ):
+        a_direction = Direction.LEFT
+        a_speed = Speed(0.147)
+        commands = [MovementCommand(a_direction, a_speed, CommandDuration(100))]
+        expected_serialization = b"\x03+\x87\x16>"
 
-        self.stm_motor_controller.actuate_wheels(movements)
+        self.stm_motor_controller.actuate_wheels(commands)
 
-        self.serial_communication.write.assert_called()
+        self.serial_communication.write.assert_called_with(expected_serialization)

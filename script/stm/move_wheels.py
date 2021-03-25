@@ -11,7 +11,7 @@ from domain.movement.MovementCommandFactory import MovementCommandFactory
 from domain.movement.MovementFactory import MovementFactory
 from domain.pathfinding.Path import Path
 from domain.Position import Position
-from infra.motor_controller import StmMotorController
+from infra.motor_controller.StmMotorController import StmMotorController
 from service.movement.MovementService import MovementService
 
 if __name__ == "__main__":
@@ -35,12 +35,12 @@ if __name__ == "__main__":
     movement_command_factory = MovementCommandFactory(
         ROBOT_MAXIMUM_SPEED, SERVOING_CONSTANT, BASE_COMMAND_DURATION
     )
-    motor_controller = StmMotorController(
-        serial.Serial(STM_PORT_NAME, STM_BAUD_RATE), movement_command_factory
-    )
+    motor_controller = StmMotorController(serial.Serial(STM_PORT_NAME, STM_BAUD_RATE))
 
     movement_factory = MovementFactory()
-    movement_service = MovementService(movement_factory, motor_controller)
+    movement_service = MovementService(
+        movement_factory, movement_command_factory, motor_controller
+    )
 
     print("----------- Straight path -------------")
     input("Press any key when ready to start......")
