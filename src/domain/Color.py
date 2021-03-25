@@ -26,7 +26,7 @@ class Color(Enum):
         return self._hsv_bounds
 
     @staticmethod
-    def value_of_resistance_digit(self, digit: int) -> "Color":
+    def value_of_resistance_digit(digit: int) -> "Color":
         for color in Color:
-            if digit == color.get_resistance_digit:
+            if digit == color.get_resistance_digit():
                 return color

@@ -6,7 +6,7 @@ from domain.Position import Position
 from domain.RobotPose import RobotPose
 from domain.game.Stage import Stage
 from domain.pathfinding.Path import Path
-from resistance.Resistance import Resistance
+from domain.resistance.Resistance import Resistance
 from service.handler.GoToOhmmeterHandler import GoToOhmmeterHandler
 
 
@@ -19,10 +19,9 @@ class TestGoToOhmmeterHandler(unittest.TestCase):
 
     def setUp(self) -> None:
         self.communication_service = MagicMock()
-        self.vision_service = MagicMock()
         self.path_service = MagicMock()
         self.go_to_ohmmeter_handler = GoToOhmmeterHandler(
-            self.communication_service, self.vision_service, self.path_service
+            self.communication_service, self.path_service
         )
 
     @patch("domain.game.GameState.GameState.set_current_stage")

@@ -10,11 +10,9 @@ class GoToOhmmeterHandler(IStageHandler):
     def __init__(
         self,
         communication_service: CommunicationService,
-        vision_service: VisionService,
         path_service: PathService,
     ):
         self._communication_service = communication_service
-        self._vision_service = vision_service
         self._path_service = path_service
 
     def execute(self):

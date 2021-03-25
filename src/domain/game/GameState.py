@@ -7,7 +7,7 @@ from domain.Color import Color
 from domain.RobotPose import RobotPose
 from domain.StartingZoneCorner import StartingZoneCorner
 from domain.game.Stage import Stage
-from resistance.Resistance import Resistance
+from domain.resistance import Resistance
 
 
 class GameState:

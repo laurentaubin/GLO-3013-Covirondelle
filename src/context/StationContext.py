@@ -125,9 +125,7 @@ class StationContext:
         )
 
     def _create_go_to_ohmmeter_handler(self):
-        return GoToOhmmeterHandler(
-            self._communication_service, self._stage_request_router
-        )
+        return GoToOhmmeterHandler(self._communication_service, self._path_service)
 
     def _create_find_command_panel_handler(self):
         return FindCommandPanelHandler(
