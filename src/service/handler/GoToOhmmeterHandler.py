@@ -1,6 +1,8 @@
+from typing import List
+
 from domain.game.IStageHandler import IStageHandler
 from domain.game.Stage import Stage
-from domain.pathfinding.Path import Path
+from domain.movement.Movement import Movement
 from domain.resistance.Resistance import Resistance
 from service.communication.CommunicationService import CommunicationService
 from service.movement.MovementService import MovementService
@@ -21,8 +23,8 @@ class GoToOhmmeterHandler(IStageHandler):
     def execute(self):
         self._communication_service.send_game_cycle_message(Stage.GO_TO_OHMMETER.value)
 
-        path: Path = self._communication_service.receive_object()
-        self._movement_service.move(path)
+        movements: List[Movement] = self._communication_service.receive_object()
+        self._movement_service.move(movements)
         resistance_value: Resistance = (
             self._resistance_service.take_resistance_measurement()
         )

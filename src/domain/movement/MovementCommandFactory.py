@@ -12,7 +12,7 @@ class MovementCommandFactory:
     def __init__(
         self,
         robot_maximum_speed: Speed,
-        servoing_constant: float,
+        servoing_constant: Speed,
         base_command_duration: CommandDuration,
     ):
         self._robot_maximum_speed = robot_maximum_speed
@@ -25,12 +25,11 @@ class MovementCommandFactory:
         distance_left = movement.get_distance().get_distance()
 
         movement_commands = list()
-        while distance_left > 0:
+        while distance_left > 0.001:
             speed = min(
                 self._robot_maximum_speed,
                 Speed(self._servoing_constant * distance_left),
             )
-
             if speed * self._base_command_duration.get_duration() > distance_left:
                 speed = Speed.calculate_from_distance_and_duration(
                     Distance(distance_left), self._base_command_duration

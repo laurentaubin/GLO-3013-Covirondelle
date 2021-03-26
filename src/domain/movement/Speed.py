@@ -24,5 +24,5 @@ class Speed:
     @staticmethod
     def calculate_from_distance_and_duration(
         distance: Distance, duration: CommandDuration
-    ):
+    ) -> "Speed":
         return Speed(distance.get_distance() / duration.get_duration())

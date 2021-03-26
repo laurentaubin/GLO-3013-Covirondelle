@@ -33,8 +33,9 @@ from config.config import (
 from domain.Position import Position
 from domain.alignment.IAlignmentCorrector import IAlignmentCorrector
 from domain.communication.IRobotInformation import IRobotInformation
+from domain.movement.CommandDuration import CommandDuration
 from domain.movement.MovementCommandFactory import MovementCommandFactory
-from domain.movement.MovementFactory import MovementFactory
+from domain.movement.Speed import Speed
 from infra.IServoController import IServoController
 from infra.MaestroController import MaestroController
 from infra.communication.robot_information.StmRobotInformation import (
@@ -110,15 +111,12 @@ class RobotContext:
 
     def _create_movement_service(self):
         movement_command_factory = MovementCommandFactory(
-            ROBOT_MAXIMUM_SPEED,
-            SERVOING_CONSTANT,
-            BASE_COMMAND_DURATION,
+            Speed(ROBOT_MAXIMUM_SPEED),
+            Speed(SERVOING_CONSTANT),
+            CommandDuration(BASE_COMMAND_DURATION),
         )
         motor_controller = self._create_motor_controller()
-        movement_factory = MovementFactory()
-        return MovementService(
-            movement_factory, movement_command_factory, motor_controller
-        )
+        return MovementService(movement_command_factory, motor_controller)
 
     def _create_motor_controller(self):
         if self._local_flag:

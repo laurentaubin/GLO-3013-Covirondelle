@@ -9,15 +9,17 @@ from domain.movement.Speed import Speed
 
 
 class TestMovementCommandFactory(TestCase):
-    A_ROBOT_MAXIMUM_SPEED = Speed(300)
-    A_SEVOING_CONSTANT = 5
-    A_COMMAND_DURATION = CommandDuration(0.5)
+    A_ROBOT_MAXIMUM_SPEED = Speed(0.25)
+    A_SEVOING_CONSTANT = Speed(5)
+    A_COMMAND_DURATION = CommandDuration(0.1)
     A_DIRECTION = Direction.LEFT
-    A_DISTANCE = Distance(1234)
+    A_DISTANCE = Distance(1)
 
     def setUp(self) -> None:
         self.movement_command_factory = MovementCommandFactory(
-            self.A_ROBOT_MAXIMUM_SPEED, self.A_SEVOING_CONSTANT, self.A_COMMAND_DURATION
+            self.A_ROBOT_MAXIMUM_SPEED,
+            self.A_SEVOING_CONSTANT,
+            self.A_COMMAND_DURATION,
         )
 
     def test_whenGenerateCommandsFromMovement_thenLastCommandHasStopDirection(self):
@@ -102,19 +104,3 @@ class TestMovementCommandFactory(TestCase):
 
         actual_durations = {command.get_duration() for command in movement_commands}
         self.assertEqual(expected_durations, actual_durations)
-
-    def test_givenVeryShortMovement_whenGenerateCommandsFromMovement_thenMovementCommandSpeedHasRightValue(
-        self,
-    ):
-        small_distance_value = Distance(20)
-        a_short_movement = Movement(self.A_DIRECTION, small_distance_value)
-        expected_speed = Speed.calculate_from_distance_and_duration(
-            small_distance_value, self.A_COMMAND_DURATION
-        )
-
-        actual_commands = self.movement_command_factory.generate_commands_from_movement(
-            a_short_movement
-        )
-        actual_command_speed: Speed = actual_commands[0].get_speed()
-
-        self.assertEqual(expected_speed, actual_command_speed)
