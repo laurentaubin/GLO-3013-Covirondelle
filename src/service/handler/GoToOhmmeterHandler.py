@@ -1,9 +1,9 @@
 from domain.game.GameState import GameState
 from domain.game.IStageHandler import IStageHandler
 from domain.game.Stage import Stage
+from domain.movement.MovementFactory import MovementFactory
 from service.communication.CommunicationService import CommunicationService
 from service.path.PathService import PathService
-from service.vision.VisionService import VisionService
 
 
 class GoToOhmmeterHandler(IStageHandler):
@@ -11,9 +11,11 @@ class GoToOhmmeterHandler(IStageHandler):
         self,
         communication_service: CommunicationService,
         path_service: PathService,
+        movement_factory: MovementFactory,
     ):
         self._communication_service = communication_service
         self._path_service = path_service
+        self._movement_factory = movement_factory
 
     def execute(self):
         print("In GoToOhmmeter, sending go_to_ohmmeter start signal ...")
@@ -24,8 +26,9 @@ class GoToOhmmeterHandler(IStageHandler):
 
         robot_pose = GameState.get_instance().get_robot_pose()
         path = self._path_service.find_path_to_ohmmeter(robot_pose.get_position())
+        movements = self._movement_factory.create_movements(path)
 
-        self._communication_service.send_object(path)
+        self._communication_service.send_object(movements)
         resistance_value = self._communication_service.receive_object()
 
         GameState.get_instance().set_resistance_value(resistance_value)
