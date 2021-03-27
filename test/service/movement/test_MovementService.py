@@ -8,6 +8,7 @@ class TestMovementService(TestCase):
     A_MOVEMENT = MagicMock()
     ANOTHER_MOVEMENT = MagicMock()
     A_COMMAND = MagicMock()
+    AN_ANGLE = 123.4
     A_MOVEMENT_COMMAND = MagicMock()
 
     def setUp(self) -> None:
@@ -35,11 +36,27 @@ class TestMovementService(TestCase):
         )
 
     def test_whenMove_thenUseMotorControllerToSendCommandsToWheels(self):
-        self.movement_command_factory.generate_commands_from_movement.return_value = [
+        self.movement_command_factory.create_from_movement.return_value = [
             self.A_COMMAND
         ]
 
         self.movement_service.move([self.A_MOVEMENT])
+
+        self.motor_controller.actuate_wheels.assert_called_with([self.A_COMMAND])
+
+    def test_whenRotate_thenCreateMovementCommands(self):
+        an_angle = 12.2
+
+        self.movement_service.rotate(an_angle)
+
+        self.movement_command_factory.create_from_angle.assert_called_with(an_angle)
+
+    def test_givenRotationMovementCommands_whenRotate_thenUseMotorControllerToSendCommandsToWheels(
+        self,
+    ):
+        self.movement_command_factory.create_from_angle.return_value = [self.A_COMMAND]
+
+        self.movement_service.rotate(self.AN_ANGLE)
 
         self.motor_controller.actuate_wheels.assert_called_with([self.A_COMMAND])
 

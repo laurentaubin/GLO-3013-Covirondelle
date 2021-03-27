@@ -29,6 +29,8 @@ from config.config import (
     PUCK_ALIGNMENT_Y_CENTER_POSITION,
     PUCK_ALIGNMENT_THRESHOLD,
     CAMERA_INDEX,
+    ROBOT_ROTATION_SPEED,
+    ROBOT_RADIUS,
 )
 from domain.Position import Position
 from domain.alignment.IAlignmentCorrector import IAlignmentCorrector
@@ -110,6 +112,8 @@ class RobotContext:
             Speed(ROBOT_MAXIMUM_SPEED),
             Speed(SERVOING_CONSTANT),
             CommandDuration(BASE_COMMAND_DURATION),
+            Speed(ROBOT_ROTATION_SPEED),
+            ROBOT_RADIUS,
         )
         motor_controller = self._create_motor_controller()
         return MovementService(movement_command_factory, motor_controller)

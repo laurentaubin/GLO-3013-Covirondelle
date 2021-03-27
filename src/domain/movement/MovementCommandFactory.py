@@ -1,3 +1,4 @@
+from math import pi
 from typing import List
 
 from domain.movement.CommandDuration import CommandDuration
@@ -14,14 +15,16 @@ class MovementCommandFactory:
         robot_maximum_speed: Speed,
         servoing_constant: Speed,
         base_command_duration: CommandDuration,
+        rotating_speed: Speed,
+        robot_radius: float,
     ):
         self._robot_maximum_speed = robot_maximum_speed
         self._servoing_constant = servoing_constant
         self._base_command_duration = base_command_duration
+        self._rotating_speed = rotating_speed
+        self._robot_radius = robot_radius
 
-    def generate_commands_from_movement(
-        self, movement: Movement
-    ) -> List[MovementCommand]:
+    def create_from_movement(self, movement: Movement) -> List[MovementCommand]:
         distance_left = movement.get_distance().get_distance()
 
         movement_commands = list()
@@ -42,8 +45,20 @@ class MovementCommandFactory:
 
             distance_left -= speed * self._base_command_duration.get_duration()
 
-        movement_commands.append(
-            MovementCommand(Direction.STOP, Speed(0), self._base_command_duration)
-        )
+        movement_commands.append(self._create_stop_command())
 
         return movement_commands
+
+    def create_from_angle(self, angle: float) -> List[MovementCommand]:
+        duration = self._calculate_duration(angle)
+        direction = Direction.CLOCKWISE if angle < 0 else Direction.COUNTER_CLOCKWISE
+
+        rotating_command = MovementCommand(direction, self._rotating_speed, duration)
+        return [rotating_command, self._create_stop_command()]
+
+    def _create_stop_command(self):
+        return MovementCommand(Direction.STOP, Speed(0), self._base_command_duration)
+
+    def _calculate_duration(self, angle: float) -> CommandDuration:
+        rotation_circle_arc = 2 * pi * self._robot_radius * angle / 360
+        return CommandDuration(rotation_circle_arc / self._rotating_speed.get_speed())

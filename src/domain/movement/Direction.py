@@ -7,3 +7,5 @@ class Direction(IntEnum):
     BACKWARDS = 2
     LEFT = 3
     RIGHT = 4
+    CLOCKWISE = 5
+    COUNTER_CLOCKWISE = 6

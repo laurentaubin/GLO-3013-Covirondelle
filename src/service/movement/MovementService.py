@@ -19,11 +19,15 @@ class MovementService:
         movement_commands = list()
 
         for movement in movements:
-            movement_commands += (
-                self._movement_command_factory.generate_commands_from_movement(movement)
+            movement_commands += self._movement_command_factory.create_from_movement(
+                movement
             )
 
         self._motor_controller.actuate_wheels(movement_commands)
+
+    def rotate(self, angle: float):
+        rotation_commands = self._movement_command_factory.create_from_angle(angle)
+        self._motor_controller.actuate_wheels(rotation_commands)
 
     def execute_movement_command(self, movement_command: MovementCommand):
         self._motor_controller.actuate_wheels([movement_command])
