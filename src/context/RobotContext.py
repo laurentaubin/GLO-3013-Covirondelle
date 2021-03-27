@@ -35,24 +35,24 @@ from domain.alignment.IAlignmentCorrector import IAlignmentCorrector
 from domain.communication.IRobotInformation import IRobotInformation
 from domain.movement.CommandDuration import CommandDuration
 from domain.movement.MovementCommandFactory import MovementCommandFactory
+from domain.vision.IPuckDetector import IPuckDetector
 from domain.movement.Speed import Speed
 from infra.IServoController import IServoController
 from infra.MaestroController import MaestroController
+from infra.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
+from infra.camera.OpenCvEmbeddedCamera import OpenCvEmbeddedCamera
 from infra.communication.robot_information.StmRobotInformation import (
     StmRobotInformation,
 )
-from infra.gripper.MaestroGripper import MaestroGripper
-from infra.motor_controller.FakeMotorController import FakeMotorController
-from infra.motor_controller.StmMotorController import StmMotorController
-from domain.vision.IPuckDetector import IPuckDetector
-from infra.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
 from infra.communication.station.ZmqPublisherConnector import ZmqPublisherConnector
 from infra.communication.station.ZmqReqRepConnector import ZmqReqRepConnector
 from infra.game.SlaveGameCycle import SlaveGameCycle
+from infra.gripper.MaestroGripper import MaestroGripper
+from infra.motor_controller.FakeMotorController import FakeMotorController
+from infra.motor_controller.StmMotorController import StmMotorController
 from infra.vision.PytesseractLetterPositionExtractor import (
     PytesseractLetterPositionExtractor,
 )
-from infra.camera.OpenCvEmbeddedCamera import OpenCvEmbeddedCamera
 from service.communication.CommunicationService import CommunicationService
 from service.game.StageHandlerSelector import StageHandlerSelector
 from service.game.StageService import StageService

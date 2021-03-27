@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import patch, MagicMock
 
-from infra.vision.CommandPannelPosition import CommandPannelPosition
+from infra.vision.CommandPanelPosition import CommandPanelPosition
 from infra.vision.PytesseractLetterPositionExtractor import (
     PytesseractLetterPositionExtractor,
 )
@@ -9,7 +9,7 @@ from infra.vision.PytesseractLetterPositionExtractor import (
 
 class TestLetterPositionExtractor(TestCase):
     PATH_TO_COMMAND_PANEL_IMAGE = "test/infra/vision/panneauCmdZoomed.jpg"
-    SECOND_POSITION = CommandPannelPosition.UPPER_RIGHT
+    SECOND_POSITION = CommandPanelPosition.UPPER_RIGHT
     LETTER_D = "D"
     STR_LETTER_LIST = "ABD\nCBC\nADA"
     LETTER_LIST = ["A", "B", "D", "C", "B", "C", "A", "D", "A"]

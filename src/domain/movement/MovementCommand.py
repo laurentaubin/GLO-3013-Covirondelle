@@ -9,6 +9,15 @@ class MovementCommand:
         self._speed = speed
         self._duration = duration
 
+    def __eq__(self, other):
+        if not isinstance(other, MovementCommand):
+            return False
+        return (
+            self._direction == other._direction
+            and self._speed == other._speed
+            and self._duration == other._duration
+        )
+
     def get_direction(self) -> Direction:
         return self._direction
 

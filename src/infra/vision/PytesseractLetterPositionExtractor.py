@@ -3,7 +3,7 @@ import pytesseract
 
 
 from domain.vision.ILetterPositionExtractor import ILetterPositionExtractor
-from infra.vision.CommandPannelPosition import CommandPannelPosition
+from infra.vision.CommandPanelPosition import CommandPanelPosition
 from config.config import TESSERACT_LOCATION
 
 
@@ -32,5 +32,5 @@ class PytesseractLetterPositionExtractor(ILetterPositionExtractor):
     ):
         return self.extracted_letters
 
-    def get_letter_by_position(self, letter_position: CommandPannelPosition):
+    def get_letter_by_position(self, letter_position: CommandPanelPosition):
         return self.extracted_letters[letter_position.value]

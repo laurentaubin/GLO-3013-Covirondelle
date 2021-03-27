@@ -9,6 +9,7 @@ from domain.movement.Speed import Speed
 
 
 class TestMovementCommandFactory(TestCase):
+    AN_ALIGNMENT_SPEED = Speed(0.01)
     A_ROBOT_MAXIMUM_SPEED = Speed(0.25)
     A_SEVOING_CONSTANT = Speed(5)
     A_COMMAND_DURATION = CommandDuration(0.1)

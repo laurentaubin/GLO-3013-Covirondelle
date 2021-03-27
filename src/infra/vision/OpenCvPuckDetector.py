@@ -14,6 +14,7 @@ class OpenCvPuckDetector(IPuckDetector):
         hsv_image = self._prepare_mask(image, puck_color)
         contour = self._find_puck_contour(hsv_image)
         (x, y), _ = cv2.minEnclosingCircle(contour)
+
         return Position(int(x), int(y))
 
     def _prepare_mask(self, image: np.ndarray, puck_color: Color):
@@ -24,7 +25,7 @@ class OpenCvPuckDetector(IPuckDetector):
         )
 
     def _find_puck_contour(self, hsv_image: np.ndarray) -> np.ndarray:
-        contours, _ = cv2.findContours(
+        contours, *_ = cv2.findContours(
             hsv_image, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE
         )
         if len(contours) == 0:

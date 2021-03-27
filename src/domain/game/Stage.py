@@ -9,4 +9,5 @@ class Stage(Enum):
     GO_PARK = "go_park"
     STOP = "stop"
     CYCLE_STARTED = "cycle_started"
+    STAGE_STARTED = "stage_started"
     STAGE_COMPLETED = "stage_completed"

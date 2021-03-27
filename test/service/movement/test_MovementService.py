@@ -8,6 +8,7 @@ class TestMovementService(TestCase):
     A_MOVEMENT = MagicMock()
     ANOTHER_MOVEMENT = MagicMock()
     A_COMMAND = MagicMock()
+    A_MOVEMENT_COMMAND = MagicMock()
 
     def setUp(self) -> None:
         self.movement_command_factory = MagicMock()
@@ -41,3 +42,12 @@ class TestMovementService(TestCase):
         self.movement_service.move([self.A_MOVEMENT])
 
         self.motor_controller.actuate_wheels.assert_called_with([self.A_COMMAND])
+
+    def test_whenExecuteCommandMovement_thenUseMotorControllerToSendCommandToTheWheels(
+        self,
+    ):
+        self.movement_service.execute_movement_command(self.A_MOVEMENT_COMMAND)
+
+        self.motor_controller.actuate_wheels.assert_called_with(
+            [self.A_MOVEMENT_COMMAND]
+        )

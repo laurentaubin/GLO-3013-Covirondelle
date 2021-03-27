@@ -6,7 +6,7 @@ from infra.camera.ImageBasedEmbeddedCamera import ImageBasedEmbeddedCamera
 
 
 class TestImageEmbeddedCamera(TestCase):
-    IMAGE_PATH = "ressources/test/test_embedded_camera.jpg"
+    IMAGE_PATH = "resources/test/test_embedded_camera.jpg"
 
     def test_whenTakeEmbeddedImage_thenReadImageFromResources(self):
         embedded_camera = ImageBasedEmbeddedCamera(self.IMAGE_PATH)

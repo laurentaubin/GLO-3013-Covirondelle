@@ -1,6 +1,7 @@
 from typing import List
 
 from domain.IMotorController import IMotorController
+from domain.movement.MovementCommand import MovementCommand
 from domain.movement.Movement import Movement
 from domain.movement.MovementCommandFactory import MovementCommandFactory
 
@@ -23,3 +24,6 @@ class MovementService:
             )
 
         self._motor_controller.actuate_wheels(movement_commands)
+
+    def execute_movement_command(self, movement_command: MovementCommand):
+        self._motor_controller.actuate_wheels([movement_command])

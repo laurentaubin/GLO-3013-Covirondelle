@@ -15,6 +15,9 @@ class TestStmMotorController(TestCase):
     A_DIRECTION = Direction.FORWARD
     A_DISTANCE = Distance(distance=10)
     A_MOVEMENT = Movement(A_DIRECTION, A_DISTANCE)
+    A_MOVEMENT_COMMAND = MovementCommand(
+        Direction.LEFT, Speed(0.01), CommandDuration(0)
+    )
     A_STOP_COMMAND = MovementCommand(Direction.STOP, Speed(0), CommandDuration(0.5))
     A_MOVEMENT_COMMAND_LIST = [
         MovementCommand(Direction.FORWARD, Speed(10), CommandDuration(10)),

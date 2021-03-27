@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class CommandPannelPosition(Enum):
+class CommandPanelPosition(Enum):
     UPPER_LEFT = 0
     UPPER_MIDDLE = 1
     UPPER_RIGHT = 2
