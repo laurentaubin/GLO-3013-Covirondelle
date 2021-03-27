@@ -14,6 +14,7 @@ class Color(Enum):
     GREY = 8, ([23, 0, 0], [80, 105, 107])
     WHITE = 9, ([37, 0, 131], [170, 25, 152])
     NONE = 10, ([0, 0, 0], [0, 0, 0])
+    STARTING_ZONE = 11, ([58, 110, 5], [86, 255, 255])
 
     def __init__(self, resistance_digit: int, hsv_bounds: Tuple[List[int], List[int]]):
         self._resistance_digit = resistance_digit

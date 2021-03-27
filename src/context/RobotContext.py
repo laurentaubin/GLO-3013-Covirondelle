@@ -35,8 +35,8 @@ from domain.alignment.IAlignmentCorrector import IAlignmentCorrector
 from domain.communication.IRobotInformation import IRobotInformation
 from domain.movement.CommandDuration import CommandDuration
 from domain.movement.MovementCommandFactory import MovementCommandFactory
-from domain.vision.IPuckDetector import IPuckDetector
 from domain.movement.Speed import Speed
+from domain.vision.IPuckDetector import IPuckDetector
 from infra.IServoController import IServoController
 from infra.MaestroController import MaestroController
 from infra.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
@@ -44,12 +44,14 @@ from infra.camera.OpenCvEmbeddedCamera import OpenCvEmbeddedCamera
 from infra.communication.robot_information.StmRobotInformation import (
     StmRobotInformation,
 )
+
 from infra.communication.station.ZmqPublisherConnector import ZmqPublisherConnector
 from infra.communication.station.ZmqReqRepConnector import ZmqReqRepConnector
 from infra.game.SlaveGameCycle import SlaveGameCycle
 from infra.gripper.MaestroGripper import MaestroGripper
 from infra.motor_controller.FakeMotorController import FakeMotorController
 from infra.motor_controller.StmMotorController import StmMotorController
+from infra.vision.OpenCvPuckDetector import OpenCvPuckDetector
 from infra.vision.PytesseractLetterPositionExtractor import (
     PytesseractLetterPositionExtractor,
 )
@@ -70,12 +72,6 @@ from service.vision.VisionService import VisionService
 class RobotContext:
     def __init__(self, local_flag):
         self._local_flag = local_flag
-
-        # TODO à changer pour la bonne implémentation
-        self._puck_detector = IPuckDetector()
-        self._puck_alignment_corrector = self._create_puck_alignment_corrector(
-            self._puck_detector
-        )
 
         if not self._local_flag:
             self._serial = serial.Serial(port=STM_PORT_NAME, baudrate=STM_BAUD_RATE)
@@ -157,8 +153,14 @@ class RobotContext:
             ResistanceService(),
         )
         find_command_panel_handler = FindCommandPanelHandler()
+        puck_alignment_corrector = self._create_puck_alignment_corrector(
+            OpenCvPuckDetector()
+        )
         transport_puck_handler = TransportPuckHandler(
-            self._vision_service, self._movement_service
+            self._communication_service,
+            self._vision_service,
+            self._movement_service,
+            puck_alignment_corrector,
         )
         go_park_handler = GoParkHandler()
         stop_handler = StopHandler()
