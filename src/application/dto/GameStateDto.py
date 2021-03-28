@@ -1,12 +1,5 @@
 from typing import List
 
-import numpy as np
-
-from domain.Position import Position
-from domain.Color import Color
-from domain.StartingZoneCorner import StartingZoneCorner
-from domain.game.Stage import Stage
-
 
 class GameStateDto:
     def __init__(

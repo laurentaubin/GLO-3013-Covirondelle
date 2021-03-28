@@ -1,6 +1,9 @@
+from domain.UnitOfMeasure import UnitOfMeasure
+
+
 class Distance:
-    def __init__(self, distance: float):
-        self._distance = distance
+    def __init__(self, distance: float, unit_of_measure=UnitOfMeasure.PIXEL):
+        self._distance = distance / unit_of_measure.get_unit_to_meter_ratio()
 
     def __eq__(self, other):
         if not isinstance(other, Distance):
