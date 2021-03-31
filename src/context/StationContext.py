@@ -160,14 +160,14 @@ class StationContext:
         image_calibrator = OpenCvCalibrator(CALIBRATION_FILE_PATH)
         maze_factory = MazeFactory(ROBOT_RADIUS, OBSTACLE_RADIUS)
         table_detector = OpenCvTableDetector()
-        world_camera = self._create_world_camera()
+        self._world_camera = self._create_world_camera()
         robot_detector = OpenCvRobotDetector(DICT_4X4_50, ROBOT_ARUCO_MARKER_ID)
         return VisionService(
             starting_zone_corners_detector,
             obstacle_detector,
             image_calibrator,
             table_detector,
-            world_camera,
+            self._world_camera,
             maze_factory,
             robot_detector,
         )

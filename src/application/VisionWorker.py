@@ -11,7 +11,7 @@ class VisionWorker:
     def run(self):
         while True:
             self.update_vision_state(self._vision_service)
-            time.sleep(1)
+            time.sleep(0.1)
 
     @staticmethod
     def update_vision_state(vision_service: VisionService):

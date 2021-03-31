@@ -9,8 +9,8 @@ SOCKET_ANY_ADDRESS = "tcp://*:"
 GAME_CYCLE_PORT = "5556"
 
 # TODO Test at lab to find right radii value
-ROBOT_RADIUS = 30
-OBSTACLE_RADIUS = 15
+ROBOT_RADIUS = 100
+OBSTACLE_RADIUS = 30
 
 CALIBRATION_FILE_PATH = (
     os.path.dirname(os.path.abspath(__file__)) + "/numpy-1600x1200.npz"
