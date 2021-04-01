@@ -33,7 +33,6 @@ from config.config import (
     ROBOT_RADIUS,
 )
 from domain.Position import Position
-from domain.alignment.IAlignmentCorrector import IAlignmentCorrector
 from domain.communication.IRobotInformation import IRobotInformation
 from domain.movement.CommandDuration import CommandDuration
 from domain.movement.MovementCommandFactory import MovementCommandFactory
@@ -41,7 +40,7 @@ from domain.movement.Speed import Speed
 from domain.vision.IPuckDetector import IPuckDetector
 from infra.IServoController import IServoController
 from infra.MaestroController import MaestroController
-from infra.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
+from domain.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
 from infra.camera.OpenCvEmbeddedCamera import OpenCvEmbeddedCamera
 from infra.communication.robot_information.StmRobotInformation import (
     StmRobotInformation,
@@ -225,7 +224,7 @@ class RobotContext:
 
     def _create_puck_alignment_corrector(
         self, puck_detector: IPuckDetector
-    ) -> IAlignmentCorrector:
+    ) -> PuckAlignmentCorrector:
         puck_center_position = Position(
             PUCK_ALIGNMENT_X_CENTER_POSITION, PUCK_ALIGNMENT_Y_CENTER_POSITION
         )

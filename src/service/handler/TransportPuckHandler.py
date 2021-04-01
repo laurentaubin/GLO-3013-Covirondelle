@@ -1,6 +1,6 @@
 import time
 
-from domain.alignment.IAlignmentCorrector import IAlignmentCorrector
+from domain.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
 from domain.game.IStageHandler import IStageHandler
 from domain.game.Stage import Stage
 from domain.movement.Direction import Direction
@@ -17,12 +17,14 @@ class TransportPuckHandler(IStageHandler):
         communication_service: CommunicationService,
         vision_service: VisionService,
         movement_service: MovementService,
-        puck_alignment_corrector: IAlignmentCorrector,
+        puck_alignment_corrector: PuckAlignmentCorrector,
     ):
         self._communication_service: CommunicationService = communication_service
         self._vision_service: VisionService = vision_service
         self._movement_service: MovementService = movement_service
-        self._puck_alignment_corrector: IAlignmentCorrector = puck_alignment_corrector
+        self._puck_alignment_corrector: PuckAlignmentCorrector = (
+            puck_alignment_corrector
+        )
 
     def execute(self) -> None:
         self._communication_service.send_game_cycle_message(Stage.STAGE_STARTED)

@@ -2,7 +2,6 @@ import numpy as np
 
 from config.config import ROBOT_ALIGNMENT_SPEED
 from domain.Position import Position
-from domain.alignment.IAlignmentCorrector import IAlignmentCorrector
 from domain.movement.CommandDuration import CommandDuration
 from domain.movement.Direction import Direction
 from domain.movement.MovementCommand import MovementCommand
@@ -11,7 +10,7 @@ from domain.vision import IPuckDetector
 from domain.vision.Color import Color
 
 
-class PuckAlignmentCorrector(IAlignmentCorrector):
+class PuckAlignmentCorrector:
     CONTINUOUS_COMMAND_DURATION = CommandDuration(0)
     STOP_MOVEMENT_COMMAND = MovementCommand(
         Direction.STOP, Speed(0), CONTINUOUS_COMMAND_DURATION

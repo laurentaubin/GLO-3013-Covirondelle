@@ -8,7 +8,7 @@ from domain.movement.Direction import Direction
 from domain.movement.MovementCommand import MovementCommand
 from domain.movement.Speed import Speed
 from domain.vision.Color import Color
-from infra.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
+from domain.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
 
 
 class TestPuckAlignmentCorrector(TestCase):
