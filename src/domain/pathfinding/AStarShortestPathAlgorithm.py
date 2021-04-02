@@ -26,7 +26,18 @@ class AStarShortestPathAlgorithm(IShortestPathAlgorithm):
         self._size_x = self._maze.get_shape()[0]
         self._size_y = self._maze.get_shape()[1]
 
-    def find_shortest_path(self, start_position: Position, goal_position: Position):
+    def find_shortest_path_with_cartesian_coordinates(
+        self, start_position: Position, goal_position: Position
+    ):
+        start_position = Position(
+            start_position.get_y_coordinate(), start_position.get_x_coordinate()
+        )
+        goal_position = Position(
+            goal_position.get_y_coordinate(), goal_position.get_x_coordinate()
+        )
+        return self._find_shortest_path(start_position, goal_position)
+
+    def _find_shortest_path(self, start_position: Position, goal_position: Position):
         if self._maze is None:
             raise InvalidMazeException
 

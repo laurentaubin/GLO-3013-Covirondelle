@@ -68,7 +68,7 @@ class TestPathService(TestCase):
 
         self.path_service.find_path_to_next_starting_zone_corner(self.A_ROBOT_POSITION)
 
-        self.shortest_path_algorithm.find_shortest_path.assert_called_with(
+        self.shortest_path_algorithm.find_shortest_path_with_cartesian_coordinates.assert_called_with(
             self.A_ROBOT_POSITION, self.A_CORNER_POSITION
         )
 

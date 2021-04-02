@@ -11,7 +11,7 @@ from domain.movement.MovementFactory import MovementFactory
 
 class TestContext(StationContext):
     def __init__(self):
-        super().__init__(local_flag=False)
+        super().__init__(local_flag=True)
 
 
 if __name__ == "__main__":
@@ -26,9 +26,11 @@ if __name__ == "__main__":
     game_table = context._vision_service.create_game_table()
     context._path_service.set_game_table(game_table)
 
-    puck_position = Position(400, 1500)
-    path = context._shortest_path_algorithm.find_shortest_path(
-        GameState.get_instance().get_robot_pose().get_position(), puck_position
+    puck_position = Position(1500, 400)
+    path = (
+        context._shortest_path_algorithm.find_shortest_path_with_cartesian_coordinates(
+            GameState.get_instance().get_robot_pose().get_position(), puck_position
+        )
     )
 
     movement_factory = MovementFactory()

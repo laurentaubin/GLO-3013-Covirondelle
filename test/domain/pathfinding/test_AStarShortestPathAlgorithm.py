@@ -36,13 +36,13 @@ class TestAStarShortestPathAlgorithm(TestCase):
             ]
         )
     )
-    AN_HORIZONTALLY_OUT_OF_BOUND_POSITION = Position(25, 1)
-    A_VERTICALLY_OUT_OF_BOUND_POSITION = Position(1, 12)
-    A_NEGATIVE_HORIZONTAL_POSITION = Position(-1, 1)
-    A_NEGATIVE_VERTICAL_POSITION = Position(1, -1)
+    AN_HORIZONTALLY_OUT_OF_BOUND_POSITION = Position(1, 25)
+    A_VERTICALLY_OUT_OF_BOUND_POSITION = Position(12, 1)
+    A_NEGATIVE_HORIZONTAL_POSITION = Position(1, -1)
+    A_NEGATIVE_VERTICAL_POSITION = Position(-1, 1)
     A_VALID_POSITION = Position(1, 1)
     ANOTHER_VALID_POSITION = Position(2, 2)
-    AN_OBSTACLE_POSITION = Position(0, 4)
+    AN_OBSTACLE_POSITION = Position(4, 0)
 
     def setUp(self) -> None:
         self.a_start_algorithm = AStarShortestPathAlgorithm()
@@ -60,7 +60,7 @@ class TestAStarShortestPathAlgorithm(TestCase):
         algorithm = AStarShortestPathAlgorithm()
 
         with self.assertRaises(InvalidMazeException):
-            algorithm.find_shortest_path(
+            algorithm.find_shortest_path_with_cartesian_coordinates(
                 self.A_VALID_POSITION, self.ANOTHER_VALID_POSITION
             )
 
@@ -68,7 +68,7 @@ class TestAStarShortestPathAlgorithm(TestCase):
         self,
     ):
         with self.assertRaises(InvalidStartPointException):
-            self.a_start_algorithm.find_shortest_path(
+            self.a_start_algorithm.find_shortest_path_with_cartesian_coordinates(
                 self.A_NEGATIVE_VERTICAL_POSITION, self.A_VALID_POSITION
             )
 
@@ -76,7 +76,7 @@ class TestAStarShortestPathAlgorithm(TestCase):
         self,
     ):
         with self.assertRaises(InvalidStartPointException):
-            self.a_start_algorithm.find_shortest_path(
+            self.a_start_algorithm.find_shortest_path_with_cartesian_coordinates(
                 self.AN_HORIZONTALLY_OUT_OF_BOUND_POSITION, self.A_VALID_POSITION
             )
 
@@ -84,7 +84,7 @@ class TestAStarShortestPathAlgorithm(TestCase):
         self,
     ):
         with self.assertRaises(InvalidStartPointException):
-            self.a_start_algorithm.find_shortest_path(
+            self.a_start_algorithm.find_shortest_path_with_cartesian_coordinates(
                 self.A_VERTICALLY_OUT_OF_BOUND_POSITION, self.A_VALID_POSITION
             )
 
@@ -92,7 +92,7 @@ class TestAStarShortestPathAlgorithm(TestCase):
         self,
     ):
         with self.assertRaises(InvalidStartPointException):
-            self.a_start_algorithm.find_shortest_path(
+            self.a_start_algorithm.find_shortest_path_with_cartesian_coordinates(
                 self.A_NEGATIVE_HORIZONTAL_POSITION, self.A_VALID_POSITION
             )
 
@@ -100,7 +100,7 @@ class TestAStarShortestPathAlgorithm(TestCase):
         self,
     ):
         with self.assertRaises(InvalidDestinationException):
-            self.a_start_algorithm.find_shortest_path(
+            self.a_start_algorithm.find_shortest_path_with_cartesian_coordinates(
                 self.A_VALID_POSITION, self.AN_HORIZONTALLY_OUT_OF_BOUND_POSITION
             )
 
@@ -108,7 +108,7 @@ class TestAStarShortestPathAlgorithm(TestCase):
         self,
     ):
         with self.assertRaises(InvalidDestinationException):
-            self.a_start_algorithm.find_shortest_path(
+            self.a_start_algorithm.find_shortest_path_with_cartesian_coordinates(
                 self.A_VALID_POSITION, self.A_VERTICALLY_OUT_OF_BOUND_POSITION
             )
 
@@ -116,7 +116,7 @@ class TestAStarShortestPathAlgorithm(TestCase):
         self,
     ):
         with self.assertRaises(InvalidDestinationException):
-            self.a_start_algorithm.find_shortest_path(
+            self.a_start_algorithm.find_shortest_path_with_cartesian_coordinates(
                 self.A_VALID_POSITION, self.AN_OBSTACLE_POSITION
             )
 
@@ -124,16 +124,17 @@ class TestAStarShortestPathAlgorithm(TestCase):
         self,
     ):
         with self.assertRaises(InvalidStartPointException):
-            self.a_start_algorithm.find_shortest_path(
+            self.a_start_algorithm.find_shortest_path_with_cartesian_coordinates(
                 self.AN_OBSTACLE_POSITION, self.A_VALID_POSITION
             )
 
-    def test_givenAMaze_whenGetPath_thenReturnCorrectPath(self):
-        starting_position = Position(1, 1)
-        ending_position = Position(1, 5)
+    def test_givenStartAndEndPosition_whenFindPathWithCartesianCoordinates_thenFlipsCoordinatesAndFindsPath(
+        self,
+    ):
+        starting_position = Position(2, 1)
+        ending_position = Position(5, 1)
         expected_path = Path(
             [
-                Position(1, 1),
                 Position(1, 2),
                 Position(1, 3),
                 Position(2, 3),
@@ -151,8 +152,10 @@ class TestAStarShortestPathAlgorithm(TestCase):
             ]
         )
 
-        actual_path = self.a_start_algorithm.find_shortest_path(
-            starting_position, ending_position
+        actual_path = (
+            self.a_start_algorithm.find_shortest_path_with_cartesian_coordinates(
+                starting_position, ending_position
+            )
         )
 
         self.assertEqual(expected_path, actual_path)

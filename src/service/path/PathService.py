@@ -28,8 +28,10 @@ class PathService:
             self._current_corner_letter
         )
 
-        return self._shortest_path_algorithm.find_shortest_path(
-            current_robot_position, corner_position
+        return (
+            self._shortest_path_algorithm.find_shortest_path_with_cartesian_coordinates(
+                current_robot_position, corner_position
+            )
         )
 
     def set_game_table(self, game_table: GameTable) -> None:
@@ -40,7 +42,9 @@ class PathService:
         self._current_corner_letter = corner_letter
 
     def find_path_to_ohmmeter(self, robot_position: Position) -> Path:
-        return self._shortest_path_algorithm.find_shortest_path(
-            robot_position,
-            Position(DEFAULT_OHMMETER_POSITION[0], DEFAULT_OHMMETER_POSITION[1]),
+        return (
+            self._shortest_path_algorithm.find_shortest_path_with_cartesian_coordinates(
+                robot_position,
+                Position(DEFAULT_OHMMETER_POSITION[0], DEFAULT_OHMMETER_POSITION[1]),
+            )
         )

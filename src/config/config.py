@@ -36,6 +36,9 @@ WORLD_CAMERA_IMAGE_SIZE = (1600, 1200)
 # in meter
 OBSTACLE_HEIGHT = 0.304
 
-BASE_TABLE_IMAGE = "resources/test/puck-detector-test-marker-3.jpg"
+BASE_TABLE_IMAGE = (
+    os.path.dirname(os.path.abspath(__file__))
+    + "/../../resources/test/puck-detector-test-marker-3.jpg"
+)
 
 DEFAULT_OHMMETER_POSITION = 20, 20
