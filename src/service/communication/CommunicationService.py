@@ -34,3 +34,7 @@ class CommunicationService:
     def send_gripper_status(self):
         gripper_status = self._robot_information.get_gripper_status()
         self._robot_status_publisher.publish_gripper_status(gripper_status)
+
+    def send_power_consumption(self):
+        power_consumption = self._robot_information.get_power_consumption()
+        self._robot_status_publisher.publish_power_consumption(power_consumption)

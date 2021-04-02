@@ -46,3 +46,21 @@ class TestRobotInformation(TestCase):
         self.robot_information.get_gripper_status()
 
         self.serial.write.assert_called_with(expected_command)
+
+    def test_givenAReadPowerConsumptionCommand_whenGetConsumptionStatus_thenTheRightCommandIsSent(
+        self,
+    ):
+        expected_command = b"\x0A\x00"
+        self.robot_information.get_power_consumption()
+        self.serial.write.assert_called_with(expected_command)
+
+    def test_givenAReadLinePowerConsumptionValue_whenGetPowerConsumption_thenTheRightValueIsReturned(
+        self,
+    ):
+        expected_power_consumption_value = "10"
+        expected_serial_response = bytes("0A", encoding="utf-8") + bytes(
+            expected_power_consumption_value, encoding="utf-8"
+        )
+        self.serial.readline.return_value = expected_serial_response
+        actual_power_consumption = self.robot_information.get_power_consumption()
+        self.assertEqual(expected_power_consumption_value, actual_power_consumption)

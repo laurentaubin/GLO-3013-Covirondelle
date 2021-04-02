@@ -18,3 +18,9 @@ class StmRobotInformation(IRobotInformation):
         if float(current_consumption) > CURRENT_CONSUMPTION_THRESHOLD:
             return GripperStatus.HAS_PUCK
         return GripperStatus.DOESNT_HAVE_PUCK
+
+    def get_power_consumption(self):
+        command = bytes([StmCommand.ASK_POWER]) + bytes([StmPeripherals.BATTERY])
+        self._serial.write(command)
+        power_consumption = self._serial.readline()[2:].decode("utf-8")
+        return power_consumption

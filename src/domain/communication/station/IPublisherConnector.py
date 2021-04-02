@@ -4,3 +4,6 @@ class IPublisherConnector:
 
     def publish_gripper_status(self, gripper_status):
         pass
+
+    def publish_power_consumption(self, power_consumption_status):
+        pass
