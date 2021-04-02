@@ -31,12 +31,14 @@ from config.config import (
     CAMERA_INDEX,
     ROBOT_ROTATION_SPEED,
     ROBOT_RADIUS,
+    RESISTANCE_READ_THRESHOLD,
 )
 from domain.Position import Position
 from domain.communication.IRobotInformation import IRobotInformation
 from domain.movement.CommandDuration import CommandDuration
 from domain.movement.MovementCommandFactory import MovementCommandFactory
 from domain.movement.Speed import Speed
+from domain.resistance.IOhmmeter import IOhmmeter
 from domain.vision.IPuckDetector import IPuckDetector
 from infra.IServoController import IServoController
 from infra.MaestroController import MaestroController
@@ -52,6 +54,7 @@ from infra.game.SlaveGameCycle import SlaveGameCycle
 from infra.gripper.MaestroGripper import MaestroGripper
 from infra.motor_controller.FakeMotorController import FakeMotorController
 from infra.motor_controller.StmMotorController import StmMotorController
+from infra.resistance.StmOhmmeter import StmOhmmeter
 from infra.vision.OpenCvPuckDetector import OpenCvPuckDetector
 from infra.vision.PytesseractLetterPositionExtractor import (
     PytesseractLetterPositionExtractor,
@@ -82,6 +85,7 @@ class RobotContext:
         self._maestro = self._create_and_configure_maestro()
         self._vision_service = self._create_vision_service()
         self._gripper_service = self._create_gripper_service()
+        self._resistance_service = self._create_resistance_service()
 
         self.stage_service = self._create_stage_service()
         self.slave_game_cycle = SlaveGameCycle(
@@ -153,7 +157,7 @@ class RobotContext:
         go_to_ohmmeter_handler = GoToOhmmeterHandler(
             self._communication_service,
             self._movement_service,
-            ResistanceService(),
+            self._resistance_service,
         )
         find_command_panel_handler = FindCommandPanelHandler()
         puck_alignment_corrector = self._create_puck_alignment_corrector(
@@ -212,11 +216,20 @@ class RobotContext:
 
         return GripperService(gripper)
 
+    def _create_resistance_service(self):
+        ohmmeter = self._create_ohmmeter()
+        return ResistanceService(RESISTANCE_READ_THRESHOLD, ohmmeter)
+
     def _create_servo_controller(self):
         if self._local_flag:
             return IServoController()
 
         return MaestroController(ttyStr=MAESTRO_POLULU_PORT_NAME)
+
+    def _create_ohmmeter(self):
+        if self._local_flag:
+            return IOhmmeter()
+        return StmOhmmeter(self._serial)
 
     def _configure_maestro_channel(self, maestro, channel_id):
         maestro.setSpeed(channel_id, SERVO_SPEED)
