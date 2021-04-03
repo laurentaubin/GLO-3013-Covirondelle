@@ -11,6 +11,7 @@ from domain.vision.Color import Color
 from service.handler.TransportPuckHandler import TransportPuckHandler
 
 
+@patch("time.sleep", MagicMock())
 class TestTransportPuckHandler(TestCase):
     ONE_PUCK_TO_TRANSPORT: List[Color] = [Color.RED]
     MANY_PUCKS_TO_TRANSPORT: List[Color] = [Color.RED, Color.GREEN, Color.BLUE]
@@ -45,17 +46,15 @@ class TestTransportPuckHandler(TestCase):
 
         self.communication_service.receive_object.assert_called()
 
-    @patch("time.sleep", return_value=None)
-    def test_whenExecute_thenImageIsTaken(self, patched_time_sleep):
+    def test_whenExecute_thenImageIsTaken(self):
         self._setup_receive_one_puck_to_transport()
 
         self.transport_puck_handler.execute()
 
         self.vision_service.take_image.assert_called()
 
-    @patch("time.sleep", return_value=None)
     def test_whenExecute_thenPuckToTransportAndImageFromVisionServiceAreUsedToHorizontallyAlignRobotWithPuck(
-        self, patched_time_sleep
+        self,
     ):
         self._setup_receive_one_puck_to_transport()
 
@@ -65,9 +64,8 @@ class TestTransportPuckHandler(TestCase):
             self.AN_IMAGE, self.ONE_PUCK_TO_TRANSPORT[0]
         )
 
-    @patch("time.sleep", return_value=None)
     def test_givenOnePuckToTransport_whenExecute_thenPuckToTransportAndImageFromVisionServiceAreUsedToVerticallyAlignRobotWithPuck(
-        self, patched_time_sleep
+        self,
     ):
         self._setup_receive_one_puck_to_transport()
 
@@ -77,9 +75,8 @@ class TestTransportPuckHandler(TestCase):
             self.AN_IMAGE, self.ONE_PUCK_TO_TRANSPORT[0]
         )
 
-    @patch("time.sleep", return_value=None)
     def test_givenManyPucks_whenExecute_thenHorizontalCorrectionIsCalculatedForEachPuck(
-        self, patched_time_sleep
+        self,
     ):
         self._setup_corrections_for_many_pucks()
 
@@ -90,9 +87,8 @@ class TestTransportPuckHandler(TestCase):
             self.puck_alignment_corrector.calculate_horizontal_correction.call_count,
         )
 
-    @patch("time.sleep", return_value=None)
     def test_givenManyPucks_whenExecute_thenVerticalCorrectionIsCalculatedForEachPuck(
-        self, patch_time_sleep
+        self,
     ):
         self._setup_corrections_for_many_pucks()
 
@@ -103,9 +99,8 @@ class TestTransportPuckHandler(TestCase):
             self.puck_alignment_corrector.calculate_vertical_correction.call_count,
         )
 
-    @patch("time.sleep", return_value=None)
     def test_givenManyPucksToTransportAllCorrectlyAligned_whenExecute_thenAlignRobotWithEachPuck(
-        self, patched_time_sleep
+        self,
     ):
         self._setup_corrections_for_many_pucks()
         no_movement_command_executed = 0
@@ -117,9 +112,8 @@ class TestTransportPuckHandler(TestCase):
             self.movement_service.execute_movement_command.call_count,
         )
 
-    @patch("time.sleep", return_value=None)
     def test_givenAPuckNotVerticallyAndHorizontallyAlign_whenExecute_thenShouldCorrectHorizontalAndVerticalAlignment(
-        self, patch_time_sleep
+        self,
     ):
         self._setup_receive_one_puck_not_correctly_aligned()
         sum_of_horizontal_and_vertical_correction_movement_needed = 4

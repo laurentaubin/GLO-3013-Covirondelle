@@ -1,6 +1,7 @@
 from math import pi
 from typing import List
 
+from config.config import ROBOT_ALIGNMENT_SPEED
 from domain.movement.CommandDuration import CommandDuration
 from domain.movement.Direction import Direction
 from domain.movement.Distance import Distance
@@ -45,7 +46,7 @@ class MovementCommandFactory:
 
             distance_left -= speed * self._base_command_duration.get_duration()
 
-        movement_commands.append(self._create_stop_command())
+        movement_commands.append(self.create_stop_command())
 
         return movement_commands
 
@@ -54,10 +55,15 @@ class MovementCommandFactory:
         direction = Direction.CLOCKWISE if angle < 0 else Direction.COUNTER_CLOCKWISE
 
         rotating_command = MovementCommand(direction, self._rotating_speed, duration)
-        return [rotating_command, self._create_stop_command()]
+        return [rotating_command, self.create_stop_command()]
 
-    def _create_stop_command(self):
+    def create_stop_command(self):
         return MovementCommand(Direction.STOP, Speed(0), self._base_command_duration)
+
+    def create_alignment_movement_command(self, direction: Direction):
+        return MovementCommand(
+            direction, Speed(ROBOT_ALIGNMENT_SPEED), CommandDuration(0)
+        )
 
     def _calculate_duration(self, angle: float) -> CommandDuration:
         rotation_circle_arc = 2 * pi * self._robot_radius * angle / 360

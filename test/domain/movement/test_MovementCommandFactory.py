@@ -1,9 +1,11 @@
 from unittest import TestCase
 
+from config.config import ROBOT_ALIGNMENT_SPEED
 from domain.movement.CommandDuration import CommandDuration
 from domain.movement.Direction import Direction
 from domain.movement.Distance import Distance
 from domain.movement.Movement import Movement
+from domain.movement.MovementCommand import MovementCommand
 from domain.movement.MovementCommandFactory import MovementCommandFactory
 from domain.movement.Speed import Speed
 
@@ -18,6 +20,10 @@ class TestMovementCommandFactory(TestCase):
     AN_ANGLE = 43.1
     ROTATING_SPEED = Speed(0.2)
     ROBOT_RADIUS = 0.1075
+    SLOW_MOVEMENT_SPEED = Speed(ROBOT_ALIGNMENT_SPEED)
+    CONTINUOUS_MOVEMENT_DURATION = CommandDuration(0)
+    NULL_SPEED = Speed(0)
+    NULL_COMMAND_DURATION = CommandDuration(0)
 
     def setUp(self) -> None:
         self.movement_command_factory = MovementCommandFactory(
@@ -154,3 +160,29 @@ class TestMovementCommandFactory(TestCase):
         )[0]
 
         self.assertEqual(expected_duration, rotation_command.get_duration())
+
+    def test_givenBackwardsDirection_whenCreateAlignmentMovementCommand_thenSlowContinuousBackwardsMovementCommandIsCreated(
+        self,
+    ):
+        expected_movement_command = MovementCommand(
+            Direction.BACKWARDS,
+            self.SLOW_MOVEMENT_SPEED,
+            self.CONTINUOUS_MOVEMENT_DURATION,
+        )
+
+        actual_movement_command = (
+            self.movement_command_factory.create_alignment_movement_command(
+                Direction.BACKWARDS
+            )
+        )
+
+        self.assertEqual(actual_movement_command, expected_movement_command)
+
+    def test_whenCreateStopMovementCommand_thenStopMovementCommandIsCreated(self):
+        expected_movement_command = MovementCommand(
+            Direction.STOP, self.NULL_SPEED, self.A_COMMAND_DURATION
+        )
+
+        actual_movement_command = self.movement_command_factory.create_stop_command()
+
+        self.assertEqual(actual_movement_command, expected_movement_command)

@@ -31,15 +31,19 @@ from config.config import (
     CAMERA_INDEX,
     ROBOT_ROTATION_SPEED,
     ROBOT_RADIUS,
+    ALIGNED_OHMMETER_HORIZONTAL_POSITION,
+    OHMMETER_ALIGNMENT_THRESHOLD,
     RESISTANCE_READ_THRESHOLD,
 )
 from domain.Position import Position
+from domain.alignment.OhmmeterAlignmentCorrector import OhmmeterAlignmentCorrector
 from domain.communication.IRobotInformation import IRobotInformation
 from domain.movement.CommandDuration import CommandDuration
 from domain.movement.MovementCommandFactory import MovementCommandFactory
 from domain.movement.Speed import Speed
 from domain.resistance.IOhmmeter import IOhmmeter
 from domain.vision.IPuckDetector import IPuckDetector
+from domain.vision.IStartingZoneLineDetector import IStartingZoneLineDetector
 from infra.IServoController import IServoController
 from infra.MaestroController import MaestroController
 from domain.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
@@ -56,6 +60,7 @@ from infra.motor_controller.FakeMotorController import FakeMotorController
 from infra.motor_controller.StmMotorController import StmMotorController
 from infra.resistance.StmOhmmeter import StmOhmmeter
 from infra.vision.OpenCvPuckDetector import OpenCvPuckDetector
+from infra.vision.OpenCvStartingZoneLineDetector import OpenCvStartingZoneLineDetector
 from infra.vision.PytesseractLetterPositionExtractor import (
     PytesseractLetterPositionExtractor,
 )
@@ -74,20 +79,30 @@ from service.vision.VisionService import VisionService
 
 
 class RobotContext:
+    ANY_VERTICAL_POSITION = 0
+
     def __init__(self, local_flag):
         self._local_flag = local_flag
 
         if not self._local_flag:
             self._serial = serial.Serial(port=STM_PORT_NAME, baudrate=STM_BAUD_RATE)
 
+        movement_command_factory = MovementCommandFactory(
+            Speed(ROBOT_MAXIMUM_SPEED),
+            Speed(SERVOING_CONSTANT),
+            CommandDuration(BASE_COMMAND_DURATION),
+            Speed(ROBOT_ROTATION_SPEED),
+            ROBOT_RADIUS,
+        )
+
         self._communication_service = self._create_communication_service()
-        self._movement_service = self._create_movement_service()
+        self._movement_service = self._create_movement_service(movement_command_factory)
         self._maestro = self._create_and_configure_maestro()
         self._vision_service = self._create_vision_service()
         self._gripper_service = self._create_gripper_service()
         self._resistance_service = self._create_resistance_service()
 
-        self.stage_service = self._create_stage_service()
+        self.stage_service = self._create_stage_service(movement_command_factory)
         self.slave_game_cycle = SlaveGameCycle(
             self._communication_service, self.stage_service
         )
@@ -110,14 +125,9 @@ class RobotContext:
             return IRobotInformation()
         return StmRobotInformation(self._serial)
 
-    def _create_movement_service(self):
-        movement_command_factory = MovementCommandFactory(
-            Speed(ROBOT_MAXIMUM_SPEED),
-            Speed(SERVOING_CONSTANT),
-            CommandDuration(BASE_COMMAND_DURATION),
-            Speed(ROBOT_ROTATION_SPEED),
-            ROBOT_RADIUS,
-        )
+    def _create_movement_service(
+        self, movement_command_factory: MovementCommandFactory
+    ):
         motor_controller = self._create_motor_controller()
         return MovementService(movement_command_factory, motor_controller)
 
@@ -148,16 +158,24 @@ class RobotContext:
     def run(self):
         self.application_server.run()
 
-    def _create_stage_service(self):
-        stage_selector = self._create_stage_handler_selector()
+    def _create_stage_service(self, movement_command_factory: MovementCommandFactory):
+        stage_selector = self._create_stage_handler_selector(movement_command_factory)
 
         return StageService(stage_selector)
 
-    def _create_stage_handler_selector(self):
+    def _create_stage_handler_selector(
+        self, movement_command_factory: MovementCommandFactory
+    ):
+        ohmmeter_alignment_corrector = self._create_ohmmeter_alignment_corrector(
+            OpenCvStartingZoneLineDetector()
+        )
         go_to_ohmmeter_handler = GoToOhmmeterHandler(
             self._communication_service,
             self._movement_service,
             self._resistance_service,
+            self._vision_service,
+            ohmmeter_alignment_corrector,
+            movement_command_factory,
         )
         find_command_panel_handler = FindCommandPanelHandler()
         puck_alignment_corrector = self._create_puck_alignment_corrector(
@@ -243,4 +261,16 @@ class RobotContext:
         )
         return PuckAlignmentCorrector(
             puck_center_position, PUCK_ALIGNMENT_THRESHOLD, puck_detector
+        )
+
+    def _create_ohmmeter_alignment_corrector(
+        self, starting_zone_line_detector: IStartingZoneLineDetector
+    ):
+        line_position_reference = Position(
+            ALIGNED_OHMMETER_HORIZONTAL_POSITION, self.ANY_VERTICAL_POSITION
+        )
+        return OhmmeterAlignmentCorrector(
+            line_position_reference,
+            OHMMETER_ALIGNMENT_THRESHOLD,
+            starting_zone_line_detector,
         )
