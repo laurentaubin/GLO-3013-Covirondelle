@@ -6,7 +6,10 @@ from domain.gripper.GripperStatus import GripperStatus
 from service.communication.CommunicationService import CommunicationService
 
 STATUS_HAS_PUCK = GripperStatus.HAS_PUCK
-A_POWER_CONSUMPTION = "10"
+
+A_CURRENT_VALUE = 10.0
+
+A_POWER_CONSUMPTION = 10.0
 
 
 class TestCommunicationService(TestCase):
@@ -49,6 +52,15 @@ class TestCommunicationService(TestCase):
 
         self.pub_sub_connector.publish_gripper_status.assert_called_with(
             STATUS_HAS_PUCK
+        )
+
+    def test_givenCurrentConsumptionReturnedByRobotInformation_whenSendPowerConsumption_thenPublishCurrentConsumption(
+        self,
+    ):
+        self.robot_information.get_current_consumption.return_value = A_CURRENT_VALUE
+        self.communication_service.send_current_consumption()
+        self.pub_sub_connector.publish_current_consumption.assert_called_with(
+            A_CURRENT_VALUE
         )
 
     def test_givenPowerConsumptionReturnedByRobotInformation_whenSendPowerConsumption_thenPublishPowerConsumption(

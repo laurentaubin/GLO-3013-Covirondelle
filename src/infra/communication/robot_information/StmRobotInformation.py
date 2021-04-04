@@ -19,8 +19,14 @@ class StmRobotInformation(IRobotInformation):
             return GripperStatus.HAS_PUCK
         return GripperStatus.DOESNT_HAVE_PUCK
 
+    def get_current_consumption(self):
+        command = bytes([StmCommand.ASK_CURRENT]) + bytes([StmPeripherals.BATTERY])
+        self._serial.write(command)
+        current_consumption = float(self._serial.readline()[1:].decode("utf-8"))
+        return current_consumption
+
     def get_power_consumption(self):
         command = bytes([StmCommand.ASK_POWER]) + bytes([StmPeripherals.BATTERY])
         self._serial.write(command)
-        power_consumption = self._serial.readline()[2:].decode("utf-8")
+        power_consumption = float(self._serial.readline()[2:].decode("utf-8"))
         return power_consumption
