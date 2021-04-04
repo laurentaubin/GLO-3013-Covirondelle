@@ -34,6 +34,9 @@ class GameStateDtoAssembler:
         battery_consumption = self._get_battery_consumption(
             game_state.get_battery_consumption()
         )
+        current_planned_trajectory = self._get_current_planned_trajectory(
+            game_state.get_current_planned_trajectory()
+        )
 
         return GameStateDto(
             puck_colors,
@@ -44,6 +47,7 @@ class GameStateDtoAssembler:
             robot_position,
             self._encode_image(table_image),
             battery_consumption,
+            current_planned_trajectory,
         )
 
     def _get_puck_colors(self, puck_colors: List[Color]) -> List[str]:
@@ -95,3 +99,12 @@ class GameStateDtoAssembler:
     def _encode_image(self, image: np.ndarray):
         _, buffer_img = cv2.imencode(".jpg", image)
         return base64.b64encode(buffer_img).decode()
+
+    def _get_current_planned_trajectory(
+        self, current_planned_trajectory: List[Position]
+    ) -> List[Position]:
+        return (
+            [position.to_dictionary() for position in current_planned_trajectory]
+            if current_planned_trajectory is not None
+            else self.EMPTY_ARRAY
+        )

@@ -1,5 +1,7 @@
 from typing import List
 
+from domain.Position import Position
+
 
 class GameStateDto:
     def __init__(
@@ -12,6 +14,7 @@ class GameStateDto:
         robot_position: dict,
         encoded_table_image: str,
         battery_consumption: float,
+        current_planned_trajectory: List[Position],
     ):
         self._puck_colors: List[str] = puck_colors
         self._current_puck: str = current_puck
@@ -21,3 +24,4 @@ class GameStateDto:
         self._robot_position: dict = robot_position
         self._encoded_table_image: str = encoded_table_image
         self._battery_consumption: float = battery_consumption
+        self._current_planned_trajectory: List[Position] = current_planned_trajectory

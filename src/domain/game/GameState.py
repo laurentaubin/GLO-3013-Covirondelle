@@ -4,6 +4,7 @@ import numpy as np
 
 from domain.GameTable import GameTable
 from domain.Color import Color
+from domain.Position import Position
 from domain.RobotPose import RobotPose
 from domain.StartingZoneCorner import StartingZoneCorner
 from domain.game.Stage import Stage
@@ -28,6 +29,7 @@ class GameState:
         self._battery_consumption: float = None
         self._game_table: GameTable = None
         self._resistance_value: Resistance = None
+        self._current_planned_trajectory: List[Position] = None
 
     @staticmethod
     def get_instance():
@@ -96,3 +98,11 @@ class GameState:
 
     def set_resistance_value(self, value: Resistance):
         self._resistance_value = value
+
+    def get_current_planned_trajectory(self) -> List[Position]:
+        return self._current_planned_trajectory
+
+    def set_current_planned_trajectory(
+        self, planned_trajectory: List[Position]
+    ) -> None:
+        self._current_planned_trajectory = planned_trajectory
