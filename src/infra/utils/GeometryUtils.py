@@ -23,5 +23,4 @@ class GeometryUtils:
     def get_quadrangle_center_y_coordinate_from_corners(
         corners: np.ndarray,
     ) -> np.float64:
-        thing = (corners[0][1] + corners[1][1] + corners[2][1] + corners[3][1]) / 4
-        return thing
+        return (corners[0][1] + corners[1][1] + corners[2][1] + corners[3][1]) / 4

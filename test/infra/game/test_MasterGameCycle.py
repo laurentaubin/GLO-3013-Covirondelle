@@ -5,7 +5,6 @@ from domain.game.Stage import Stage
 from infra.game.MasterGameCycle import MasterGameCycle
 
 
-@patch("builtins.input", lambda *args: "y")
 class TestMasterGameCycle(TestCase):
     START_GAME_CYCLE = Stage.START_CYCLE
     GO_TO_OHMMETER = Stage.GO_TO_OHMMETER
@@ -19,7 +18,8 @@ class TestMasterGameCycle(TestCase):
 
         self.master_game_cycle = MasterGameCycle(self.stage_service)
 
-    def test_whenRun_thenStageServiceIsCalledForEachGameCycleStage(self):
+    @patch("domain.game.GameState.GameState.is_game_cycle_started", return_value=True)
+    def test_whenRun_thenStageServiceIsCalledForEachGameCycleStage(self, game_state):
         self.master_game_cycle.run()
 
         self.stage_service.execute.assert_any_call(self.START_GAME_CYCLE)

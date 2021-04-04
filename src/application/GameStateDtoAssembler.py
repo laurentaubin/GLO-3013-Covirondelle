@@ -34,6 +34,7 @@ class GameStateDtoAssembler:
         battery_consumption = self._get_battery_consumption(
             game_state.get_battery_consumption()
         )
+        is_game_started = game_state.is_game_cycle_started()
         current_planned_trajectory = self._get_current_planned_trajectory(
             game_state.get_current_planned_trajectory()
         )
@@ -47,6 +48,7 @@ class GameStateDtoAssembler:
             robot_position,
             self._encode_image(table_image),
             battery_consumption,
+            is_game_started,
             current_planned_trajectory,
         )
 

@@ -1,3 +1,6 @@
+import time
+
+from domain.game.GameState import GameState
 from domain.game.IGameCycle import IGameCycle
 from domain.game.Stage import Stage
 from service.game.StageService import StageService
@@ -32,6 +35,8 @@ class MasterGameCycle(IGameCycle):
         pass
 
     def _wait_for_input(self):
+        game_state: GameState = GameState.get_instance()
         while True:
-            if input("Send start signal ? (y/n)") == "y":
+            if game_state.is_game_cycle_started():
                 break
+            time.sleep(0.5)

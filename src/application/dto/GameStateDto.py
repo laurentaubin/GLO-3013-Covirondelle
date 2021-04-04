@@ -14,6 +14,7 @@ class GameStateDto:
         robot_position: dict,
         encoded_table_image: str,
         battery_consumption: float,
+        is_game_started: bool,
         current_planned_trajectory: List[Position],
     ):
         self._puck_colors: List[str] = puck_colors
@@ -24,4 +25,5 @@ class GameStateDto:
         self._robot_position: dict = robot_position
         self._encoded_table_image: str = encoded_table_image
         self._battery_consumption: float = battery_consumption
+        self._is_game_started: bool = is_game_started
         self._current_planned_trajectory: List[Position] = current_planned_trajectory

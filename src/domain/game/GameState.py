@@ -19,6 +19,7 @@ class GameState:
             GameState.__instance__ = self
         else:
             raise Exception("You cannot create another GameState class")
+        self._is_started: bool = False
         self._puck_colors: List[Color] = None
         self._current_puck: Color = None
         self._current_stage: Stage = None
@@ -32,10 +33,16 @@ class GameState:
         self._current_planned_trajectory: List[Position] = None
 
     @staticmethod
-    def get_instance():
+    def get_instance() -> "GameState":
         if not GameState.__instance__:
             GameState()
         return GameState.__instance__
+
+    def is_game_cycle_started(self) -> bool:
+        return self._is_started
+
+    def start_game_cycle(self) -> None:
+        self._is_started = True
 
     def get_puck_colors(self) -> List[Color]:
         return self._puck_colors
