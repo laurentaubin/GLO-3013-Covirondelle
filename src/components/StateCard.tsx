@@ -59,6 +59,7 @@ class StateCard extends Component<AllProps> {
     public render() {
         const {classes} = this.props;
         const {title, active, neutral, isActive, onClick, label} = this.props;
+
         return (
             <div className={classes.root}>
                 <Typography gutterBottom variant="h5" component="h2">
@@ -80,7 +81,6 @@ class StateCard extends Component<AllProps> {
                         </Paper>
                     </Grid>
                 </Grid>
-
                 {(onClick) &&
                 <Button
                     className={classes.actionButton}

@@ -63,7 +63,13 @@ export const Dashboard = (props: any) => {
         socket.on(UPDATE_EVENT, received_data => {
             dispatch({"type": ActionType.UPDATE_STATE, "payload": received_data})
         });
-    }, []);
+    }, [state.isGameStarted]);
+
+    const send_start_signal = async () => {
+        const socket = io(SERVER_ENDPOINT)
+        socket.emit("start_game")
+        dispatch({"type": ActionType.START_GAME})
+    }
 
     return (
         <>
@@ -121,8 +127,8 @@ export const Dashboard = (props: any) => {
                                 title={'État du robot'}
                                 active={'ACTIF'}
                                 neutral={'EN ATTENTE'}
-                                isActive={false}
-                                onClick={() => console.log('envoie du signal de départ')}
+                                isActive={state.isGameStarted}
+                                onClick={send_start_signal}
                             />
                         </Paper>
                     </Grid>

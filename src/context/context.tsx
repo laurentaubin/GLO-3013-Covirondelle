@@ -53,7 +53,8 @@ interface InitialState {
     startingZoneCornersOrder: StartingZoneCorners[];
     robotPose: RobotPose;
     tableImage: unknown;
-    batteryConsumption: number
+    batteryConsumption: number,
+    isGameStarted: boolean
 }
 
 const initialPosition = {
@@ -77,7 +78,8 @@ const initialState = {
     startingZoneCornersOrder: [],
     robotPose: initialRobotPose,
     tableImage: null,
-    batteryConsumption: 0
+    batteryConsumption: 0,
+    isGameStarted: false
 }
 
 const AppContext = createContext<{

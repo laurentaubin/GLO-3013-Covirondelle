@@ -1,9 +1,16 @@
 export enum ActionType {
-    UPDATE_STATE = "UPDATE_STATE"
+    UPDATE_STATE = "UPDATE_STATE",
+    START_GAME = "START_GAME"
 }
 
 export const appReducer = (state: any, action: any) => {
     switch (action.type) {
+        case ActionType.START_GAME:
+            console.log(action)
+            return {
+                ...state,
+                isGameStarted: true
+            }
         case ActionType.UPDATE_STATE:
             console.log(action)
             return {

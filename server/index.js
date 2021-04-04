@@ -6,6 +6,8 @@ const path = require("path")
 
 
 const STATION_ENDPOINT_URL = "http://localhost:5000/information"
+const START_ENDPOINT_URL = "http://localhost:5000/start"
+
 const port = process.env.PORT || 4001;
 
 const app = express();
@@ -30,10 +32,16 @@ const io = socketIo(server, {
 let interval;
 
 io.on("connection", (socket) => {
-  console.log("New client connected");
+  console.log("Client connected")
   if (interval) {
     clearInterval(interval);
   }
+
+  socket.on("start_game", () => {
+    console.log("start_game")
+    axios.post(START_ENDPOINT_URL).then(r => socket.emit("game_started", r.data))
+  });
+
   interval = setInterval(() => getApiAndEmit(socket), 1000);
   socket.on("disconnect", () => {
     console.log("Client disconnected");
@@ -43,6 +51,8 @@ io.on("connection", (socket) => {
 
 const getApiAndEmit = socket => {
   axios.get(STATION_ENDPOINT_URL).then(function (response) {
+      console.log("emit game update")
+      response.data.batteryConsumption = response.data.batteryConsumption + 1
       socket.emit("GameCycleUpdate", response.data);
     }
   ).catch(function (error) {
