@@ -226,8 +226,8 @@ class RobotContext:
             self._maestro,
             GRIPPER_HORIZONTAL_SERVO_ID,
             GRIPPER_VERTICAL_SERVO_ID,
-            OPEN_GRIPPER_TARGET,
             CLOSE_GRIPPER_TARGET,
+            OPEN_GRIPPER_TARGET,
             MOVE_GRIPPER_UP_TARGET,
             MOVE_GRIPPER_DOWN_TARGET,
         )
