@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import {makeStyles, Theme, createStyles, withStyles, WithStyles, decomposeColor} from '@material-ui/core/styles';
+import {createStyles, Theme, withStyles, WithStyles} from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import StepContent from '@material-ui/core/StepContent';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import {Paper} from "@material-ui/core";
+import {PuckColor} from "../context/context";
 
 const styles = (theme: Theme) => createStyles({
     root: {
@@ -48,30 +48,32 @@ function getStepColor(label: string) {
 }
 
 type Props = {
-    steps: string[]
-    activeStep: number
+    pucks: PuckColor[]
+    activePuck: number
 };
 
 type AllProps = Props & WithStyles<typeof styles>;
 
 class RobotStepper extends Component<AllProps> {
-    render () {
-        const {activeStep, classes, steps} = this.props;
+    render() {
+        const {activePuck, classes, pucks} = this.props;
         return (
             <div className={classes.root}>
                 <Typography variant="h5" component="h5">Rondelles</Typography>
-                <Stepper activeStep={activeStep} alternativeLabel>
-                    {steps.map((puck) => (
+                {pucks.length === 0 && <Typography variant="subtitle1">En attente</Typography>}
+                {pucks.length > 0 && <Stepper activeStep={activePuck + 1} alternativeLabel>
+                    {pucks.map((puck) => (
                         <Step key={puck}>
                             <StepLabel>{puck}</StepLabel>
-                            <div className={classes.circle} style={{backgroundColor: getStepColor(puck)}} />
-                            <Typography style={{backgroundColor: getStepColor(puck)}} />
+                            <div className={classes.circle} style={{backgroundColor: getStepColor(puck)}}/>
+                            <Typography style={{backgroundColor: getStepColor(puck)}}/>
                         </Step>
                     ))}
                 </Stepper>
-                {activeStep === steps.length && (
+                }
+                {activePuck === pucks.length && (
                     <Paper square elevation={0} className={classes.resetContainer}>
-                        <Typography>Game cycle completed!</Typography>
+                        <Typography>Terminé!</Typography>
                     </Paper>
                 )}
             </div>

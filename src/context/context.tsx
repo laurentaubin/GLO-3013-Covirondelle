@@ -1,7 +1,7 @@
 import React, {createContext, useReducer} from 'react';
 import {appReducer} from "./reducer";
 
-enum PuckColor {
+export enum PuckColor {
     NONE="NONE",
     BLACK="BLACK",
     BROWN="BROWN",
@@ -15,7 +15,7 @@ enum PuckColor {
     WHITE="WHITE"
 }
 
-enum Stage {
+export enum Stage {
     BOOT="BOOT",
     START_GAME_CYCLE="START_GAME_CYCLE",
     READ_RESISTANCE="READ_RESISTANCE",

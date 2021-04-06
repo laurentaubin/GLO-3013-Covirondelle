@@ -5,7 +5,7 @@ import RobotStepper from "./RobotStepper";
 import StateCard from "./StateCard";
 import DataCard from "./DataCard";
 import PucksStepper from "./PucksStepper";
-import {AppContext} from "../context/context";
+import {AppContext, Stage} from "../context/context";
 import {io} from "socket.io-client";
 import {SERVER_ENDPOINT, UPDATE_EVENT} from "../config/config"
 import {ActionType} from "../context/reducer";
@@ -106,8 +106,8 @@ export const Dashboard = (props: any) => {
                     <Grid item xs={12}>
                         <Paper className={classes.smallPaper}>
                             <PucksStepper
-                                steps={state.puckColors ? state.puckColors: []}
-                                activeStep={1}
+                                pucks={state.puckColors}
+                                activePuck={1}
                             />
                         </Paper>
                     </Grid>
@@ -134,8 +134,7 @@ export const Dashboard = (props: any) => {
                     </Grid>
                 </Grid>
                 <RobotStepper
-                    //TODO: Pass index of active step
-                    activeStep={7}
+                    activeStage={Stage.READ_RESISTANCE}
                 />
             </div>
         </>
