@@ -14,7 +14,7 @@ from domain.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
 class TestPuckAlignmentCorrector(TestCase):
     A_PUCK_COLOR = Color.BLUE
     AN_IMAGE = MagicMock()
-    IMAGE_CENTRAL_POINT: Position = Position(500, 500)
+    CORRECTLY_PLACED_POSITION: Position = Position(500, 500)
     ANY_POSITION = Position(69, 420)
     POSITION_WITHIN_HORIZONTAL_THRESHOLD = Position(515, 500)
     POSITION_WITHIN_VERTICAL_THRESHOLD = Position(3211, 496)
@@ -22,7 +22,8 @@ class TestPuckAlignmentCorrector(TestCase):
     POSITION_TOO_FAR_TO_THE_LEFT = Position(300, 500)
     POSITION_TOO_FAR_FORWARD = Position(324, 24)
     POSITION_TOO_CLOSE = Position(65, 843)
-    CENTER_POSITION_THRESHOLD: int = 20
+    HORIZONTAL_THRESHOLD = 20
+    UP_THRESHOLD = 20
     STOP_MOVEMENT_COMMAND = MovementCommand(
         Direction.STOP, Speed(0), CommandDuration(0)
     )
@@ -32,7 +33,10 @@ class TestPuckAlignmentCorrector(TestCase):
     def setUp(self) -> None:
         self.puck_detector = MagicMock()
         self.alignment_corrector = PuckAlignmentCorrector(
-            self.IMAGE_CENTRAL_POINT, self.CENTER_POSITION_THRESHOLD, self.puck_detector
+            self.CORRECTLY_PLACED_POSITION,
+            self.HORIZONTAL_THRESHOLD,
+            self.UP_THRESHOLD,
+            self.puck_detector,
         )
 
     def test_givenAnImage_whenCalculateHorizontalCorrection_thenPuckPositionIsDetected(

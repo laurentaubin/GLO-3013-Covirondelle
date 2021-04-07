@@ -34,9 +34,11 @@ from config.config import (
     ALIGNED_OHMMETER_HORIZONTAL_POSITION,
     OHMMETER_ALIGNMENT_THRESHOLD,
     RESISTANCE_READ_THRESHOLD,
+    PUCK_ALIGNMENT_HORIZONTAL_THRESHOLD,
 )
 from domain.Position import Position
 from domain.alignment.OhmmeterAlignmentCorrector import OhmmeterAlignmentCorrector
+from domain.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
 from domain.communication.IRobotInformation import IRobotInformation
 from domain.movement.CommandDuration import CommandDuration
 from domain.movement.MovementCommandFactory import MovementCommandFactory
@@ -46,12 +48,10 @@ from domain.vision.IPuckDetector import IPuckDetector
 from domain.vision.IStartingZoneLineDetector import IStartingZoneLineDetector
 from infra.IServoController import IServoController
 from infra.MaestroController import MaestroController
-from domain.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
 from infra.camera.OpenCvEmbeddedCamera import OpenCvEmbeddedCamera
 from infra.communication.robot_information.StmRobotInformation import (
     StmRobotInformation,
 )
-
 from infra.communication.station.ZmqPublisherConnector import ZmqPublisherConnector
 from infra.communication.station.ZmqReqRepConnector import ZmqReqRepConnector
 from infra.game.SlaveGameCycle import SlaveGameCycle
@@ -256,11 +256,14 @@ class RobotContext:
     def _create_puck_alignment_corrector(
         self, puck_detector: IPuckDetector
     ) -> PuckAlignmentCorrector:
-        puck_center_position = Position(
+        puck_correctly_placed_position = Position(
             PUCK_ALIGNMENT_X_CENTER_POSITION, PUCK_ALIGNMENT_Y_CENTER_POSITION
         )
         return PuckAlignmentCorrector(
-            puck_center_position, PUCK_ALIGNMENT_THRESHOLD, puck_detector
+            puck_correctly_placed_position,
+            PUCK_ALIGNMENT_HORIZONTAL_THRESHOLD,
+            PUCK_ALIGNMENT_THRESHOLD,
+            puck_detector,
         )
 
     def _create_ohmmeter_alignment_corrector(

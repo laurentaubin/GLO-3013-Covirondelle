@@ -18,12 +18,14 @@ class PuckAlignmentCorrector:
 
     def __init__(
         self,
-        image_central_point: Position,
-        center_position_threshold: int,
+        correctly_placed_position: Position,
+        horizontal_threshold: int,
+        up_threshold: int,
         puck_detector: IPuckDetector,
     ):
-        self._image_central_point = image_central_point
-        self._center_position_threshold = center_position_threshold
+        self.correctly_placed_position = correctly_placed_position
+        self._horizontal_threshold = horizontal_threshold
+        self._up_threshold = up_threshold
         self._puck_detector = puck_detector
 
     def calculate_horizontal_correction(
@@ -32,7 +34,7 @@ class PuckAlignmentCorrector:
         puck_position: Position = self._puck_detector.detect(image, puck_color)
         horizontal_distance_from_center: int = (
             puck_position.get_x_coordinate()
-            - self._image_central_point.get_x_coordinate()
+            - self.correctly_placed_position.get_x_coordinate()
         )
         if self._is_puck_position_within_horizontal_threshold(
             horizontal_distance_from_center
@@ -49,7 +51,7 @@ class PuckAlignmentCorrector:
 
         vertical_distance_from_center: int = (
             puck_position.get_y_coordinate()
-            - self._image_central_point.get_y_coordinate()
+            - self.correctly_placed_position.get_y_coordinate()
         )
         if self._is_puck_within_vertical_threshold(vertical_distance_from_center):
             return self.STOP_MOVEMENT_COMMAND
@@ -58,7 +60,7 @@ class PuckAlignmentCorrector:
     def _is_puck_position_within_horizontal_threshold(
         self, horizontal_distance_from_center: int
     ) -> bool:
-        return abs(horizontal_distance_from_center) <= self._center_position_threshold
+        return abs(horizontal_distance_from_center) <= self._horizontal_threshold
 
     def _calculate_horizontal_movement_command(
         self, distance_from_center: int
@@ -99,4 +101,4 @@ class PuckAlignmentCorrector:
     def _is_puck_within_vertical_threshold(
         self, vertical_distance_from_center: int
     ) -> bool:
-        return abs(vertical_distance_from_center) <= self._center_position_threshold
+        return abs(vertical_distance_from_center) <= self._up_threshold
