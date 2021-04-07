@@ -5,7 +5,7 @@ from domain.game.IStageHandler import IStageHandler
 from domain.game.Stage import Stage
 from domain.movement.Direction import Direction
 from domain.movement.MovementCommand import MovementCommand
-from domain.vision.Color import Color
+from domain.Color import Color
 from service.communication.CommunicationService import CommunicationService
 from service.movement.MovementService import MovementService
 from service.vision.VisionService import VisionService

@@ -1,5 +1,5 @@
 from domain.exception.InvalidResistanceException import InvalidResistanceException
-from domain.resistance.ResistanceColor import ResistanceColor
+from domain.Color import Color
 
 
 class Resistance:
@@ -21,16 +21,16 @@ class Resistance:
     def __init__(self, resistance_value: float) -> None:
         self._resistance_value = resistance_value
 
-    def get_colors(self) -> {ResistanceColor, ResistanceColor, ResistanceColor}:
+    def get_colors(self) -> {Color, Color, Color}:
 
         first_digit = self._find_nth_digit(0)
         second_digit = self._find_nth_digit(1)
         multiplication_factor = self._find_multiplication_factor()
 
         return (
-            ResistanceColor.valueOf(first_digit),
-            ResistanceColor.valueOf(second_digit),
-            ResistanceColor.valueOf(multiplication_factor),
+            Color.value_of_resistance_digit(first_digit),
+            Color.value_of_resistance_digit(second_digit),
+            Color.value_of_resistance_digit(multiplication_factor),
         )
 
     def __eq__(self, other):

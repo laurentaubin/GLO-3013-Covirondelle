@@ -29,5 +29,5 @@ class Color(Enum):
     @staticmethod
     def value_of_resistance_digit(digit: int) -> "Color":
         for color in Color:
-            if digit == color.get_resistance_digit:
+            if digit == color.get_resistance_digit():
                 return color

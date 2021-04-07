@@ -3,7 +3,7 @@ from unittest import TestCase
 import cv2
 
 from domain.Position import Position
-from domain.vision.Color import Color
+from domain.Color import Color
 from domain.vision.exception.PuckNotFoundException import PuckNotFoundException
 from infra.vision.OpenCvPuckDetector import OpenCvPuckDetector
 

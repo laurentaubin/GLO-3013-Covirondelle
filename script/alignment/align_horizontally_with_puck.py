@@ -17,7 +17,7 @@ from domain.movement.Direction import Direction
 from domain.movement.MovementCommand import MovementCommand
 from domain.movement.MovementCommandFactory import MovementCommandFactory
 from domain.movement.MovementFactory import MovementFactory
-from domain.vision.Color import Color
+from domain.Color import Color
 from domain.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
 from infra.motor_controller.StmMotorController import StmMotorController
 from infra.vision.OpenCvPuckDetector import OpenCvPuckDetector

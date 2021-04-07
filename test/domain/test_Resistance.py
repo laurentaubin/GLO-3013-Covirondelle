@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from domain.exception.InvalidResistanceException import InvalidResistanceException
 from domain.resistance.Resistance import Resistance
-from domain.resistance.ResistanceColor import ResistanceColor
+from domain.Color import Color
 
 
 class TestResistance(TestCase):
@@ -13,7 +13,7 @@ class TestResistance(TestCase):
 
         first_color, *_ = resistance.get_colors()
 
-        self.assertEqual(first_color, ResistanceColor.YELLOW)
+        self.assertEqual(first_color, Color.YELLOW)
 
     def test_givenResistanceValueStartingWithFive_whenGettingColors_thenFirstColorIsGreen(
         self,
@@ -22,7 +22,7 @@ class TestResistance(TestCase):
 
         first_color, *_ = resistance.get_colors()
 
-        self.assertEqual(first_color, ResistanceColor.GREEN)
+        self.assertEqual(first_color, Color.GREEN)
 
     def test_givenResistanceValueWithTwoAsSecondDigit_whenGettingColors_thenSecondColorIsRed(
         self,
@@ -31,7 +31,7 @@ class TestResistance(TestCase):
 
         _, second_color, *_ = resistance.get_colors()
 
-        self.assertEqual(second_color, ResistanceColor.RED)
+        self.assertEqual(second_color, Color.RED)
 
     def test_givenResistanceValueWithSixAsSecondDigit_whenGettingColors_thenSecondColorIsBlue(
         self,
@@ -40,7 +40,7 @@ class TestResistance(TestCase):
 
         _, second_color, *_ = resistance.get_colors()
 
-        self.assertEqual(second_color, ResistanceColor.BLUE)
+        self.assertEqual(second_color, Color.BLUE)
 
     def test_givenResistanceValueOfOrderFive_whenGettingColors_thenThirdColorIsOrange(
         self,
@@ -49,7 +49,7 @@ class TestResistance(TestCase):
 
         *_, third_color = resistance.get_colors()
 
-        self.assertEqual(third_color, ResistanceColor.ORANGE)
+        self.assertEqual(third_color, Color.ORANGE)
 
     def test_givenResistanceValueOfOrderThree_whenGettingColors_thenThirdColorIsBrown(
         self,
@@ -58,7 +58,7 @@ class TestResistance(TestCase):
 
         *_, third_color = resistance.get_colors()
 
-        self.assertEqual(third_color, ResistanceColor.BROWN)
+        self.assertEqual(third_color, Color.BROWN)
 
     def test_givenResistanceValueOf9500_whenRoundToNearestE12Value_thenReturnClosestE12ValueOf10000(
         self,

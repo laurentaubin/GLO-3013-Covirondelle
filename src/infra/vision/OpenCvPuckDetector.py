@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 
 from domain.Position import Position
-from domain.vision.Color import Color
+from domain.Color import Color
 from domain.vision.IPuckDetector import IPuckDetector
 from domain.vision.exception.PuckNotFoundException import PuckNotFoundException
 
