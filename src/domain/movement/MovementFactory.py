@@ -1,10 +1,10 @@
 from typing import List
 
-from domain.movement.Direction import Direction
-from domain.pathfinding.Path import Path
-from domain.movement.Movement import Movement
 from domain.Position import Position
+from domain.movement.Direction import Direction
 from domain.movement.Distance import Distance
+from domain.movement.Movement import Movement
+from domain.pathfinding.Path import Path
 
 
 class MovementFactory:

@@ -1,7 +1,9 @@
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
+from domain.communication.Message import Message
 from domain.game.Stage import Stage
+from domain.game.Topic import Topic
 from service.handler.StartCycleHandler import StartCycleHandler
 
 
@@ -48,15 +50,13 @@ class TestStartCycleHandler(TestCase):
         gameState_mock.assert_called_with(self.A_GAME_TABLE)
 
     def test_whenExecute_thenStartSignalIsSentToRobot(self):
-        start_signal = Stage.START_CYCLE.value
+        start_signal = Message(Topic.START_CYCLE, Stage.START_CYCLE)
 
         self.start_cycle_handler.execute()
 
-        self.communication_service.send_game_cycle_response.assert_called_with(
-            start_signal
-        )
+        self.communication_service.send_object.assert_called_with(start_signal)
 
     def test_whenExecute_thenRobotResponseIsHandled(self):
         self.start_cycle_handler.execute()
 
-        self.communication_service.receive_game_cycle_request.assert_called()
+        self.communication_service.receive_object.assert_called()

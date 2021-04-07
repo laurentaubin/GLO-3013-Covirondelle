@@ -1,8 +1,10 @@
 import time
 
+from domain.communication.Message import Message
 from domain.game.GameState import GameState
 from domain.game.IStageHandler import IStageHandler
 from domain.game.Stage import Stage
+from domain.game.Topic import Topic
 from service.communication.CommunicationService import CommunicationService
 from service.path.PathService import PathService
 from service.vision.VisionService import VisionService
@@ -33,13 +35,15 @@ class StartCycleHandler(IStageHandler):
 
     def _send_start_signal(self):
         print("Sending start signal...")
-        self._communication_service.send_game_cycle_response(Stage.START_CYCLE.value)
+        self._communication_service.send_object(
+            Message(Topic.START_CYCLE, Stage.START_CYCLE)
+        )
         time.sleep(1)
 
     def _route_robot_response(self):
-        response = self._communication_service.receive_game_cycle_request()
+        message = self._communication_service.receive_object()
 
-        if response == Stage.STAGE_COMPLETED.value:
+        if message.get_payload() == Stage.STAGE_COMPLETED:
             return
 
         print("Whoops, robot sent the wrong thing")
