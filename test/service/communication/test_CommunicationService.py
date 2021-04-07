@@ -1,7 +1,8 @@
 from unittest import TestCase
 from unittest.mock import MagicMock
 
-from domain.communication.message import Message
+from domain.communication.Message import Message
+from domain.game.Topic import Topic
 from domain.gripper.GripperStatus import GripperStatus
 from service.communication.CommunicationService import CommunicationService
 
@@ -13,7 +14,7 @@ A_POWER_CONSUMPTION = 10.0
 
 
 class TestCommunicationService(TestCase):
-    A_MESSAGE = Message("a task", False)
+    A_MESSAGE = Message(Topic.READ_RESISTANCE, False)
 
     def setUp(self):
         self.pub_sub_connector = MagicMock()

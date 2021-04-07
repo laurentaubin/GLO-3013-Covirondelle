@@ -3,7 +3,7 @@ SOCKET_DOCKER_BASE_ADDRESS = "tcp://covirondelle-station:"
 SOCKET_LOCAL_BASE_ADDRESS = "tcp://localhost:"
 PING_PORT = "5555"
 # TODO Replace with IP address of station when at the lab
-SOCKET_STATION_ADDRESS = "tcp://192.168.0.119:"
+SOCKET_STATION_ADDRESS = "tcp://192.168.0.111:"
 GAME_CYCLE_PORT = "5556"
 
 # Vision

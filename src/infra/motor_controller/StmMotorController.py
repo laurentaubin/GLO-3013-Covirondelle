@@ -29,5 +29,3 @@ class StmMotorController(IMotorController):
         encoded_speed = struct.pack("f", command.get_speed().get_speed())
         self._serial.write(encoded_direction + encoded_speed)
         time.sleep(command.get_duration().get_duration())
-
-        print("Response from STM32: %s" % self._serial.readline().decode("utf-8"))

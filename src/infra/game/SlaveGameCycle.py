@@ -1,5 +1,7 @@
+from domain.communication.Message import Message
 from domain.game.IGameCycle import IGameCycle
 from domain.game.Stage import Stage
+from domain.game.Topic import Topic
 from service.communication.CommunicationService import CommunicationService
 from service.game.StageService import StageService
 
@@ -29,11 +31,16 @@ class SlaveGameCycle(IGameCycle):
     def _wait_until_start_signal(self):
         while True:
             print("Waiting for start signal ...")
-            message = self.communication_service.receive_game_cycle_message()
-            print("Message received in game cycle: " + message)
-            if message == Stage.START_CYCLE.value:
-                self.communication_service.send_game_cycle_message(
-                    Stage.STAGE_COMPLETED.value
+            message = self.communication_service.receive_object()
+            print(
+                "Message received in game cycle: "
+                + str(message.get_topic())
+                + " -> "
+                + str(message.get_payload())
+            )
+            if message.get_payload() == Stage.START_CYCLE:
+                self.communication_service.send_object(
+                    Message(Topic.STAGE_COMPLETED, Stage.STAGE_COMPLETED)
                 )
                 break
 
