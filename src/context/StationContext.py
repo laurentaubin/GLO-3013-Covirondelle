@@ -31,6 +31,7 @@ from infra.camera.OpenCvWorldCamera import OpenCvWorldCamera
 from infra.communication.robot.ZmqSubscriberConnector import ZmqSubscriberConnector
 from infra.communication.robot.ZmqReqRepConnector import ZmqReqRepConnector
 from infra.game.MasterGameCycle import MasterGameCycle
+from infra.vision.HardcodedStartingZoneDetector import HardcodedStartingZoneDetector
 from infra.vision.OpenCvObstacleDetector import OpenCvObstacleDetector
 from infra.vision.OpenCvRobotDetector import OpenCvRobotDetector
 from infra.vision.OpenCvStartingZoneDetector import OpenCvStartingZoneDetector
@@ -148,7 +149,7 @@ class StationContext:
         return StopHandler(self._communication_service, self._stage_request_router)
 
     def _create_vision_service(self):
-        starting_zone_corners_detector = OpenCvStartingZoneDetector()
+        starting_zone_corners_detector = HardcodedStartingZoneDetector()
         obstacle_detector = OpenCvObstacleDetector(
             OBSTACLE_ARUCO_MARKER_ID,
             DICT_4X4_50,

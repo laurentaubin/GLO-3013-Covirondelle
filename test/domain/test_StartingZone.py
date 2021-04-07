@@ -49,7 +49,7 @@ class TestStartingZone(TestCase):
             StartingZoneCorner.A
         )
 
-        self.assertEqual(self.UPPER_LEFT_CORNER, corner_position)
+        self.assertEqual(self.UPPER_RIGHT_CORNER, corner_position)
 
     def test_givenLetterB_whenFindCornerPositionFromLetter_thenReturnUpperRightCorner(
         self,
@@ -58,7 +58,7 @@ class TestStartingZone(TestCase):
             StartingZoneCorner.B
         )
 
-        self.assertEqual(self.UPPER_RIGHT_CORNER, corner_position)
+        self.assertEqual(self.LOWER_RIGHT_CORNER, corner_position)
 
     def test_givenLetterC_whenFindCornerPositionFromLetter_thenReturnLowerRightCorner(
         self,
@@ -67,7 +67,7 @@ class TestStartingZone(TestCase):
             StartingZoneCorner.C
         )
 
-        self.assertEqual(self.LOWER_RIGHT_CORNER, corner_position)
+        self.assertEqual(self.LOWER_LEFT_CORNER, corner_position)
 
     def test_givenLetterD_whenFindCornerPositionFromLetter_thenReturnLowerLeftCorner(
         self,
@@ -76,4 +76,4 @@ class TestStartingZone(TestCase):
             StartingZoneCorner.D
         )
 
-        self.assertEqual(self.LOWER_LEFT_CORNER, corner_position)
+        self.assertEqual(self.UPPER_LEFT_CORNER, corner_position)

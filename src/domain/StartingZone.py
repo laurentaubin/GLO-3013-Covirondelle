@@ -59,10 +59,10 @@ class StartingZone:
         self, corner_letter: StartingZoneCorner
     ) -> Position:
         starting_zone_letter_to_corner = {
-            StartingZoneCorner.A: self._upper_left_corner,
-            StartingZoneCorner.B: self._upper_right_corner,
-            StartingZoneCorner.C: self._lower_right_corner,
-            StartingZoneCorner.D: self._lower_left_corner,
+            StartingZoneCorner.A: self._upper_right_corner,
+            StartingZoneCorner.B: self._lower_right_corner,
+            StartingZoneCorner.C: self._lower_left_corner,
+            StartingZoneCorner.D: self._upper_left_corner,
         }
 
         return starting_zone_letter_to_corner.get(corner_letter)
