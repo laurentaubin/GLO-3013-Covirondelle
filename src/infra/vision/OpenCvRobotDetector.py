@@ -20,7 +20,7 @@ class OpenCvRobotDetector(IRobotDetector):
         self._aruco_dictionary = aruco.Dictionary_get(aruco_dictionary)
         self._robot_aruco_marker_id = robot_aruco_marker_id
 
-    def detect(self, image):
+    def detect(self, image) -> RobotPose:
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         corners, ids, _ = aruco.detectMarkers(

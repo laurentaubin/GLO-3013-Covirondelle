@@ -135,20 +135,20 @@ class TestAStarShortestPathAlgorithm(TestCase):
         ending_position = Position(5, 1)
         expected_path = Path(
             [
-                Position(1, 2),
-                Position(1, 3),
-                Position(2, 3),
+                Position(2, 1),
+                Position(3, 1),
+                Position(3, 2),
                 Position(3, 3),
-                Position(4, 3),
-                Position(5, 3),
-                Position(6, 3),
-                Position(6, 4),
-                Position(6, 5),
-                Position(5, 5),
-                Position(4, 5),
+                Position(3, 4),
                 Position(3, 5),
-                Position(2, 5),
-                Position(1, 5),
+                Position(3, 6),
+                Position(4, 6),
+                Position(5, 6),
+                Position(5, 5),
+                Position(5, 4),
+                Position(5, 3),
+                Position(5, 2),
+                Position(5, 1),
             ]
         )
 

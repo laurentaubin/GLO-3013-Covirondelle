@@ -11,7 +11,7 @@ MINIMUM_AREA = 800
 
 
 class OpenCvPuckDetector(IPuckDetector):
-    def detect(self, image, color: Color) -> Position:
+    def detect(self, image: np.array, color: Color) -> Position:
         mask = self._prepare_mask(image, color)
         contours, hierarchy = cv2.findContours(
             mask, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE

@@ -48,3 +48,10 @@ class PathService:
                 Position(DEFAULT_OHMMETER_POSITION[0], DEFAULT_OHMMETER_POSITION[1]),
             )
         )
+
+    def find_path(self, robot_position: Position, goal_position: Position):
+        return (
+            self._shortest_path_algorithm.find_shortest_path_with_cartesian_coordinates(
+                robot_position, goal_position
+            )
+        )

@@ -11,7 +11,7 @@ from domain.movement.MovementFactory import MovementFactory
 
 class TestContext(StationContext):
     def __init__(self):
-        super().__init__(local_flag=True)
+        super().__init__(local_flag=False)
 
 
 if __name__ == "__main__":
@@ -26,7 +26,7 @@ if __name__ == "__main__":
     game_table = context._vision_service.create_game_table()
     context._path_service.set_game_table(game_table)
 
-    puck_position = Position(1500, 400)
+    puck_position = Position(1400, 600)
     path = (
         context._shortest_path_algorithm.find_shortest_path_with_cartesian_coordinates(
             GameState.get_instance().get_robot_pose().get_position(), puck_position
@@ -45,7 +45,7 @@ if __name__ == "__main__":
                 table_image[i][j] = [255, 0, 255]
 
     for element in path:
-        table_image[element.get_x_coordinate()][element.get_y_coordinate()] = [
+        table_image[element.get_y_coordinate()][element.get_x_coordinate()] = [
             0,
             255,
             0,
@@ -53,7 +53,10 @@ if __name__ == "__main__":
 
     cv2.imshow("astar pathfinding algorithm", table_image)
     cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
     print("sending movement")
-    context._communication_service.send_object(movements)
+    for movement in movements:
+        print(movement.get_direction())
+    # context._communication_service.send_object(movements)
     print("movement sent")

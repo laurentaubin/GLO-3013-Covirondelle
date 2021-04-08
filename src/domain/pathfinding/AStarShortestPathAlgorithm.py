@@ -141,10 +141,10 @@ class AStarShortestPathAlgorithm(IShortestPathAlgorithm):
         current: GridLocation = goal
         path: List[Position] = []
         while current != start:
-            current_x_coordinate, current_y_coordinate = current
+            current_y_coordinate, current_x_coordinate = current
             path.append(Position(current_x_coordinate, current_y_coordinate))
             current = came_from[current]
-        start_x_coordinate, start_y_coordinate = start
+        start_y_coordinate, start_x_coordinate = start
         path.append(Position(start_x_coordinate, start_y_coordinate))
         path.reverse()
         return Path(path)

@@ -1,6 +1,7 @@
 from unittest import TestCase
 from unittest.mock import MagicMock
 
+from domain.Color import Color
 from domain.Position import Position
 from service.vision.VisionService import VisionService
 
@@ -13,6 +14,8 @@ class TestVisionService(TestCase):
     A_POSITION_LIST = [Position(100, 100), Position(200, 200)]
     A_MAZE = MagicMock()
     A_ROBOT_POSE = MagicMock()
+    A_POSITION = MagicMock()
+    A_COLOR = Color.BLUE
 
     def setUp(self):
         self.setUpMocks()
@@ -26,6 +29,7 @@ class TestVisionService(TestCase):
             self.world_camera,
             self.maze_factory,
             self.robot_detector,
+            self.puck_detector,
         )
 
         self.table_detector.crop_table.return_value = self.AN_IMAGE
@@ -40,6 +44,7 @@ class TestVisionService(TestCase):
         self.world_camera = MagicMock()
         self.maze_factory = MagicMock()
         self.robot_detector = MagicMock()
+        self.puck_detector = MagicMock()
 
     def test_whenCreateGameTable_thenImageIsUndistorted(self):
         self.vision_service.create_game_table()
@@ -103,3 +108,20 @@ class TestVisionService(TestCase):
 
         self.assertEqual(actual_table_image, self.AN_IMAGE)
         self.assertEqual(actual_robot_pose, self.A_ROBOT_POSE)
+
+    def test_givenColorAndCalibratedTableImage_whenFindPuck_thenUsePuckDetectorToDetectRightColor(
+        self,
+    ):
+        self.image_calibrator.calibrate.return_value = self.AN_IMAGE
+        a_color = Color.YELLOW
+
+        self.vision_service.find_puck_position(a_color)
+
+        self.puck_detector.detect.assert_called_with(self.AN_IMAGE, a_color)
+
+    def test_givenPuckDetectedByDetector_whenFindPuck_thenReturnPuckPosition(self):
+        self.puck_detector.detect.return_value = self.A_POSITION
+
+        actual_position = self.vision_service.find_puck_position(self.A_COLOR)
+
+        self.assertEqual(self.A_POSITION, actual_position)

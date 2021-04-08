@@ -33,6 +33,7 @@ from infra.communication.robot.ZmqReqRepConnector import ZmqReqRepConnector
 from infra.game.MasterGameCycle import MasterGameCycle
 from infra.vision.HardcodedStartingZoneDetector import HardcodedStartingZoneDetector
 from infra.vision.OpenCvObstacleDetector import OpenCvObstacleDetector
+from infra.vision.OpenCvPuckDetector import OpenCvPuckDetector
 from infra.vision.OpenCvRobotDetector import OpenCvRobotDetector
 from infra.vision.OpenCvStartingZoneDetector import OpenCvStartingZoneDetector
 from infra.vision.OpenCvTableDetector import OpenCvTableDetector
@@ -171,6 +172,7 @@ class StationContext:
             self._world_camera,
             maze_factory,
             robot_detector,
+            OpenCvPuckDetector(),
         )
 
     def _create_world_camera(self):

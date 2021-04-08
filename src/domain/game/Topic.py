@@ -8,7 +8,7 @@ class Topic(Enum):
     STAGE_COMPLETED = "stage completed"
     MOVEMENTS = "movements"
     ROTATION = "rotation"
-    PUCK_TO_TRANSPORT = "puck to transport"
+    GRAB_PUCK = "grab puck"
     DROP_PUCK = "drop puck"
     READ_RESISTANCE = "read resistance"
     ANALYZE_COMMAND_PANEL = "analyze command panel"
