@@ -34,6 +34,7 @@ from config.config import (
     ALIGNED_OHMMETER_HORIZONTAL_POSITION,
     OHMMETER_ALIGNMENT_THRESHOLD,
     RESISTANCE_READ_THRESHOLD,
+    AN_IMAGE_PATH,
     PUCK_ALIGNMENT_HORIZONTAL_THRESHOLD,
 )
 from domain.Position import Position
@@ -48,6 +49,7 @@ from domain.vision.IPuckDetector import IPuckDetector
 from domain.vision.IStartingZoneLineDetector import IStartingZoneLineDetector
 from infra.IServoController import IServoController
 from infra.MaestroController import MaestroController
+from infra.camera.ImageBasedEmbeddedCamera import ImageBasedEmbeddedCamera
 from infra.camera.OpenCvEmbeddedCamera import OpenCvEmbeddedCamera
 from infra.communication.robot_information.StmRobotInformation import (
     StmRobotInformation,
@@ -178,14 +180,14 @@ class RobotContext:
             movement_command_factory,
         )
         find_command_panel_handler = FindCommandPanelHandler()
-        puck_alignment_corrector = self._create_puck_alignment_corrector(
+        self._puck_alignment_corrector = self._create_puck_alignment_corrector(
             OpenCvPuckDetector()
         )
         transport_puck_handler = TransportPuckHandler(
             self._communication_service,
             self._vision_service,
             self._movement_service,
-            puck_alignment_corrector,
+            self._puck_alignment_corrector,
         )
         go_park_handler = GoParkHandler()
         stop_handler = StopHandler()
@@ -209,7 +211,16 @@ class RobotContext:
 
     def _create_vision_service(self):
 
-        embedded_camera = OpenCvEmbeddedCamera(
+        embedded_camera = self._create_embedded_camera()
+        letter_position_detector = PytesseractLetterPositionExtractor()
+
+        return VisionService(embedded_camera, letter_position_detector)
+
+    def _create_embedded_camera(self):
+        if self._local_flag:
+            return ImageBasedEmbeddedCamera(AN_IMAGE_PATH)
+
+        return OpenCvEmbeddedCamera(
             CAMERA_INDEX,
             self._maestro,
             CAMERA_HORIZONTAL_SERVO_ID,
@@ -217,9 +228,6 @@ class RobotContext:
             HORIZONTAL_ANGLE_RANGE,
             VERTICAL_ANGLE_RANGE,
         )
-        letter_position_detector = PytesseractLetterPositionExtractor()
-
-        return VisionService(embedded_camera, letter_position_detector)
 
     def _create_gripper_service(self):
         gripper = MaestroGripper(

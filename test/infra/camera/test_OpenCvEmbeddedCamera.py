@@ -2,7 +2,6 @@ from unittest import TestCase
 
 from unittest.mock import MagicMock, patch
 
-
 from infra.camera.OpenCvEmbeddedCamera import OpenCvEmbeddedCamera
 
 
@@ -43,10 +42,9 @@ class TestOpenCvEmbeddedCamera(TestCase):
     def test_givenARotationAngle_whenRotateHorizontally_thenMaestroControllerRotatesHorizontalServo(
         self,
     ):
-        an_angle = 90
-        expected_target = 6000.0
+        expected_target = 6000
 
-        self.embedded_camera.rotate_horizontally(an_angle)
+        self.embedded_camera.rotate_horizontally(expected_target)
 
         self.maestro_controller.setTarget.assert_called_with(
             self.HORIZONTAL_SERVO_ID, expected_target
@@ -55,10 +53,9 @@ class TestOpenCvEmbeddedCamera(TestCase):
     def test_givenARotationAngle_whenRotateVertically_thenMaestroControllerRotatesVerticalServo(
         self,
     ):
-        an_angle = 45
-        expected_target = 8500.0
+        expected_target = 8500
 
-        self.embedded_camera.rotate_vertically(an_angle)
+        self.embedded_camera.rotate_vertically(expected_target)
 
         self.maestro_controller.setTarget.assert_called_with(
             self.VERTICAL_SERVO_ID, expected_target

@@ -28,14 +28,10 @@ class OpenCvEmbeddedCamera(IEmbeddedCamera):
 
         self._open_capture()
 
-    def rotate_horizontally(self, angle: float) -> None:
-        target = self._find_target_from_angle_range(angle, self._horizontal_angle_range)
-
+    def rotate_horizontally(self, target: int) -> None:
         self._maestro_controller.setTarget(self._horizontal_servo_id, target)
 
-    def rotate_vertically(self, angle: float) -> None:
-        target = self._find_target_from_angle_range(angle, self._vertical_angle_range)
-
+    def rotate_vertically(self, target: int) -> None:
         self._maestro_controller.setTarget(self._vertical_servo_id, target)
 
     def take_image(self):
@@ -51,10 +47,7 @@ class OpenCvEmbeddedCamera(IEmbeddedCamera):
         self._capture = cv2.VideoCapture(self._camera_index)
         self._capture.set(cv2.CAP_PROP_FRAME_WIDTH, EMBEDDED_CAMERA_IMAGE_SIZE[0])
         self._capture.set(cv2.CAP_PROP_FRAME_HEIGHT, EMBEDDED_CAMERA_IMAGE_SIZE[1])
+        self._capture.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
     def _close_capture(self):
         self._capture.release()
-
-    def _find_target_from_angle_range(self, angle, angle_range):
-        minimum_angle, maximum_angle = angle_range
-        return angle / 360 * (maximum_angle - minimum_angle) + minimum_angle

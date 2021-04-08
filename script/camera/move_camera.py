@@ -43,8 +43,8 @@ if __name__ == "__main__":
 
     print("-------------- Horizontal Movement test ----------------")
     input("Press Enter to start test")
-    vision_service.rotate_camera_horizontally(20)
+    vision_service.rotate_camera_horizontally(6150)
 
     print("-------------- Vertical Movement test ----------------")
     input("Press Enter to start test")
-    vision_service.rotate_camera_vertically(20)
+    vision_service.make_camera_look_down()

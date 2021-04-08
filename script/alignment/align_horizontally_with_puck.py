@@ -12,11 +12,9 @@ from config.config import (
     STM_BAUD_RATE,
 )
 from domain.Position import Position
-from domain.alignment.IPuckAlignmentCorrector import IPuckAlignmentCorrector
 from domain.movement.Direction import Direction
 from domain.movement.MovementCommand import MovementCommand
 from domain.movement.MovementCommandFactory import MovementCommandFactory
-from domain.movement.MovementFactory import MovementFactory
 from domain.Color import Color
 from domain.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
 from infra.motor_controller.StmMotorController import StmMotorController
@@ -67,7 +65,7 @@ class HorizontalAlignmentCorrector:
         self,
         movement_service: MovementService,
         vision_service: FakeVisionService,
-        puck_alignment_corrector: IPuckAlignmentCorrector,
+        puck_alignment_corrector,
     ):
         self._movement_service = movement_service
         self._vision_service = vision_service
@@ -112,9 +110,8 @@ if __name__ == "__main__":
     serial = serial.Serial(port=STM_PORT_NAME, baudrate=STM_BAUD_RATE)
     stm_motor_controller = StmMotorController(serial)
     movement_service = MovementService(
-        MovementFactory(),
         MovementCommandFactory(
-            ROBOT_MAXIMUM_SPEED, SERVOING_CONSTANT, BASE_COMMAND_DURATION
+            ROBOT_MAXIMUM_SPEED, SERVOING_CONSTANT, BASE_COMMAND_DURATION, None, None
         ),
         stm_motor_controller,
     )
@@ -124,6 +121,6 @@ if __name__ == "__main__":
         movement_service, vision_service, puck_alignment_corrector
     )
 
-    puck_color_to_align = Color.RED
+    puck_color_to_align = Color.YELLOW
 
     horizontal_alignment_corrector.correct_horizontal_alignment(puck_color_to_align)
