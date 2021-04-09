@@ -60,11 +60,43 @@ class TestResistance(TestCase):
 
         self.assertEqual(third_color, Color.BROWN)
 
+    def test_givenResistanceValueOf50_whenRoundToNearestE12Value_thenThrowInvalidResistanceException(
+        self,
+    ):
+        resistance_read = 50
+
+        rounding_to_nearest_e12_value = (
+            lambda resistance: Resistance.round_to_nearest_e12_value(resistance)
+        )
+
+        with self.assertRaises(InvalidResistanceException):
+            rounding_to_nearest_e12_value(resistance_read)
+
+    def test_givenResistanceValueOf370_whenRoundToNearestE12Value_thenReturnClosestE12ValueOf390(
+        self,
+    ):
+        resistance_read = 370
+        expected_resistance = Resistance(390)
+
+        actual_resistance = Resistance.round_to_nearest_e12_value(resistance_read)
+
+        self.assertEqual(expected_resistance, actual_resistance)
+
     def test_givenResistanceValueOf9500_whenRoundToNearestE12Value_thenReturnClosestE12ValueOf10000(
         self,
     ):
         resistance_read = 9500
         expected_resistance = Resistance(10000)
+
+        actual_resistance = Resistance.round_to_nearest_e12_value(resistance_read)
+
+        self.assertEqual(expected_resistance, actual_resistance)
+
+    def test_givenResistanceValueOf4437_whenRoundToNearestE12Value_thenReturnClosestE12ValueOf4700(
+        self,
+    ):
+        resistance_read = 4437
+        expected_resistance = Resistance(4700)
 
         actual_resistance = Resistance.round_to_nearest_e12_value(resistance_read)
 
@@ -80,22 +112,20 @@ class TestResistance(TestCase):
 
         self.assertEqual(expected_resistance, actual_resistance)
 
-    def test_givenResistanceValueOf50_whenRoundToNearestE12Value_thenThrowInvalidResistanceException(
+    def test_givenResistanceValueOf230000_whenRoundToNearestE12Value_thenReturnClosestE12ValueOf220000(
         self,
     ):
-        resistance_read = 50
+        resistance_read = 230000
+        expected_resistance = Resistance(220000)
 
-        rounding_to_nearest_e12_value = (
-            lambda resistance: Resistance.round_to_nearest_e12_value(resistance)
-        )
+        actual_resistance = Resistance.round_to_nearest_e12_value(resistance_read)
 
-        with self.assertRaises(InvalidResistanceException):
-            rounding_to_nearest_e12_value(resistance_read)
+        self.assertEqual(expected_resistance, actual_resistance)
 
-    def test_givenResistanceValueOf500000_whenRoundToNearestE12Value_thenThrowInvalidResistanceException(
+    def test_givenResistanceValueOf5000000_whenRoundToNearestE12Value_thenThrowInvalidResistanceException(
         self,
     ):
-        resistance_read = 500000
+        resistance_read = 5000000
 
         rounding_to_nearest_e12_value = (
             lambda resistance: Resistance.round_to_nearest_e12_value(resistance)

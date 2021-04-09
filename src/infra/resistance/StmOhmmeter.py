@@ -13,4 +13,5 @@ class StmOhmmeter(IOhmmeter):
 
         self._serial.write(read_resistance_command)
 
-        return float(self._serial.readline().decode("utf-8"))
+        _header, resistance_value = self._serial.readline().decode("utf-8").split()
+        return float(resistance_value)
