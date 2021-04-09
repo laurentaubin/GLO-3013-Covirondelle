@@ -212,7 +212,12 @@ class RobotContext:
         embedded_camera = self._create_embedded_camera()
         letter_position_detector = PytesseractLetterPositionExtractor()
 
-        return VisionService(embedded_camera, letter_position_detector, CAMERA_LOOK_UP_TARGET, CAMERA_LOOK_DOWN_TARGET)
+        return VisionService(
+            embedded_camera,
+            letter_position_detector,
+            CAMERA_LOOK_DOWN_TARGET,
+            CAMERA_LOOK_UP_TARGET,
+        )
 
     def _create_embedded_camera(self):
         if self._local_flag:
