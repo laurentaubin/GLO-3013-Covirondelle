@@ -11,6 +11,10 @@ class Orientation:
 
         return self._orientation == other._orientation
 
+    def __sub__(self, other):
+        if isinstance(other, Orientation):
+            return Orientation(self._orientation - other._orientation)
+
     def get_orientation_in_degree(self) -> int:
         return self._orientation
 
