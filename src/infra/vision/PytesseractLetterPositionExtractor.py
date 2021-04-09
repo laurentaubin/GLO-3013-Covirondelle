@@ -11,7 +11,7 @@ class PytesseractLetterPositionExtractor(ILetterPositionExtractor):
     def __init__(self):
         self.extracted_letters = []
 
-    def set_command_panel_picture(self, command_panel_image):
+    def extract_letters_from_image(self, command_panel_image):
         # TODO changer pour le bon path
         pytesseract.pytesseract.tesseract_cmd = TESSERACT_LOCATION
         custom_config = "--psm 11 -c tessedit_char_whitelist=ABCD"
@@ -27,7 +27,7 @@ class PytesseractLetterPositionExtractor(ILetterPositionExtractor):
         )
         self.extracted_letters = list(imageText.replace("\n", ""))
 
-    def get_letter_list(
+    def get_extracted_letters(
         self,
     ):
         return self.extracted_letters
