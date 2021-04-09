@@ -34,6 +34,8 @@ from config.config import (
     RESISTANCE_READ_THRESHOLD,
     AN_IMAGE_PATH,
     PUCK_ALIGNMENT_HORIZONTAL_THRESHOLD,
+    CAMERA_LOOK_UP_TARGET,
+    CAMERA_LOOK_DOWN_TARGET,
 )
 from domain.Position import Position
 from domain.alignment.OhmmeterAlignmentCorrector import OhmmeterAlignmentCorrector
@@ -210,7 +212,7 @@ class RobotContext:
         embedded_camera = self._create_embedded_camera()
         letter_position_detector = PytesseractLetterPositionExtractor()
 
-        return VisionService(embedded_camera, letter_position_detector)
+        return VisionService(embedded_camera, letter_position_detector, CAMERA_LOOK_UP_TARGET, CAMERA_LOOK_DOWN_TARGET)
 
     def _create_embedded_camera(self):
         if self._local_flag:
