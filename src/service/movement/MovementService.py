@@ -27,7 +27,7 @@ class MovementService:
 
     def rotate(self, angle: float):
         rotation_commands = self._movement_command_factory.create_from_angle(angle)
-        self._motor_controller.actuate_wheels(rotation_commands)
+        self._motor_controller.rotate(rotation_commands)
 
     def execute_movement_command(self, movement_command: MovementCommand):
         self._motor_controller.actuate_wheels([movement_command])

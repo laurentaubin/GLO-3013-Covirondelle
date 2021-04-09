@@ -1,4 +1,3 @@
-from math import pi
 from typing import List
 
 from config.config import ROBOT_ALIGNMENT_SPEED
@@ -7,6 +6,7 @@ from domain.movement.Direction import Direction
 from domain.movement.Distance import Distance
 from domain.movement.Movement import Movement
 from domain.movement.MovementCommand import MovementCommand
+from domain.movement.RotationCommand import RotationCommand
 from domain.movement.Speed import Speed
 
 
@@ -16,14 +16,10 @@ class MovementCommandFactory:
         robot_maximum_speed: Speed,
         servoing_constant: Speed,
         base_command_duration: CommandDuration,
-        rotating_speed: Speed,
-        robot_radius: float,
     ):
         self._robot_maximum_speed = robot_maximum_speed
         self._servoing_constant = servoing_constant
         self._base_command_duration = base_command_duration
-        self._rotating_speed = rotating_speed
-        self._robot_radius = robot_radius
 
     def create_from_movement(self, movement: Movement) -> List[MovementCommand]:
         distance_left = movement.get_distance().get_distance()
@@ -50,12 +46,11 @@ class MovementCommandFactory:
 
         return movement_commands
 
-    def create_from_angle(self, angle: float) -> List[MovementCommand]:
-        duration = self._calculate_duration(angle)
+    def create_from_angle(self, angle: float) -> RotationCommand:
         direction = Direction.CLOCKWISE if angle < 0 else Direction.COUNTER_CLOCKWISE
 
-        rotating_command = MovementCommand(direction, self._rotating_speed, duration)
-        return [rotating_command, self.create_stop_command()]
+        rotating_command = RotationCommand(direction, abs(angle))
+        return rotating_command
 
     def create_stop_command(self):
         return MovementCommand(Direction.STOP, Speed(0), self._base_command_duration)
@@ -64,7 +59,3 @@ class MovementCommandFactory:
         return MovementCommand(
             direction, Speed(ROBOT_ALIGNMENT_SPEED), CommandDuration(0)
         )
-
-    def _calculate_duration(self, angle: float) -> CommandDuration:
-        rotation_circle_arc = 2 * pi * self._robot_radius * angle / 360
-        return CommandDuration(rotation_circle_arc / self._rotating_speed.get_speed())

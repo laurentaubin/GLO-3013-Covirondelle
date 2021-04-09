@@ -6,6 +6,7 @@ from domain.movement.Direction import Direction
 from domain.movement.Distance import Distance
 from domain.movement.Movement import Movement
 from domain.movement.MovementCommand import MovementCommand
+from domain.movement.RotationCommand import RotationCommand
 from domain.movement.Speed import Speed
 from infra.motor_controller.StmMotorController import StmMotorController
 
@@ -51,3 +52,22 @@ class TestStmMotorController(TestCase):
         self.stm_motor_controller.actuate_wheels(commands)
 
         self.serial_communication.write.assert_called_with(expected_serialization)
+
+    def test_whenRotate_thenSerializeCommandBeforeWritingOnSerial(self):
+        a_direction = Direction.CLOCKWISE
+        an_angle = 15.4
+        rotation_command = RotationCommand(a_direction, an_angle)
+        expected_serialization = b"\x05ffvA"
+
+        self.stm_motor_controller.rotate(rotation_command)
+
+        self.serial_communication.write.assert_called_with(expected_serialization)
+
+    def test_whenRotate_thenWaitForRobotResponse(self):
+        a_direction = Direction.CLOCKWISE
+        an_angle = 15.4
+        rotation_command = RotationCommand(a_direction, an_angle)
+
+        self.stm_motor_controller.rotate(rotation_command)
+
+        self.serial_communication.readline.assert_called()

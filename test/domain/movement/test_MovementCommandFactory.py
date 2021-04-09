@@ -30,8 +30,6 @@ class TestMovementCommandFactory(TestCase):
             self.A_ROBOT_MAXIMUM_SPEED,
             self.A_SEVOING_CONSTANT,
             self.A_COMMAND_DURATION,
-            self.ROTATING_SPEED,
-            self.ROBOT_RADIUS,
         )
 
     def test_whenCreateFromMovement_thenLastCommandHasStopDirection(self):
@@ -115,6 +113,22 @@ class TestMovementCommandFactory(TestCase):
         actual_durations = {command.get_duration() for command in movement_commands}
         self.assertEqual(expected_durations, actual_durations)
 
+    def test_givenNegativeAngle_whenCreateFromAngle_thenReturnCommandWithSameAngle(
+        self,
+    ):
+        a_negative_angle = -self.AN_ANGLE
+
+        actual_command = self.movement_command_factory.create_from_angle(
+            a_negative_angle
+        )
+
+        self.assertEqual(self.AN_ANGLE, actual_command.get_angle())
+
+    def test_whenCreateFromAngle_thenReturnCommandWithSameAngle(self):
+        actual_command = self.movement_command_factory.create_from_angle(self.AN_ANGLE)
+
+        self.assertEqual(self.AN_ANGLE, actual_command.get_angle())
+
     def test_givenAPositiveAngle_whenCreateFromAngle_thenReturnCommandWithCounterClockwiseDirection(
         self,
     ):
@@ -122,7 +136,7 @@ class TestMovementCommandFactory(TestCase):
 
         actual_command = self.movement_command_factory.create_from_angle(
             a_positive_angle
-        )[0]
+        )
 
         self.assertEqual(Direction.COUNTER_CLOCKWISE, actual_command.get_direction())
 
@@ -133,33 +147,9 @@ class TestMovementCommandFactory(TestCase):
 
         actual_command = self.movement_command_factory.create_from_angle(
             a_negative_angle
-        )[0]
+        )
 
         self.assertEqual(Direction.CLOCKWISE, actual_command.get_direction())
-
-    def test_whenCreateFromAngle_thenReturnCommandWithRotationSpeed(self):
-        actual_command = self.movement_command_factory.create_from_angle(self.AN_ANGLE)[
-            0
-        ]
-
-        self.assertEqual(self.ROTATING_SPEED, actual_command.get_speed())
-
-    def test_whenCreateFromAngle_thenLastCommandIsAStopCommand(self):
-        commands = self.movement_command_factory.create_from_angle(self.AN_ANGLE)
-        last_command = commands[-1]
-
-        self.assertEqual(Direction.STOP, last_command.get_direction())
-
-    def test_givenRobotRadius_whenCreateFromAngle_thenCalculateRotationDurationAndSetDurationToCommand(
-        self,
-    ):
-        expected_duration = CommandDuration(0.4043)
-
-        rotation_command = self.movement_command_factory.create_from_angle(
-            self.AN_ANGLE
-        )[0]
-
-        self.assertEqual(expected_duration, rotation_command.get_duration())
 
     def test_givenBackwardsDirection_whenCreateAlignmentMovementCommand_thenSlowContinuousBackwardsMovementCommandIsCreated(
         self,

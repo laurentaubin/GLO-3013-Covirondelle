@@ -29,8 +29,6 @@ from config.config import (
     PUCK_ALIGNMENT_Y_CENTER_POSITION,
     PUCK_ALIGNMENT_THRESHOLD,
     CAMERA_INDEX,
-    ROBOT_ROTATION_SPEED,
-    ROBOT_RADIUS,
     ALIGNED_OHMMETER_HORIZONTAL_POSITION,
     OHMMETER_ALIGNMENT_THRESHOLD,
     RESISTANCE_READ_THRESHOLD,
@@ -93,8 +91,6 @@ class RobotContext:
             Speed(ROBOT_MAXIMUM_SPEED),
             Speed(SERVOING_CONSTANT),
             CommandDuration(BASE_COMMAND_DURATION),
-            Speed(ROBOT_ROTATION_SPEED),
-            ROBOT_RADIUS,
         )
 
         self._communication_service = self._create_communication_service()

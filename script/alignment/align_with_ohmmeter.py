@@ -8,8 +8,6 @@ from config.config import (
     ROBOT_MAXIMUM_SPEED,
     SERVOING_CONSTANT,
     BASE_COMMAND_DURATION,
-    ROBOT_ROTATION_SPEED,
-    ROBOT_RADIUS,
     STM_PORT_NAME,
     STM_BAUD_RATE,
     EMBEDDED_CAMERA_IMAGE_SIZE,
@@ -56,8 +54,6 @@ if __name__ == "__main__":
         ROBOT_MAXIMUM_SPEED,
         SERVOING_CONSTANT,
         BASE_COMMAND_DURATION,
-        ROBOT_ROTATION_SPEED,
-        ROBOT_RADIUS,
     )
     motor_controller = StmMotorController(
         serial.Serial(port=STM_PORT_NAME, baudrate=STM_BAUD_RATE)

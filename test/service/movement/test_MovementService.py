@@ -51,14 +51,14 @@ class TestMovementService(TestCase):
 
         self.movement_command_factory.create_from_angle.assert_called_with(an_angle)
 
-    def test_givenRotationMovementCommands_whenRotate_thenUseMotorControllerToSendCommandsToWheels(
+    def test_givenRotationMovementCommand_whenRotate_thenUseMotorControllerToSendCommandsToWheels(
         self,
     ):
-        self.movement_command_factory.create_from_angle.return_value = [self.A_COMMAND]
+        self.movement_command_factory.create_from_angle.return_value = self.A_COMMAND
 
         self.movement_service.rotate(self.AN_ANGLE)
 
-        self.motor_controller.actuate_wheels.assert_called_with([self.A_COMMAND])
+        self.motor_controller.rotate.assert_called_with(self.A_COMMAND)
 
     def test_whenExecuteCommandMovement_thenUseMotorControllerToSendCommandToTheWheels(
         self,
