@@ -11,6 +11,8 @@ from config.config import (
     HORIZONTAL_ANGLE_RANGE,
     VERTICAL_ANGLE_RANGE,
     CAMERA_INDEX,
+    CAMERA_LOOK_UP_TARGET,
+    CAMERA_LOOK_DOWN_TARGET,
 )
 from infra.MaestroController import MaestroController
 from infra.camera.OpenCvEmbeddedCamera import OpenCvEmbeddedCamera
@@ -39,7 +41,7 @@ if __name__ == "__main__":
     )
     letter_position_detector = MagicMock()
 
-    vision_service = VisionService(embedded_camera, letter_position_detector)
+    vision_service = VisionService(embedded_camera, letter_position_detector, CAMERA_LOOK_DOWN_TARGET, CAMERA_LOOK_UP_TARGET)
 
     print("-------------- Horizontal Movement test ----------------")
     input("Press Enter to start test")

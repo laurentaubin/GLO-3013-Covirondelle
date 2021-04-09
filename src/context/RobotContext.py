@@ -234,8 +234,8 @@ class RobotContext:
             GRIPPER_VERTICAL_SERVO_ID,
             CLOSE_GRIPPER_TARGET,
             OPEN_GRIPPER_TARGET,
-            MOVE_GRIPPER_UP_TARGET,
             MOVE_GRIPPER_DOWN_TARGET,
+            MOVE_GRIPPER_UP_TARGET,
         )
 
         return GripperService(gripper)
