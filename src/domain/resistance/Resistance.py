@@ -23,8 +23,8 @@ class Resistance:
 
     def get_colors(self) -> {Color, Color, Color}:
 
-        first_digit = self._find_nth_digit(0)
-        second_digit = self._find_nth_digit(1)
+        first_digit = self.find_nth_digit(0)
+        second_digit = self.find_nth_digit(1)
         multiplication_factor = self._find_multiplication_factor()
 
         return (
@@ -50,7 +50,7 @@ class Resistance:
 
         raise InvalidResistanceException
 
-    def _find_nth_digit(self, digit: int) -> int:
+    def find_nth_digit(self, digit: int) -> int:
         return int(str(self._resistance_value)[digit])
 
     def _find_multiplication_factor(self) -> int:

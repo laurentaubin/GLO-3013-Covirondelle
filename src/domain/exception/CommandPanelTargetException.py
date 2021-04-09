@@ -1,0 +1,2 @@
+class CommandPanelTargetException(Exception):
+    pass
