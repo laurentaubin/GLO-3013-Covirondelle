@@ -61,7 +61,7 @@ class StateCard extends Component<AllProps> {
         const {title, active, neutral, isActive, onClick, label} = this.props;
 
         return (
-            <div className={classes.root}>
+            <div className={classes.root} data-testid={"state-card"}>
                 <Typography gutterBottom variant="h5" component="h2">
                     {title}
                 </Typography>

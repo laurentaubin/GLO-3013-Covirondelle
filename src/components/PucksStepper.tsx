@@ -58,7 +58,7 @@ class RobotStepper extends Component<AllProps> {
     render() {
         const {activePuck, classes, pucks} = this.props;
         return (
-            <div className={classes.root}>
+            <div className={classes.root} data-testid={"pucks-stepper"}>
                 <Typography variant="h5" component="h5">Rondelles</Typography>
                 {pucks.length === 0 && <Typography variant="subtitle1">En attente</Typography>}
                 {pucks.length > 0 && <Stepper activeStep={activePuck + 1} alternativeLabel>

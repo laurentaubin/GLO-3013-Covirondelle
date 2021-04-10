@@ -1,5 +1,5 @@
 export const RobotStages = {
-    BOOT: {
+    boot: {
         order: 0,
         description: "Attente du signal de départ"
     },

@@ -1,9 +1,11 @@
+import {ApplicationState} from "./context";
+
 export enum ActionType {
     UPDATE_STATE = "UPDATE_STATE",
     START_GAME = "START_GAME"
 }
 
-export const appReducer = (state: any, action: any) => {
+export const appReducer = (state: ApplicationState, action: any) => {
     switch (action.type) {
         case ActionType.START_GAME:
             console.log(action)

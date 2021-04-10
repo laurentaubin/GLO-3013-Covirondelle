@@ -74,7 +74,7 @@ export const Dashboard = (props: any) => {
     return (
         <>
             {state.tableImage ? <img src={`data:image/jpeg;base64,${state.tableImage}`} alt={""}/> : ""}
-            <div className={classes.root}>
+            <div className={classes.root} data-testid={"dashboard"}>
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={4}>
                         <Paper className={classes.smallPaper}>

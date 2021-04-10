@@ -1,9 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import './style/App.css';
-import {io} from "socket.io-client";
 import Dashboard from "./components/Dashboard";
-
-import {SERVER_ENDPOINT} from "./config/config"
 
 import {AppProvider} from "./context/context";
 
@@ -20,9 +17,9 @@ import {AppProvider} from "./context/context";
 const App = () => {
     return (
         <AppProvider>
-            <div className="App">
+            <div className="App" data-testid={"app"}>
                 <header className="App-header">
-                    <Dashboard />
+                    <Dashboard/>
                 </header>
             </div>
         </AppProvider>
