@@ -1,4 +1,6 @@
+from domain.CardinalOrientation import CardinalOrientation
 from domain.Position import Position
+from domain.RobotPose import RobotPose
 from domain.StartingZoneCorner import StartingZoneCorner
 from domain.communication.Message import Message
 from domain.game.Stage import Stage
@@ -9,7 +11,7 @@ from domain.movement.MovementFactory import MovementFactory
 from integration.IntegrationContext import IntegrationContext
 
 
-PUCK_COLOR_TO_USE = Color.YELLOW
+PUCK_COLOR_TO_USE = Color.ORANGE
 STARTING_ZONE_CORNER_TO_USE = StartingZoneCorner.B
 
 
@@ -34,12 +36,17 @@ class GrabPuckIT(IntegrationContext):
         else:
             print("Whoops wrong command !")
 
-    def find_movements_to_goal(self, robot_position, goal_position):
+    def find_movements_to_goal(self, robot_pose: RobotPose, goal_position):
         if FIND_MOVEMENTS_FOR_REAL:
-            path = self._path_service.find_path(robot_position, goal_position)
+            path = self._path_service.find_path(
+                robot_pose.get_position() + Position(140, 0),
+                goal_position,
+            )
 
             # TODO Fix le dernier mouvement pour arriver un peu avant la puck
-            return MovementFactory().create_movements(path)
+            return MovementFactory().create_movements(
+                path, robot_pose.get_orientation_in_degree()
+            )
         else:
             # TODO return hardcoded movements
             pass
@@ -48,10 +55,10 @@ class GrabPuckIT(IntegrationContext):
         message = Message(command, payload)
         self._communication_service.send_object(message)
 
-    def find_robot_position(self):
+    def find_robot_pose(self):
         if DETECT_ROBOT_FOR_REAL:
             _, robot_pose = self._vision_service.get_vision_state()
-            return robot_pose.get_position()
+            return robot_pose
         else:
             # TODO return hardcoded position
             pass
@@ -88,17 +95,19 @@ if __name__ == "__main__":
     grab_puck_it.send_command_to_robot(Topic.START_CYCLE, Stage.TRANSPORT_PUCK)
     grab_puck_it.wait_for_robot_confirmation(Topic.START_CYCLE)
 
+    print("Rotating robot")
+    grab_puck_it._rotation_service.rotate(CardinalOrientation.SOUTH.value)
+
     print("Finding robot position")
-    first_stage_robot_position = grab_puck_it.find_robot_position()
+    first_stage_robot_pose = grab_puck_it.find_robot_pose()
     # TODO Find gripper position for real
-    first_stage_gripper_position = first_stage_robot_position + Position(175, 0)
 
     print("Finding puck position")
     puck_position = grab_puck_it.find_puck_position(PUCK_COLOR_TO_USE)
 
     print("Finding movements to puck")
     movements_to_puck = grab_puck_it.find_movements_to_goal(
-        first_stage_gripper_position, puck_position
+        first_stage_robot_pose, puck_position
     )
 
     # TODO Rotate robot
@@ -116,17 +125,16 @@ if __name__ == "__main__":
     grab_puck_it.wait_for_robot_confirmation(Topic.GRAB_PUCK)
 
     print("Finding robot position")
-    grab_puck_it.find_robot_position()
-    second_stage_robot_position = grab_puck_it.find_robot_position()
+    grab_puck_it.find_robot_pose()
+    second_stage_robot_pose = grab_puck_it.find_robot_pose()
     # TODO Find gripper position for real
-    second_stage_gripper_position = second_stage_robot_position + Position(140, 0)
 
     print("Finding starting zone corner position")
     starting_zone_corner_position = grab_puck_it.find_starting_zone_corner_position()
 
     print("Finding movements to starting zone")
     movements_to_starting_zone = grab_puck_it.find_movements_to_goal(
-        second_stage_gripper_position, starting_zone_corner_position
+        second_stage_robot_pose, starting_zone_corner_position
     )
 
     print("Sending movements to robot")

@@ -48,6 +48,7 @@ from service.handler.StartCycleHandler import StartCycleHandler
 from service.handler.StopHandler import StopHandler
 from service.handler.TransportPuckHandler import TransportPuckHandler
 from service.path.PathService import PathService
+from service.rotation.RotationService import RotationService
 from service.vision.VisionService import VisionService
 
 
@@ -60,6 +61,9 @@ class StationContext:
         )
 
         self._vision_service = self._create_vision_service()
+        self._rotation_service = RotationService(
+            self._vision_service, self._communication_service
+        )
 
         self._shortest_path_algorithm = AStarShortestPathAlgorithm()
         self._path_service = PathService(self._shortest_path_algorithm)

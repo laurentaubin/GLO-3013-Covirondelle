@@ -26,7 +26,9 @@ class GoToOhmmeterHandler(IStageHandler):
 
         robot_pose = GameState.get_instance().get_robot_pose()
         path = self._path_service.find_path_to_ohmmeter(robot_pose.get_position())
-        movements = self._movement_factory.create_movements(path)
+        movements = self._movement_factory.create_movements(
+            path, robot_pose.get_orientation_in_degree()
+        )
 
         self._communication_service.send_object(movements)
         resistance_value = self._communication_service.receive_object()

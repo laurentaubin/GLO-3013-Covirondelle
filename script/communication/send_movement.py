@@ -1,11 +1,14 @@
 from unittest.mock import MagicMock
 
 import cv2
+import numpy as np
 
 from application.ApplicationServer import ApplicationServer
 from context.StationContext import StationContext
+from domain.Orientation import Orientation
 from domain.Position import Position
 from domain.game.GameState import GameState
+from domain.movement.Direction import Direction
 from domain.movement.MovementFactory import MovementFactory
 
 
@@ -34,7 +37,11 @@ if __name__ == "__main__":
     )
 
     movement_factory = MovementFactory()
-    movements = movement_factory.create_movements(path)
+    robot_orientation = (
+        GameState.get_instance().get_robot_pose().get_orientation_in_degree()
+    )
+
+    movements = movement_factory.create_movements(path, robot_orientation)
     maze_array = context._vision_service.create_game_table().get_maze()
 
     table_image = context._world_camera.take_world_image()

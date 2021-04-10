@@ -16,7 +16,7 @@ CALIBRATION_FILE_PATH = (
     os.path.dirname(os.path.abspath(__file__)) + "/numpy-1600x1200.npz"
 )
 
-LAPTOP_CAMERA_INDEX = 0
+LAPTOP_CAMERA_INDEX = 1
 PC_CAMERA_INDEX = 1
 
 PIXEL_TO_METERS_RATIO = 643

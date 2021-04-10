@@ -1,0 +1,2 @@
+class InvalidOrientationException(Exception):
+    pass

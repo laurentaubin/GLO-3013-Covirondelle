@@ -86,7 +86,9 @@ class TestGoToOhmmeterHandler(unittest.TestCase):
 
         self.go_to_ohmmeter_handler.execute()
 
-        self.movement_factory.create_movements.assert_called_with(self.A_PATH)
+        self.movement_factory.create_movements.assert_called_with(
+            self.A_PATH, self.A_ROBOT_POSE.get_orientation_in_degree()
+        )
 
     @patch("domain.game.GameState.GameState.get_robot_pose")
     def test_givenPathToOhmmeter_whenExecute_thenResistanceValueIsReceivedFromRobot(

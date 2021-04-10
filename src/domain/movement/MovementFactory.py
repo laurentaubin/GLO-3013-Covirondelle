@@ -1,6 +1,9 @@
 from typing import List
 
+from domain.CardinalOrientation import CardinalOrientation
+from domain.Orientation import Orientation
 from domain.Position import Position
+from domain.exception.InvalidOrientationException import InvalidOrientationException
 from domain.movement.Direction import Direction
 from domain.movement.Distance import Distance
 from domain.movement.Movement import Movement
@@ -8,12 +11,30 @@ from domain.pathfinding.Path import Path
 
 
 class MovementFactory:
-    def create_movements(self, original_path: Path) -> List[Movement]:
+    def __init__(self):
+        self._direction_to_orientation = {
+            Direction.LEFT: Orientation(90),
+            Direction.RIGHT: Orientation(270),
+            Direction.FORWARD: Orientation(0),
+            Direction.BACKWARDS: Orientation(180),
+        }
+        self._orientation_to_direction = {
+            90: Direction.LEFT,
+            270: Direction.RIGHT,
+            0: Direction.FORWARD,
+            180: Direction.BACKWARDS,
+        }
+
+    def create_movements(
+        self, original_path: Path, orientation: Orientation
+    ) -> List[Movement]:
         sub_paths = self._split_path_in_sub_paths(original_path)
 
         movements = list()
         for path in sub_paths:
-            movements.append(self._create_movement_from_straight_path(path))
+            movements.append(
+                self._create_movement_from_straight_path(path, orientation)
+            )
 
         return movements
 
@@ -86,19 +107,6 @@ class MovementFactory:
             == 1
         )
 
-    def _create_movement_from_straight_path(self, path: Path) -> Movement:
-        if path[1].get_x_coordinate() - path[0].get_x_coordinate() == 1:
-            return Movement(Direction.FORWARD, Distance(distance=len(path)))
-        if path[1].get_x_coordinate() - path[0].get_x_coordinate() == -1:
-            return Movement(Direction.BACKWARDS, Distance(distance=len(path)))
-        if path[1].get_y_coordinate() - path[0].get_y_coordinate() == 1:
-            return Movement(Direction.RIGHT, Distance(distance=len(path)))
-        if path[1].get_y_coordinate() - path[0].get_y_coordinate() == -1:
-            return Movement(Direction.LEFT, Distance(distance=len(path)))
-
-        # will never happen
-        raise Exception
-
     def _is_current_direction_vertical(
         self,
         is_current_direction_vertical: bool,
@@ -113,3 +121,47 @@ class MovementFactory:
             full_path[current_position - 1],
             full_path[current_position],
         )
+
+    def _create_movement_from_straight_path(
+        self, path: Path, orientation: Orientation
+    ) -> Movement:
+        direction = None
+        if path[1].get_x_coordinate() - path[0].get_x_coordinate() == 1:
+            direction = self._calculate_movement_from_orientation(
+                orientation, Direction.FORWARD
+            )
+        elif path[1].get_x_coordinate() - path[0].get_x_coordinate() == -1:
+            direction = self._calculate_movement_from_orientation(
+                orientation, Direction.BACKWARDS
+            )
+        elif path[1].get_y_coordinate() - path[0].get_y_coordinate() == 1:
+            direction = self._calculate_movement_from_orientation(
+                orientation, Direction.RIGHT
+            )
+        elif path[1].get_y_coordinate() - path[0].get_y_coordinate() == -1:
+            direction = self._calculate_movement_from_orientation(
+                orientation, Direction.LEFT
+            )
+        return Movement(direction, Distance(len(path)))
+
+    def _calculate_movement_from_orientation(
+        self, current_orientation: Orientation, absolute_direction: Direction
+    ) -> Direction:
+        absolute_orientation = self._find_orientation_from_direction(absolute_direction)
+        orientation_offset = absolute_orientation - current_orientation
+        return self._find_direction_from_orientation(orientation_offset)
+
+    def _find_orientation_from_direction(self, direction: Direction) -> Orientation:
+        return self._direction_to_orientation.get(direction)
+
+    def _find_direction_from_orientation(self, orientation: Orientation) -> Direction:
+        if orientation.get_orientation_in_degree() < 0:
+            orientation = Orientation(360 + orientation.get_orientation_in_degree())
+
+        direction = self._orientation_to_direction.get(
+            orientation.get_orientation_in_degree()
+        )
+
+        if direction is None:
+            raise InvalidOrientationException
+        return direction
