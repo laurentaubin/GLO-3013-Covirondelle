@@ -23,7 +23,7 @@ class TestOpenCvStartingZoneLineDetector(TestCase):
     def test_givenAnImageWithStartingLineOnIt_whenDetect_thenFindStartingZoneLineCenterPosition(
         self,
     ):
-        expected_position: Position = Position(350, 237)
+        expected_position: Position = Position(354, 65)
 
         actual_position = self._starting_zone_line_detector.detect(
             self.AN_IMAGE_WITH_STARTING_ZONE_LINE

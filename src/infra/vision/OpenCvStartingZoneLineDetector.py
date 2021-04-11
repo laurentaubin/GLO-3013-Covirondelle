@@ -13,6 +13,7 @@ from domain.vision.exception.StartingZoneLineNotFoundException import (
 
 class OpenCvStartingZoneLineDetector(IStartingZoneLineDetector):
     def detect(self, image: np.ndarray) -> Position:
+        image = self._cut_image(image)
         hsv_image = self._prepare_mask(image)
         contour = self._find_line_contour(hsv_image)
         moments = cv2.moments(contour)
@@ -38,3 +39,6 @@ class OpenCvStartingZoneLineDetector(IStartingZoneLineDetector):
 
     def _extract_max_contour(self, contours: List[np.ndarray]):
         return max(contours, key=cv2.contourArea)
+
+    def _cut_image(self, image: np.ndarray) -> np.ndarray:
+        return image[320:, :]
