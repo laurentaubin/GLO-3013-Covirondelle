@@ -35,7 +35,6 @@ from infra.vision.HardcodedStartingZoneDetector import HardcodedStartingZoneDete
 from infra.vision.OpenCvObstacleDetector import OpenCvObstacleDetector
 from infra.vision.OpenCvPuckDetector import OpenCvPuckDetector
 from infra.vision.OpenCvRobotDetector import OpenCvRobotDetector
-from infra.vision.OpenCvStartingZoneDetector import OpenCvStartingZoneDetector
 from infra.vision.OpenCvTableDetector import OpenCvTableDetector
 from service.communication.CommunicationService import CommunicationService
 from service.game.StageHandlerSelector import StageHandlerSelector

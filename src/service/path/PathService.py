@@ -1,6 +1,7 @@
 from config.config import DEFAULT_OHMMETER_POSITION
 from domain.GameTable import GameTable
 from domain.Position import Position
+from domain.StartingZone import StartingZone
 from domain.StartingZoneCorner import StartingZoneCorner
 from domain.pathfinding.IShortestPathAlgorithm import IShortestPathAlgorithm
 from domain.pathfinding.Path import Path
@@ -11,7 +12,7 @@ class PathService:
         self,
         shortest_path_algorithm: IShortestPathAlgorithm,
     ) -> None:
-        self._game_table = None
+        self._game_table: StartingZone
         self._shortest_path_algorithm = shortest_path_algorithm
         self._current_corner_letter = None
 
@@ -46,6 +47,13 @@ class PathService:
             self._shortest_path_algorithm.find_shortest_path_with_cartesian_coordinates(
                 robot_position,
                 Position(DEFAULT_OHMMETER_POSITION[0], DEFAULT_OHMMETER_POSITION[1]),
+            )
+        )
+
+    def find_path_to_starting_zone_center(self, robot_position: Position) -> Path:
+        return (
+            self._shortest_path_algorithm.find_shortest_path_with_cartesian_coordinates(
+                robot_position, self._game_table.get_starting_zone().get_center()
             )
         )
 

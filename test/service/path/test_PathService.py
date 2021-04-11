@@ -12,11 +12,11 @@ class TestPathService(TestCase):
     A_CORNER_POSITION = Position(12, 12)
     A_ROBOT_POSITION = Position(200, 200)
     A_GAME_TABLE = MagicMock()
-    A_STARTING_ZONE = MagicMock()
     A_POSITION = MagicMock()
     A_PATH = MagicMock()
 
     def setUpMocks(self) -> None:
+        self.A_STARTING_ZONE = MagicMock()
         self.game_table = MagicMock()
         self.shortest_path_algorithm = MagicMock()
 
@@ -80,6 +80,40 @@ class TestPathService(TestCase):
         self.path_service.set_game_table(self.A_GAME_TABLE)
 
         self.shortest_path_algorithm.set_maze.assert_called_with(a_maze)
+
+    def test_givenGameTable_whenFindPathToStartingZoneCenter_thenUseGameTableToGetStartingZoneCenter(
+        self,
+    ):
+        self.A_GAME_TABLE.get_starting_zone.return_value = self.A_STARTING_ZONE
+
+        self.path_service.find_path_to_starting_zone_center(self.A_ROBOT_POSITION)
+
+        self.A_STARTING_ZONE.get_center.assert_called_once()
+
+    def test_givenGameTable_whenFindPathToStartingZoneCenter_thenUseAlgorithmWithRobotAndStartingZonePositions(
+        self,
+    ):
+        self.A_GAME_TABLE.get_starting_zone.return_value = self.A_STARTING_ZONE
+        self.A_STARTING_ZONE.get_center.return_value = self.A_POSITION
+
+        self.path_service.find_path_to_starting_zone_center(self.A_ROBOT_POSITION)
+
+        self.shortest_path_algorithm.find_shortest_path_with_cartesian_coordinates.assert_called_with(
+            self.A_ROBOT_POSITION, self.A_POSITION
+        )
+
+    def test_givenPathReturnByAlgorithm_whenFindPathToStartingZoneCenter_thenReturnThisPath(
+        self,
+    ):
+        self.shortest_path_algorithm.find_shortest_path_with_cartesian_coordinates.return_value = (
+            self.A_PATH
+        )
+
+        actual_path = self.path_service.find_path_to_starting_zone_center(
+            self.A_ROBOT_POSITION
+        )
+
+        self.assertEqual(self.A_PATH, actual_path)
 
     def test_givenRobotAndSomeOtherPosition_whenFindPath_thenUseAlgorithmToFindPath(
         self,

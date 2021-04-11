@@ -1,4 +1,5 @@
 from domain.CardinalOrientation import CardinalOrientation
+from domain.Orientation import Orientation
 from domain.Position import Position
 from domain.RobotPose import RobotPose
 from domain.StartingZoneCorner import StartingZoneCorner
@@ -17,7 +18,6 @@ STARTING_ZONE_CORNER_TO_USE = StartingZoneCorner.B
 
 DETECT_PUCK_FOR_REAL = True
 DETECT_ROBOT_FOR_REAL = True
-DETECT_STARTING_ZONE_FOR_REAL = True
 FIND_MOVEMENTS_FOR_REAL = True
 
 
@@ -70,22 +70,31 @@ class GrabPuckIT(IntegrationContext):
             # TODO return hardcoded puck
             pass
 
-    def find_starting_zone_corner_position(self):
-        if DETECT_STARTING_ZONE_FOR_REAL:
-            starting_zone = self._vision_service.create_game_table().get_starting_zone()
-            return starting_zone.find_corner_position_from_letter(
-                STARTING_ZONE_CORNER_TO_USE
-            )
-        else:
-            # TODO return hardcoded corner position
-            pass
-
     def wait_for_robot_confirmation(self, topic: Topic):
         robot_response = self._communication_service.receive_object()
         if robot_response.get_topic() == topic:
             return
         else:
             print("Wrong command whoops !")
+
+    def find_robot_orientation(self):
+        if DETECT_ROBOT_FOR_REAL:
+            _, robot_pose = self._vision_service.get_vision_state()
+            return robot_pose.get_orientation_in_degree()
+        else:
+            # TODO return hardcoded position
+            pass
+
+    def rotate_robot(self, wanted_orientation: Orientation):
+        self._rotation_service.rotate(wanted_orientation)
+
+    def find_movements_to_starting_zone(self, robot_pose):
+        path = self._path_service.find_path_to_starting_zone_center(
+            robot_pose.get_position()
+        )
+        return MovementFactory().create_movements(
+            path, robot_pose.get_orientation_in_degree()
+        )
 
 
 if __name__ == "__main__":
@@ -129,12 +138,9 @@ if __name__ == "__main__":
     second_stage_robot_pose = grab_puck_it.find_robot_pose()
     # TODO Find gripper position for real
 
-    print("Finding starting zone corner position")
-    starting_zone_corner_position = grab_puck_it.find_starting_zone_corner_position()
-
-    print("Finding movements to starting zone")
-    movements_to_starting_zone = grab_puck_it.find_movements_to_goal(
-        second_stage_robot_pose, starting_zone_corner_position
+    print("Finding movements to starting zone center")
+    movements_to_starting_zone = grab_puck_it.find_movements_to_starting_zone(
+        second_stage_robot_pose
     )
 
     print("Sending movements to robot")
@@ -142,6 +148,10 @@ if __name__ == "__main__":
 
     print("Waiting for robot to move")
     grab_puck_it.wait_for_robot_confirmation(Topic.MOVEMENTS)
+
+    print("Rotating robot towards starting zone center")
+    starting_zone_corner_orientation = STARTING_ZONE_CORNER_TO_USE.value
+    grab_puck_it.rotate_robot(starting_zone_corner_orientation)
 
     print("Sending command to drop puck")
     grab_puck_it.send_command_to_robot(Topic.DROP_PUCK, None)

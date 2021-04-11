@@ -1,11 +1,13 @@
 from enum import Enum
 
+from domain.Orientation import Orientation
+
 
 class StartingZoneCorner(Enum):
-    A = "A"
-    B = "B"
-    C = "C"
-    D = "D"
+    A = Orientation(45)
+    B = Orientation(315)
+    C = Orientation(225)
+    D = Orientation(125)
 
     @staticmethod
     def get_next_corner(current_corner: "StartingZoneCorner") -> "StartingZoneCorner":

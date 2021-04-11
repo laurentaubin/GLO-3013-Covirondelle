@@ -36,10 +36,10 @@ class TestStartingZone(TestCase):
             self.STARTING_ZONE_CENTER,
         )
 
-        self.assertEqual(self.UPPER_LEFT_CORNER, starting_zone._upper_left_corner)
-        self.assertEqual(self.UPPER_RIGHT_CORNER, starting_zone._upper_right_corner)
-        self.assertEqual(self.LOWER_LEFT_CORNER, starting_zone._lower_left_corner)
-        self.assertEqual(self.LOWER_RIGHT_CORNER, starting_zone._lower_right_corner)
+        self.assertEqual(self.UPPER_LEFT_CORNER, starting_zone._south_east_corner)
+        self.assertEqual(self.UPPER_RIGHT_CORNER, starting_zone._south_west_corner)
+        self.assertEqual(self.LOWER_LEFT_CORNER, starting_zone._north_east_corner)
+        self.assertEqual(self.LOWER_RIGHT_CORNER, starting_zone._north_west_corner)
 
     def test_givenLetterA_whenFindCornerPositionFromLetter_thenReturnUpperLeftCorner(
         self,
