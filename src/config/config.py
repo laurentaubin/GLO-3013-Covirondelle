@@ -7,6 +7,7 @@ PING_PORT = "5555"
 
 SOCKET_ANY_ADDRESS = "tcp://*:"
 GAME_CYCLE_PORT = "5556"
+STREAM_PI_FEED_PORT = "5557"
 
 # TODO Test at lab to find right radii value
 ROBOT_RADIUS = 100
