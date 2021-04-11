@@ -8,35 +8,35 @@ from infra.vision.OpenCvCommandPanelDetector import OpenCvCommandPanelDetector
 class TestOpenCvCommandPanelDetector(TestCase):
 
     AN_IMAGE_WITH_COMMAND_PANEL = cv2.imread(
-        "test/infra/vision/resources/cmd_panel.jpg"
+        "test/infra/vision/resources/command_panel_images/cmd_panel.jpg"
     )
 
     A_ZOOMED_IMAGE_WITH_COMMAND_PANEL = cv2.imread(
-        "test/infra/vision/resources/cmd_panel_zoomed.jpg"
+        "test/infra/vision/resources/command_panel_images/cmd_panel_zoomed.jpg"
     )
 
     AN_IMAGE_FROM_ANGLE_WITH_COMMAND_PANEL = cv2.imread(
-        "test/infra/vision/resources/cmd_panel_angle.jpg"
+        "test/infra/vision/resources/command_panel_images/cmd_panel_angle.jpg"
     )
 
     AN_IMAGE_WITH_SMALL_COMMAND_PANEL = cv2.imread(
-        "test/infra/vision/resources/small_cmd_panel.JPG"
+        "test/infra/vision/resources/command_panel_images/small_cmd_panel.JPG"
     )
 
     A_LEFT_SIDE_IMAGE_OF_COMMAND_PANEL = cv2.imread(
-        "test/infra/vision/resources/cmd_panel_leftside.JPG"
+        "test/infra/vision/resources/command_panel_images/cmd_panel_leftside.JPG"
     )
 
     A_RIGHT_SIDE_IMAGE_OF_COMMAND_PANEL = cv2.imread(
-        "test/infra/vision/resources/cmd_panel_rightside.JPG"
+        "test/infra/vision/resources/command_panel_images/cmd_panel_rightside.JPG"
     )
 
     AN_IMAGE_WITH_TOP_OF_COMMAND_PANEL = cv2.imread(
-        "test/infra/vision/resources/cmd_panel_top.JPG"
+        "test/infra/vision/resources/command_panel_images/cmd_panel_top.JPG"
     )
 
     AN_IMAGE_WITH_BOTTOM_OF_COMMAND_PANEL = cv2.imread(
-        "test/infra/vision/resources/cmd_panel_bottom.JPG"
+        "test/infra/vision/resources/command_panel_images/cmd_panel_bottom.JPG"
     )
 
     NOT_A_IMAGE_OF_COMMAND_PANEL = cv2.imread(
