@@ -3,7 +3,7 @@ import cv2
 from domain.Position import Position
 from domain.Color import Color
 from domain.vision.IPuckDetector import IPuckDetector
-from infra.exception import PuckCenterNotFound
+from infra.exception.PuckCenterNotFound import PuckCenterNotFound
 from infra.utils.VisionUtils import VisionUtils
 
 X_VALUE = 1200
