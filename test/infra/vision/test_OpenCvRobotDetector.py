@@ -2,6 +2,7 @@ from unittest import TestCase
 
 import cv2
 import cv2.aruco as aruco
+from os import path
 
 from domain.Orientation import Orientation
 from domain.Position import Position
@@ -12,7 +13,10 @@ from infra.vision.OpenCvRobotDetector import OpenCvRobotDetector
 class TestOpenCvRobotDetector(TestCase):
     ARUCO_DICTIONARY = aruco.DICT_4X4_50
     ROBOT_ARUCO_MARKER_ID = 1
-    AN_IMAGE = "resources/test/robot-detector-test-image-1.jpg"
+    AN_IMAGE = (
+        path.dirname(path.abspath(__file__))
+        + "/../../../resources/test/robot-detector-test-image-1.jpg"
+    )
 
     def setUp(self) -> None:
         self.robot_detector = OpenCvRobotDetector(

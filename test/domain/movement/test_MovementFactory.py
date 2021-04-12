@@ -1,9 +1,11 @@
 from unittest import TestCase
+from unittest.mock import MagicMock, patch
 
 from domain.CardinalOrientation import CardinalOrientation
 from domain.Orientation import Orientation
 from domain.exception.InvalidOrientationException import InvalidOrientationException
 from domain.movement.Direction import Direction
+from domain.movement.Movement import Movement
 from domain.movement.MovementFactory import MovementFactory
 from domain.pathfinding.Path import Path
 from domain.Position import Position
@@ -11,6 +13,11 @@ from domain.movement.Distance import Distance
 
 
 class TestMovementFactory(TestCase):
+    A_POSITION = MagicMock()
+    ANOTHER_POSITION = MagicMock()
+    A_DIRECTION = Direction.FORWARD
+    A_DISTANCE = Distance(10)
+
     def setUp(self) -> None:
         self.movement_factory = MovementFactory()
 
@@ -383,3 +390,32 @@ class TestMovementFactory(TestCase):
         )
         with self.assertRaises(InvalidOrientationException):
             self.movement_factory.create_movements(a_path, an_invalid_orientation)
+
+    @patch(
+        "infra.utils.GeometryUtils.GeometryUtils.calculate_distance_between_two_positions"
+    )
+    def test_givenTwoPositions_whenCreateMovementToGetToPointWithDirection_thenCalculateDistanceBetweenTwoPoints(
+        self, geometryUtils_mock
+    ):
+        self.movement_factory.create_movement_to_get_to_point_with_direction(
+            self.A_POSITION, self.ANOTHER_POSITION, self.A_DIRECTION
+        )
+
+        geometryUtils_mock.assert_called_with(self.A_POSITION, self.ANOTHER_POSITION)
+
+    @patch(
+        "infra.utils.GeometryUtils.GeometryUtils.calculate_distance_between_two_positions"
+    )
+    def test_givenCalculatedDistance_whenCreateMovementToGetToPointWithDirection_returnMovementWithDirectionAndDistance(
+        self, geometryUtils_mock
+    ):
+        geometryUtils_mock.return_value = self.A_DISTANCE
+        expected_movement = Movement(self.A_DIRECTION, self.A_DISTANCE)
+
+        actual_movement = (
+            self.movement_factory.create_movement_to_get_to_point_with_direction(
+                self.A_POSITION, self.ANOTHER_POSITION, self.A_DIRECTION
+            )
+        )
+
+        self.assertEqual(expected_movement, actual_movement)

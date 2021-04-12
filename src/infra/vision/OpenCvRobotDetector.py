@@ -4,6 +4,7 @@ import cv2
 import cv2.aruco as aruco
 
 from domain.Orientation import Orientation
+from domain.Position import Position
 from domain.RobotPose import RobotPose
 from domain.vision.IRobotDetector import IRobotDetector
 from domain.vision.exception import RobotNotFoundException
@@ -28,9 +29,7 @@ class OpenCvRobotDetector(IRobotDetector):
         )
 
         robot_marker_corners = self._get_robot_marker_corners(corners, ids)
-        robot_orientation = Orientation(
-            self._get_robot_orientation_in_degree(robot_marker_corners)
-        )
+        robot_orientation = self._get_robot_orientation_in_degree(robot_marker_corners)
         robot_position = (
             GeometryUtils.get_quadrangle_center_coordinates_from_corner_coordinates(
                 robot_marker_corners[0]
@@ -44,23 +43,16 @@ class OpenCvRobotDetector(IRobotDetector):
                 return corners[i]
         raise RobotNotFoundException
 
-    def _get_robot_orientation_in_degree(self, robot_marker_corner) -> int:
-        marker_upper_left_corner = (
+    def _get_robot_orientation_in_degree(self, robot_marker_corner) -> Orientation:
+        marker_upper_left_corner = Position(
             int(robot_marker_corner[0][0][0]),
             int(robot_marker_corner[0][0][1]),
         )
-        marker_bottom_left_corner = (
+        marker_bottom_left_corner = Position(
             int(robot_marker_corner[0][3][0]),
             int(robot_marker_corner[0][3][1]),
         )
-        orientation = int(
-            math.atan2(
-                (marker_upper_left_corner[1] - marker_bottom_left_corner[1]),
-                (marker_upper_left_corner[0] - marker_bottom_left_corner[0]),
-            )
-            * self.RAD_TO_DEG_FACTOR
+
+        return GeometryUtils.calculate_angle_between_positions(
+            marker_bottom_left_corner, marker_upper_left_corner
         )
-        orientation *= -1
-        if orientation < 0:
-            orientation = 360 + orientation
-        return orientation

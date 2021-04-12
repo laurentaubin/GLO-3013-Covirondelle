@@ -57,6 +57,13 @@ class PathService:
             )
         )
 
+    def find_path_to_puck_zone_center(self, robot_position: Position) -> Path:
+        return (
+            self._shortest_path_algorithm.find_shortest_path_with_cartesian_coordinates(
+                robot_position, self._game_table.get_puck_zone_center()
+            )
+        )
+
     def find_path(self, robot_position: Position, goal_position: Position):
         return (
             self._shortest_path_algorithm.find_shortest_path_with_cartesian_coordinates(

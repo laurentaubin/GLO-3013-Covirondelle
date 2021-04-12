@@ -25,6 +25,7 @@ class VisionService:
         maze_factory: MazeFactory,
         robot_detector: IRobotDetector,
         puck_detector: IPuckDetector,
+        puck_zone_center: Position,
     ) -> None:
         self._starting_zone_corner_detector = starting_zone_corner_detector
         self._obstacle_detector = obstacle_detector
@@ -35,6 +36,7 @@ class VisionService:
         self._maze_factory = maze_factory
         self._robot_detector = robot_detector
         self._puck_detector = puck_detector
+        self._puck_zone_center = puck_zone_center
 
     def create_game_table(self) -> GameTable:
         table_image = self._get_calibrated_table_image(self._world_image)
@@ -42,7 +44,7 @@ class VisionService:
         starting_zone = self._find_starting_zone(table_image)
         maze = self._create_maze(table_image)
 
-        return GameTable(starting_zone, maze)
+        return GameTable(starting_zone, maze, self._puck_zone_center)
 
     def get_vision_state(self):
         world_image = self._world_camera.take_world_image()

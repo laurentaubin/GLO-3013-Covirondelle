@@ -1,6 +1,5 @@
 from typing import List
 
-from domain.CardinalOrientation import CardinalOrientation
 from domain.Orientation import Orientation
 from domain.Position import Position
 from domain.exception.InvalidOrientationException import InvalidOrientationException
@@ -8,6 +7,7 @@ from domain.movement.Direction import Direction
 from domain.movement.Distance import Distance
 from domain.movement.Movement import Movement
 from domain.pathfinding.Path import Path
+from infra.utils.GeometryUtils import GeometryUtils
 
 
 class MovementFactory:
@@ -165,3 +165,12 @@ class MovementFactory:
         if direction is None:
             raise InvalidOrientationException
         return direction
+
+    def create_movement_to_get_to_point_with_direction(
+        self, first_position, second_position, direction
+    ):
+        distance = GeometryUtils.calculate_distance_between_two_positions(
+            first_position, second_position
+        )
+
+        return Movement(direction, distance)

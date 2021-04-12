@@ -21,7 +21,9 @@ from config.config import (
     OBSTACLE_HEIGHT,
     OBSTACLE_RADIUS,
     ROBOT_RADIUS,
+    DEFAULT_PUCK_ZONE_POSITION,
 )
+from domain.Position import Position
 from domain.movement.MovementFactory import MovementFactory
 from domain.pathfinding.AStarShortestPathAlgorithm import AStarShortestPathAlgorithm
 from domain.pathfinding.MazeFactory import MazeFactory
@@ -167,6 +169,9 @@ class StationContext:
         table_detector = OpenCvTableDetector()
         self._world_camera = self._create_world_camera()
         robot_detector = OpenCvRobotDetector(DICT_4X4_50, ROBOT_ARUCO_MARKER_ID)
+        puck_zone_center_position = Position(
+            DEFAULT_PUCK_ZONE_POSITION[0], DEFAULT_PUCK_ZONE_POSITION[1]
+        )
         return VisionService(
             starting_zone_corners_detector,
             obstacle_detector,
@@ -176,6 +181,7 @@ class StationContext:
             maze_factory,
             robot_detector,
             OpenCvPuckDetector(),
+            puck_zone_center_position,
         )
 
     def _create_world_camera(self):

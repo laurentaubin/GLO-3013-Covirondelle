@@ -15,6 +15,9 @@ class Orientation:
         if isinstance(other, Orientation):
             return Orientation(self._orientation - other._orientation)
 
+    def __repr__(self):
+        return f"{self._orientation}"
+
     def get_orientation_in_degree(self) -> int:
         return self._orientation
 
@@ -23,3 +26,7 @@ class Orientation:
 
     def get_orientation_in_radians(self) -> float:
         return self._orientation * (math.pi / 180)
+
+    @staticmethod
+    def from_radian(angle: float) -> "Orientation":
+        return Orientation(int(angle / math.pi * 180))

@@ -1,3 +1,5 @@
+import math
+
 from unittest import TestCase
 
 from domain.Orientation import Orientation
@@ -29,3 +31,12 @@ class TestOrientation(TestCase):
         actual_orientation_in_radians = an_orientation.get_orientation_in_radians()
 
         self.assertEqual(expected_orientation_in_radians, actual_orientation_in_radians)
+
+    def test_givenRadianValueOfPi_whenCreateOrientationFromRadian_thenReturnOrientationWith180Degrees(
+        self,
+    ):
+        expected_orientation = Orientation(180)
+
+        actual_orientation = Orientation.from_radian(math.pi)
+
+        self.assertEqual(actual_orientation, expected_orientation)

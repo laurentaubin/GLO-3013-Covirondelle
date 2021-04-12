@@ -10,6 +10,7 @@ class TestVisionService(TestCase):
     A_STARTING_ZONE = MagicMock()
     AN_IMAGE = MagicMock()
     UNDISTORTED_TABLE_IMAGE = MagicMock()
+    PUCK_ZONE_CENTER = Position(100, 200)
     AN_IMAGE_SHAPE = [120, 200, 3]
     A_POSITION_LIST = [Position(100, 100), Position(200, 200)]
     A_MAZE = MagicMock()
@@ -30,6 +31,7 @@ class TestVisionService(TestCase):
             self.maze_factory,
             self.robot_detector,
             self.puck_detector,
+            self.PUCK_ZONE_CENTER,
         )
 
         self.table_detector.crop_table.return_value = self.AN_IMAGE
@@ -76,6 +78,11 @@ class TestVisionService(TestCase):
         self.vision_service.create_game_table()
 
         self.obstacle_detector.detect.assert_called_with(self.UNDISTORTED_TABLE_IMAGE)
+
+    def test_whenCreateGameTable_thenGameTableHasRightPuckZonePosition(self):
+        game_table = self.vision_service.create_game_table()
+
+        self.assertEqual(self.PUCK_ZONE_CENTER, game_table.get_puck_zone_center())
 
     def test_givenWorldCameraTakesPictureOfTable_createGameTable_thenMazeIsCreatedWithRightDimensionsAndObstacles(
         self,
