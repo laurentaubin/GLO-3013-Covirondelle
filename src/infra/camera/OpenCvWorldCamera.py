@@ -1,3 +1,5 @@
+import threading, queue
+
 import cv2
 
 from config.config import WORLD_CAMERA_IMAGE_SIZE
@@ -14,14 +16,28 @@ class OpenCvWorldCamera(IWorldCamera):
         self._camera_calibrator = camera_calibrator
         self._capture = None
         self._open_capture()
+        self.q = queue.Queue()
+        t = threading.Thread(target=self._reader)
+        t.daemon = True
+        t.start()
 
     def take_world_image(self):
         return self._get_camera_frame()
 
+    def _reader(self):
+        while True:
+            ret, frame = self._capture.read()
+            if not ret:
+                break
+            if not self.q.empty():
+                try:
+                    self.q.get_nowait()
+                except queue.Empty:
+                    pass
+            self.q.put(frame)
+
     def _get_camera_frame(self):
-        opened_successfully, current_frame = self._capture.read()
-        if not opened_successfully:
-            raise InvalidCameraConfigException
+        current_frame = self.q.get()
         return self._camera_calibrator.calibrate(current_frame)
 
     def _open_capture(self):
