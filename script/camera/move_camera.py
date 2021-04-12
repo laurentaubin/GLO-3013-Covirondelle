@@ -48,10 +48,18 @@ if __name__ == "__main__":
         CAMERA_LOOK_UP_TARGET,
     )
 
-    print("-------------- Horizontal Movement test ----------------")
+    print("-------------- Press to look left ----------------")
     input("Press Enter to start test")
-    vision_service.rotate_camera_horizontally(6150)
+    vision_service.rotate_camera_horizontally(5000)
 
-    print("-------------- Vertical Movement test ----------------")
+    print("-------------- Press to look middle ----------------")
+    input("Press Enter to start test")
+    vision_service.rotate_camera_horizontally(6200)
+
+    print("-------------- Press to make camera look up ----------------")
+    input("Press Enter to start test")
+    vision_service.make_camera_look_up()
+
+    print("-------------- Press to make camera look down ----------------")
     input("Press Enter to start test")
     vision_service.make_camera_look_down()
