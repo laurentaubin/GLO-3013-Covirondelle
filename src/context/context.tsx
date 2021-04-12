@@ -16,16 +16,16 @@ export enum PuckColor {
 }
 
 export enum Stage {
-    BOOT = "boot",
-    START_GAME_CYCLE = "START_GAME_CYCLE",
-    READ_RESISTANCE = "READ_RESISTANCE",
-    READ_COMMAND_PANEL = "READ_COMMAND_PANEL",
-    TRANSPORT_PUCK = "TRANSPORT_PUCK",
-    GO_PARK = "GO_PARK",
-    STOP = "STOP"
+    boot = "boot",
+    start_cycle = "start_cycle",
+    go_to_ohmmeter = "go_to_ohmmeter",
+    find_command_panel = "find_command_panel",
+    transport_puck = "transport_puck",
+    go_park = "go_park",
+    stop = "stop"
 }
 
-enum ZoneCorner {
+export enum ZoneCorner {
     A = "A",
     B = "B",
     C = "C",
@@ -43,25 +43,33 @@ const initialPosition = {
 }
 
 export interface ApplicationState {
-    puckColors: PuckColor[]
-    currentPuck: PuckColor
-    currentStage: Stage
-    startingZoneCornersOrder: ZoneCorner[],
-    robotPose: Position,
-    tableImage: unknown,
-    batteryConsumption: number,
-    isGameStarted: boolean
+    Resistance: number | undefined
+    PuckColors: PuckColor[]
+    CurrentPuck: PuckColor | undefined
+    CurrentStage: Stage | undefined
+    ZoneCornersOrder: ZoneCorner[]
+    RobotPosition: Position | undefined
+    TableImage: string |  undefined
+    BatteryElectricCharge: number | undefined,
+    RobotConsumption: number,
+    BatteryTime: number | undefined,
+    IsGripperHolding: boolean,
+    IsGameStarted: boolean
 }
 
 const initialState: ApplicationState = {
-    puckColors: [],
-    currentPuck: PuckColor.NONE,
-    currentStage: Stage.BOOT,
-    startingZoneCornersOrder: [],
-    robotPose: initialPosition,
-    tableImage: null,
-    batteryConsumption: 0,
-    isGameStarted: false
+    Resistance: undefined,
+    PuckColors: [],
+    CurrentPuck: undefined,
+    CurrentStage: undefined,
+    ZoneCornersOrder: [],
+    RobotPosition: undefined,
+    TableImage: undefined,
+    BatteryElectricCharge: undefined,
+    RobotConsumption: 0,
+    BatteryTime: undefined,
+    IsGripperHolding: false,
+    IsGameStarted: false
 }
 
 const AppContext = createContext<{

@@ -52,7 +52,8 @@ io.on("connection", (socket) => {
 const getApiAndEmit = socket => {
   axios.get(STATION_ENDPOINT_URL).then(function (response) {
       console.log("emit game update")
-      response.data.batteryConsumption = response.data.batteryConsumption + 1
+    // TODO: Check to remove this test
+      response.data.BatteryConsumption = response.data.batteryConsumption + 1
       socket.emit("GameCycleUpdate", response.data);
     }
   ).catch(function (error) {

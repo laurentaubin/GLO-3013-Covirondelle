@@ -3,27 +3,27 @@ export const RobotStages = {
         order: 0,
         description: "Attente du signal de départ"
     },
-    START_GAME_CYCLE: {
+    start_cycle: {
         order: 1,
         description: "Démarrage d'un cycle de jeu"
     },
-    READ_RESISTANCE: {
+    go_to_ohmmeter: {
         order: 2,
-        description: "Mesure de la valeur de résistance en cours"
+        description: "Lecture de résistance en cours"
     },
-    READ_COMMAND_PANEL: {
+    find_command_panel: {
         order: 3,
         description: "Lecture du panneau de commande en cours"
     },
-    TRANSPORT_PUCK: {
+    transport_puck: {
         order: 4,
         description: "Transport d'une rondelle"
     },
-    GO_PARK: {
+    go_park: {
         order: 5,
         description: "Confirmation de la fin du cycle de jeu"
     },
-    STOP: {
+    stop: {
         order: 6,
         description: "STOP"
     }

@@ -30,7 +30,7 @@ function getStepLabel(step: Stage) {
 }
 
 type Props = {
-    activeStage: Stage
+    activeStage?: Stage
 };
 
 type AllProps = Props & WithStyles<typeof styles>;
@@ -39,7 +39,7 @@ class RobotStepper extends Component<AllProps> {
     render() {
         const {activeStage, classes} = this.props;
         const steps = Object.keys(RobotStages);
-        const currentStage = RobotStages[activeStage]
+        const currentStage = activeStage ? RobotStages[activeStage] : RobotStages[Stage.boot]
         return (
             <div className={classes.root} data-testid={"robot-stepper"}>
                 <Typography variant="h5" component="h5">Étapes du robot</Typography>

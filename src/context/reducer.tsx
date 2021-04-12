@@ -15,15 +15,16 @@ export const appReducer = (state: ApplicationState, action: any) => {
             }
         case ActionType.UPDATE_STATE:
             console.log(action)
+            // TODO: check payload if all information is received
             return {
                 ...state,
-                puckColors: action.payload._puck_colors,
-                currentPuck: action.payload._current_puck,
-                currentStage: action.payload._current_stage,
-                startingZoneCornersOrder: action.payload._starting_zone_corner_order,
-                robotPose: action.payload._robot_position,
-                tableImage: action.payload._encoded_table_image,
-                batteryConsumption: action.payload._battery_consumption
+                PuckColors: action.payload._puck_colors,
+                CurrentPuck: action.payload._current_puck,
+                CurrentStage: action.payload._current_stage,
+                ZoneCornersOrder: action.payload._starting_zone_corner_order,
+                RobotPosition: action.payload._robot_position,
+                TableImage: action.payload._encoded_table_image,
+                RobotConsumption: action.payload._battery_consumption
             }
         default:
             return state;

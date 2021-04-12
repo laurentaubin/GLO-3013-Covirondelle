@@ -8,7 +8,7 @@ import "@testing-library/jest-dom/extend-expect"
 import renderer from "react-test-renderer"
 import {Stage} from "../../context/context";
 
-const A_STAGE = Stage.BOOT
+const A_STAGE = Stage.boot
 
 afterEach(cleanup)
 
@@ -21,8 +21,6 @@ it("renders pucks stepper correctly", () => {
     const { getByTestId } = render(<RobotStepper activeStage={A_STAGE}/>)
     expect(getByTestId("robot-stepper")).toBeTruthy()
 })
-
-// TODO: add check for each element to be truthy
 
 // if failing and should pass, try update snapshot with "u" option
 it("matches snapshot", () => {

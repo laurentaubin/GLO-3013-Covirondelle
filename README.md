@@ -10,7 +10,7 @@ You need to the run the following commands
 ## Available Scripts
 
 In the project directory, you can run:
-
+// TODO:  change start documentation
 ### `yarn start`
 
 Builds the react app and serves the app through the node server.\

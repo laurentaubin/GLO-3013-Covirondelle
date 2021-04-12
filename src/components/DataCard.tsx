@@ -1,30 +1,31 @@
 import {Paper} from '@material-ui/core';
 import {createStyles, WithStyles, withStyles} from '@material-ui/core/styles';
-import React, {Component} from 'react';
+import React, {Component, ReactNode} from 'react';
 import Typography from '@material-ui/core/Typography';
 
 const styles = () => createStyles({
     root: {
-        margin: 20,
+        margin: 'auto',
         maxWidth: 345,
         color: '#000000'
     },
     media: {
-        height: 140,
+        height: 70,
     },
     data: {
         flex: 1,
-        margin: 20,
+        margin: 'auto',
         paddingTop: 12,
         paddingBottom: 12,
-        padding: 40
+        padding: 20
     }
 });
 
 type Props = {
     title: string
-    value: number
+    value?: number
     unit: string
+    children?: ReactNode
 };
 
 type AllProps = Props & WithStyles<typeof styles>;
@@ -32,22 +33,22 @@ type AllProps = Props & WithStyles<typeof styles>;
 class DataCard extends Component<AllProps> {
 
     public render() {
-        const {classes} = this.props;
-        const {title, value, unit} = this.props;
+        const {title, value, unit, classes, children} = this.props;
 
         return (
             <div className={classes.root} data-testid={"data-card"}>
-                <Typography gutterBottom variant="h5" component="h2">
+                <Typography gutterBottom variant="subtitle1" component="h2">
                     {title}
                 </Typography>
-                <Paper className={classes.data}>
+                <div className={classes.data}>
                     <Typography variant="body2" component="p">
-                        {value}
+                        {value ?? 'N/A'}
                     </Typography>
                     <Typography variant="body2" component="p">
                         {unit}
                     </Typography>
-                </Paper>
+                    {children}
+                </div>
             </div>
         );
     }
