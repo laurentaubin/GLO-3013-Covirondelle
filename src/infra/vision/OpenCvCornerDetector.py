@@ -12,7 +12,7 @@ class OpenCvCornerDetector(ICornerDetector):
     MIN_DISTANCE_BETWEEN_CORNERS = 10
     BLUR_KERNEL = (3, 3)
     NUMBER_OF_ITERATIONS = 1
-    IMAGE_HEIGHT_TO_CUT_GRIPPER_FROM_VIEW = 280
+    IMAGE_HEIGHT_TO_CUT_GRIPPER_FROM_VIEW = 320
     INFINITE_VALUE = float("inf")
 
     def detect_inferior_corner(self, image: np.ndarray) -> Position:
