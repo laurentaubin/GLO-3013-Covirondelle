@@ -52,3 +52,6 @@ class Position:
 
     def __abs__(self):
         return Position(abs(self._x_coordinate), abs(self._y_coordinate))
+
+    def __repr__(self):
+        return str((self._x_coordinate, self._y_coordinate))
