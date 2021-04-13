@@ -1,6 +1,6 @@
 import cv2
 
-CAMERA_INDEX = 0
+CAMERA_INDEX = 1
 EMBEDDED_CAMERA_IMAGE_SIZE = (640, 480)
 
 
@@ -48,7 +48,7 @@ if __name__ == "__main__":
         cv2.destroyAllWindows()
     cv2.destroyAllWindows()
 
-    filename = "corners/image-{}.jpg"
+    filename = "puck-ajustement/image-{}.jpg"
 
     for index, image in enumerate(images):
         cv2.imwrite(filename.format(index), image)
