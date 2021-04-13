@@ -23,6 +23,9 @@ class RotationService:
             )
             if orientation_to_send.get_orientation_in_degree() == 0:
                 break
+            orientation_to_send = self._find_smallest_orientation_to_send(
+                orientation_to_send
+            )
             self._communication_service.send_object(
                 Message(Topic.ROTATION, orientation_to_send)
             )
@@ -45,3 +48,14 @@ class RotationService:
         return (
             robot_pose.get_orientation_in_degree() - desired_orientation
         ) == Orientation(0)
+
+    def _find_smallest_orientation_to_send(self, orientation_delta: Orientation):
+        if orientation_delta.get_orientation_in_degree() < 0:
+            orientation_delta = Orientation(
+                orientation_delta.get_orientation_in_degree() - 360
+            )
+        if orientation_delta.get_orientation_in_degree() >= 180:
+            orientation_delta = Orientation(
+                orientation_delta.get_orientation_in_degree() - 360
+            )
+        return orientation_delta

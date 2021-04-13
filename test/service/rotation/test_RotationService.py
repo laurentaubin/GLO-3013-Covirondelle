@@ -85,12 +85,12 @@ class TestRotationService(TestCase):
 
         self.assertEqual(2, self._vision_service.get_vision_state.call_count)
 
-    def test_givenRobotNotCorrectlyOriented_whenRotate_thenSendAdjustedOrientation(
+    def test_givenRobotNotCorrectlyOrientedAndRobotWithOrientationLargerThan180Degree_whenRotate_thenSendNegativeAdjustedOrientation(
         self,
     ):
         self._setup_communication_service(1)
         self._setup_vision_service(self.ANOTHER_ORIENTATION)
-        expected_orientation = self.ANOTHER_ORIENTATION - self.AN_ORIENTATION
+        expected_orientation = Orientation(-126)
 
         self._rotation_service.rotate(self.AN_ORIENTATION)
 
