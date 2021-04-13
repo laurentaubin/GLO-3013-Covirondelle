@@ -26,3 +26,6 @@ class MovementCommand:
 
     def get_duration(self) -> CommandDuration:
         return self._duration
+
+    def __repr__(self):
+        return str((self._direction, self._speed))

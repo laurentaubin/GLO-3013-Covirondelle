@@ -1,17 +1,18 @@
+from typing import List
+
 import cv2
 import pytesseract
 
-
+from config.config import TESSERACT_LOCATION
 from domain.vision.ILetterPositionExtractor import ILetterPositionExtractor
 from infra.vision.CommandPanelPosition import CommandPanelPosition
-from config.config import TESSERACT_LOCATION
 
 
 class PytesseractLetterPositionExtractor(ILetterPositionExtractor):
     def __init__(self):
         self.extracted_letters = []
 
-    def extract_letters_from_image(self, command_panel_image):
+    def extract_letters_from_image(self, command_panel_image) -> List[str]:
         # TODO changer pour le bon path
         pytesseract.pytesseract.tesseract_cmd = TESSERACT_LOCATION
         custom_config = "--psm 11 -c tessedit_char_whitelist=ABCD"
@@ -26,6 +27,7 @@ class PytesseractLetterPositionExtractor(ILetterPositionExtractor):
             adaptive_threshold, config=custom_config
         )
         self.extracted_letters = list(imageText.replace("\n", ""))
+        return self.extracted_letters
 
     def get_extracted_letters(
         self,

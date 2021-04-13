@@ -14,3 +14,4 @@ class StmCommand(IntEnum):
     ASK_CURRENT = 8
     ASK_VOLTAGE = 9
     ASK_POWER = 10
+    TOGGLE_LED = 11

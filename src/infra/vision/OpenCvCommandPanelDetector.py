@@ -6,7 +6,7 @@ from domain.vision.ICommandPanelDetector import ICommandPanelDetector
 
 
 class OpenCvCommandPanelDetector(ICommandPanelDetector):
-    def detect(self, image: np.ndarray) -> Position:
+    def detect_upper_left_corner(self, image: np.ndarray) -> Position:
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
         contours, _ = cv2.findContours(
