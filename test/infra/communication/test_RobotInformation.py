@@ -51,7 +51,9 @@ class TestRobotInformation(TestCase):
         self,
     ):
         expected_command = b"\x08\x00"
+
         self.robot_information.get_current_consumption()
+
         self.serial.write.assert_called_with(expected_command)
 
     def test_givenAReadLineCurrentConsumptionValue_whenGetCurrentConsumption_thenTheRightValueIsReturned(
@@ -62,14 +64,18 @@ class TestRobotInformation(TestCase):
             "10", encoding="utf-8"
         )
         self.serial.readline.return_value = expected_serial_response
+
         actual_current_consumption = self.robot_information.get_current_consumption()
+
         self.assertEqual(expected_current_consumption_value, actual_current_consumption)
 
     def test_givenAReadPowerConsumptionCommand_whenGetConsumptionStatus_thenTheRightCommandIsSent(
         self,
     ):
         expected_command = b"\x0A\x00"
+
         self.robot_information.get_power_consumption()
+
         self.serial.write.assert_called_with(expected_command)
 
     def test_givenAReadLinePowerConsumptionValue_whenGetPowerConsumption_thenTheRightValueIsReturned(
@@ -80,5 +86,7 @@ class TestRobotInformation(TestCase):
             "10", encoding="utf-8"
         )
         self.serial.readline.return_value = expected_serial_response
+
         actual_power_consumption = self.robot_information.get_power_consumption()
+
         self.assertEqual(expected_power_consumption_value, actual_power_consumption)
