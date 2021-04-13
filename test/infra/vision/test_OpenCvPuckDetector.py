@@ -14,7 +14,7 @@ class TestOpenCvPuckDetector(TestCase):
 
     def test_givenAnImageAndPuckColor_whenDetect_thenDetectThePuckCenter(self):
         an_image = cv2.imread(self.AN_IMAGE)
-        expected_puck_center = Position(1483, 311)
+        expected_puck_center = Position(1471, 303)
 
         actual_puck_center = self.detector.detect(an_image, Color.BLACK)
 

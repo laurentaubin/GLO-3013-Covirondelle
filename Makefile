@@ -10,6 +10,8 @@ test:
 format:
 	black src; \
 	black test; \
+	black script; \
+	black integration; \
 
 check-format:
 	black --check src
