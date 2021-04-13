@@ -24,7 +24,8 @@ export const appReducer = (state: ApplicationState, action: any) => {
                 ZoneCornersOrder: action.payload._starting_zone_corner_order,
                 RobotPosition: action.payload._robot_position,
                 TableImage: action.payload._encoded_table_image,
-                RobotConsumption: action.payload._battery_consumption
+                RobotConsumption: action.payload._battery_consumption,
+                currentPlannedTrajectory: action.payload._current_planned_trajectory
             }
         default:
             return state;

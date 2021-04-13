@@ -33,13 +33,8 @@ export enum ZoneCorner {
 }
 
 interface Position {
-    x: number;
-    y: number;
-}
-
-const initialPosition = {
-    x: 0,
-    y: 0
+    x_coordinate: number;
+    y_coordinate: number;
 }
 
 export interface ApplicationState {
@@ -50,11 +45,12 @@ export interface ApplicationState {
     ZoneCornersOrder: ZoneCorner[]
     RobotPosition: Position | undefined
     TableImage: string |  undefined
-    BatteryElectricCharge: number | undefined,
-    RobotConsumption: number,
-    BatteryTime: number | undefined,
-    IsGripperHolding: boolean,
+    BatteryElectricCharge: number | undefined
+    RobotConsumption: number
+    BatteryTime: number | undefined
+    IsGripperHolding: boolean
     IsGameStarted: boolean
+    currentPlannedTrajectory: Position[]
 }
 
 const initialState: ApplicationState = {
@@ -69,7 +65,8 @@ const initialState: ApplicationState = {
     RobotConsumption: 0,
     BatteryTime: undefined,
     IsGripperHolding: false,
-    IsGameStarted: false
+    IsGameStarted: false,
+    currentPlannedTrajectory: []
 }
 
 const AppContext = createContext<{

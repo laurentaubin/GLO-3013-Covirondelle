@@ -9,6 +9,7 @@ import {AppContext, PuckColor} from "../context/context";
 import {io} from "socket.io-client";
 import {SERVER_ENDPOINT, UPDATE_EVENT} from "../config/config"
 import {ActionType} from "../context/reducer";
+import TableDisplay from "./TableDisplay";
 
 
 const styles = (theme: Theme) => createStyles({
@@ -74,8 +75,8 @@ export const Dashboard = (props: any) => {
 
     return (
         <>
-            {state.TableImage ? <img src={`data:image/jpeg;base64,${state.TableImage}`} alt={""}/> : ""}
-            <div className={classes.root} data-testid={"dashboard"}>
+            <TableDisplay />
+            <div className={classes.root}>
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={6}>
                         <Paper className={classes.smallPaper}>
