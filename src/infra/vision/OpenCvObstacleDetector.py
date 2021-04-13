@@ -4,7 +4,9 @@ import cv2
 import cv2.aruco as aruco
 import numpy as np
 
-from config.config import OBSTACLE_ARUCO_MARKER_SIZE
+from config.config import (
+    OBSTACLE_ARUCO_MARKER_SIZE,
+)
 from domain.Position import Position
 from domain.vision.IObstacleDetector import IObstacleDetector
 from domain.vision.exception.ObstacleNotFoundException import ObstacleNotFoundException
@@ -13,6 +15,8 @@ from infra.utils.GeometryUtils import GeometryUtils
 
 # https://github.com/ddelago/Aruco-Marker-Calibration-and-Pose-Estimation/blob/master/pose_marker.py
 # https://docs.opencv.org/master/d7/d53/tutorial_py_pose.html
+
+
 class OpenCvObstacleDetector(IObstacleDetector):
     def __init__(
         self,
@@ -31,7 +35,7 @@ class OpenCvObstacleDetector(IObstacleDetector):
         self._aruco_marker_radius = aruco_marker_size / 2
         self._obstacle_height = obstacle_height
 
-    def detect(self, image: List[np.ndarray]) -> List[Position]:
+    def detect(self, image: np.ndarray) -> List[Position]:
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         corners, ids, _ = aruco.detectMarkers(
             gray,
@@ -41,7 +45,6 @@ class OpenCvObstacleDetector(IObstacleDetector):
             distCoeff=self._distortion_coefficients,
         )
         all_image_points = self._get_obstacles_aruco_marker_image_points(corners, ids)
-
         projection_points = self._get_projection_points(all_image_points)
         return self._get_obstacle_positions_from_projection_points(projection_points)
 

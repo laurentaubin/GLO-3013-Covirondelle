@@ -21,6 +21,8 @@ from config.config import (
     OBSTACLE_HEIGHT,
     OBSTACLE_RADIUS,
     ROBOT_RADIUS,
+    ROBOT_ARUCO_MARKER_SIZE,
+    ROBOT_HEIGHT,
     DEFAULT_PUCK_ZONE_POSITION,
 )
 from domain.Position import Position
@@ -168,7 +170,14 @@ class StationContext:
         maze_factory = MazeFactory(ROBOT_RADIUS, OBSTACLE_RADIUS)
         table_detector = OpenCvTableDetector()
         self._world_camera = self._create_world_camera()
-        robot_detector = OpenCvRobotDetector(DICT_4X4_50, ROBOT_ARUCO_MARKER_ID)
+        robot_detector = OpenCvRobotDetector(
+            DICT_4X4_50,
+            ROBOT_ARUCO_MARKER_ID,
+            ROBOT_ARUCO_MARKER_SIZE,
+            CAMERA_MATRIX,
+            DISTORTION_COEFFICIENTS,
+            ROBOT_HEIGHT,
+        )
         puck_zone_center_position = Position(
             DEFAULT_PUCK_ZONE_POSITION[0], DEFAULT_PUCK_ZONE_POSITION[1]
         )

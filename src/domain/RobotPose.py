@@ -5,7 +5,6 @@ import numpy as np
 
 
 class RobotPose:
-
     GRIPPER_POSE = GRIPPER_OFFSET
 
     def __init__(self, position: Position, orientation: Orientation):

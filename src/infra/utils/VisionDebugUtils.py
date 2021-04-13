@@ -34,6 +34,24 @@ class VisionDebugUtils:
         return img
 
     @staticmethod
+    def draw_3D_projection_from_image_points(
+        img: np.ndarray, all_image_points: List[np.ndarray]
+    ) -> np.ndarray:
+        image_points = np.int32(all_image_points).reshape(-1, 2)
+
+        # draw ground floor in green
+        img = cv2.drawContours(img, [image_points[:4]], -1, (0, 255, 0), -3)
+
+        # draw pillars in blue color
+        for i, j in zip(range(4), range(4, 8)):
+            img = cv2.line(
+                img, tuple(image_points[i]), tuple(image_points[j]), (255), 3
+            )
+
+        # draw top layer in red color
+        return cv2.drawContours(img, [image_points[4:]], -1, (0, 0, 255), 3)
+
+    @staticmethod
     def draw_circle_around_positions(image: np.ndarray, positions: Position) -> None:
         for position in positions:
             cv2.circle(
