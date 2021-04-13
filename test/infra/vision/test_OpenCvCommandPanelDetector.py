@@ -51,7 +51,7 @@ class TestOpenCvCommandPanelDetector(TestCase):
     ):
         expected_position: Position = Position(429, 37)
 
-        actual_position = self._command_panel_detector.detect(
+        actual_position = self._command_panel_detector.detect_upper_left_corner(
             self.AN_IMAGE_WITH_COMMAND_PANEL
         )
 
@@ -62,7 +62,7 @@ class TestOpenCvCommandPanelDetector(TestCase):
     ):
         expected_position: Position = Position(12, 18)
 
-        actual_position = self._command_panel_detector.detect(
+        actual_position = self._command_panel_detector.detect_upper_left_corner(
             self.A_ZOOMED_IMAGE_WITH_COMMAND_PANEL
         )
 
@@ -73,7 +73,7 @@ class TestOpenCvCommandPanelDetector(TestCase):
     ):
         expected_position: Position = Position(403, 0)
 
-        actual_position = self._command_panel_detector.detect(
+        actual_position = self._command_panel_detector.detect_upper_left_corner(
             self.AN_IMAGE_FROM_ANGLE_WITH_COMMAND_PANEL
         )
 
@@ -84,7 +84,7 @@ class TestOpenCvCommandPanelDetector(TestCase):
     ):
         expected_position: Position = Position(786, 360)
 
-        actual_position = self._command_panel_detector.detect(
+        actual_position = self._command_panel_detector.detect_upper_left_corner(
             self.AN_IMAGE_WITH_SMALL_COMMAND_PANEL
         )
 
@@ -95,7 +95,7 @@ class TestOpenCvCommandPanelDetector(TestCase):
     ):
         expected_position: Position = Position(245, 19)
 
-        actual_position = self._command_panel_detector.detect(
+        actual_position = self._command_panel_detector.detect_upper_left_corner(
             self.A_LEFT_SIDE_IMAGE_OF_COMMAND_PANEL
         )
 
@@ -106,7 +106,7 @@ class TestOpenCvCommandPanelDetector(TestCase):
     ):
         expected_position: Position = Position(0, 27)
 
-        actual_position = self._command_panel_detector.detect(
+        actual_position = self._command_panel_detector.detect_upper_left_corner(
             self.A_RIGHT_SIDE_IMAGE_OF_COMMAND_PANEL
         )
 
@@ -117,7 +117,7 @@ class TestOpenCvCommandPanelDetector(TestCase):
     ):
         expected_position: Position = Position(249, 23)
 
-        actual_position = self._command_panel_detector.detect(
+        actual_position = self._command_panel_detector.detect_upper_left_corner(
             self.AN_IMAGE_WITH_TOP_OF_COMMAND_PANEL
         )
 
@@ -128,7 +128,7 @@ class TestOpenCvCommandPanelDetector(TestCase):
     ):
         expected_position: Position = Position(241, 0)
 
-        actual_position = self._command_panel_detector.detect(
+        actual_position = self._command_panel_detector.detect_upper_left_corner(
             self.AN_IMAGE_WITH_BOTTOM_OF_COMMAND_PANEL
         )
 
@@ -139,7 +139,7 @@ class TestOpenCvCommandPanelDetector(TestCase):
     ):
         expected_position: Position = Position(0, 0)
 
-        actual_position = self._command_panel_detector.detect(
+        actual_position = self._command_panel_detector.detect_upper_left_corner(
             self.NOT_A_IMAGE_OF_COMMAND_PANEL
         )
 

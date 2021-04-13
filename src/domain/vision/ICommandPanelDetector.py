@@ -4,5 +4,5 @@ from domain.movement.MovementCommand import MovementCommand
 
 
 class ICommandPanelDetector:
-    def detect(self, image: np.ndarray) -> MovementCommand:
+    def detect_upper_left_corner(self, image: np.ndarray) -> MovementCommand:
         pass
