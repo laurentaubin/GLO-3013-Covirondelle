@@ -1,7 +1,10 @@
+from typing import List
+
 from domain import StartingZone
 from domain.Color import Color
 from domain.GameTable import GameTable
 from domain.Position import Position
+from domain.Puck import Puck
 from domain.RobotPose import RobotPose
 from domain.camera.ICalibrator import ICalibrator
 from domain.camera.IWorldCamera import IWorldCamera
@@ -43,8 +46,9 @@ class VisionService:
 
         starting_zone = self._find_starting_zone(table_image)
         maze = self._create_maze(table_image)
+        pucks = self._detect_pucks(table_image)
 
-        return GameTable(starting_zone, maze, self._puck_zone_center)
+        return GameTable(starting_zone, maze, self._puck_zone_center, pucks)
 
     def get_vision_state(self):
         world_image = self._world_camera.take_world_image()
@@ -71,3 +75,13 @@ class VisionService:
 
     def _find_robot_position(self, image) -> RobotPose:
         return self._robot_detector.detect(image)
+
+    def _detect_pucks(self, table_image) -> List[Puck]:
+
+        pucks = list()
+        for color in Color:
+            if color == Color.NONE:
+                continue
+            puck_position = self._puck_detector.detect(table_image, color)
+            pucks.append(Puck(color, puck_position))
+        return pucks

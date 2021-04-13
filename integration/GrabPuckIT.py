@@ -65,7 +65,7 @@ class GrabPuckIT(IntegrationContext):
 
     def find_puck_position(self, color: Color):
         if DETECT_PUCK_FOR_REAL:
-            return self._vision_service.find_puck_position(color)
+            return self._path_service._game_table.get_puck(color)
         else:
             # TODO return hardcoded puck
             pass

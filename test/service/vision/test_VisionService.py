@@ -1,5 +1,5 @@
 from unittest import TestCase
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, call
 
 from domain.Color import Color
 from domain.Position import Position
@@ -17,6 +17,7 @@ class TestVisionService(TestCase):
     A_ROBOT_POSE = MagicMock()
     A_POSITION = MagicMock()
     A_COLOR = Color.BLUE
+    SOME_PUCKS = MagicMock()
 
     def setUp(self):
         self.setUpMocks()
@@ -132,3 +133,22 @@ class TestVisionService(TestCase):
         actual_position = self.vision_service.find_puck_position(self.A_COLOR)
 
         self.assertEqual(self.A_POSITION, actual_position)
+
+    def test_whenCreateGameTable_thenAllPucksAreDetected(self):
+        self.world_camera.take_world_image.return_value = self.AN_IMAGE
+        self.image_calibrator.calibrate.return_value = self.AN_IMAGE
+        expected_calls = [
+            call(self.AN_IMAGE, color) for color in Color if color != Color.NONE
+        ]
+
+        self.vision_service.create_game_table()
+
+        self.puck_detector.detect.assert_has_calls(expected_calls)
+
+    def test_givenPucksDetected_whenCreateGameTable_thenGameTableHasPucks(self):
+        self.puck_detector.detect.return_value = self.A_POSITION
+        puck_colors = len(Color) - 1
+
+        actual_game_table = self.vision_service.create_game_table()
+
+        self.assertEqual(len(actual_game_table.get_pucks()), puck_colors)
