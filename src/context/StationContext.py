@@ -147,7 +147,10 @@ class StationContext:
 
     def _create_transport_puck_handler(self):
         return TransportPuckHandler(
-            self._communication_service, self._stage_request_router
+            self._communication_service,
+            self._path_service,
+            self._rotation_service,
+            self._movement_factory,
         )
 
     def _create_go_park_handler(self):

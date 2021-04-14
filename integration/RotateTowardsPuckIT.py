@@ -38,7 +38,7 @@ class RotateTowardsPuckIT(IntegrationContext):
             pass
 
     def find_orientation_to_puck(self, puck_position, robot_pose):
-        return self._rotation_service.find_orientation_to_puck(
+        return self._rotation_service._find_orientation_to_puck(
             puck_position, robot_pose
         )
 
@@ -55,20 +55,20 @@ class RotateTowardsPuckIT(IntegrationContext):
 
     def run(self):
         print("Finding puck position")
-        current_puck_position = rotate_it.find_puck_position(PUCK_COLOR_TO_USE)
+        current_puck_position = self.find_puck_position(PUCK_COLOR_TO_USE)
 
         input("Put robot in the middle of the puck zone")
 
         print("Finding robot position")
-        puck_zone_robot_pose = rotate_it.find_robot_pose()
+        puck_zone_robot_pose = self.find_robot_pose()
 
         print("Finding angle between puck and robot")
-        orientation_to_puck = rotate_it.find_orientation_to_puck(
+        orientation_to_puck = self.find_orientation_to_puck(
             current_puck_position, puck_zone_robot_pose
         )
 
         print("Rotating to face puck")
-        rotate_it._rotation_service.rotate(orientation_to_puck)
+        self._rotation_service.rotate(orientation_to_puck)
 
         print("Calculating movement needed to get to puck")
         movements_to_puck = [
@@ -80,21 +80,21 @@ class RotateTowardsPuckIT(IntegrationContext):
         ]
 
         print("Sending movements to robot")
-        rotate_it.send_command_to_robot(Topic.MOVEMENTS, movements_to_puck)
+        self.send_command_to_robot(Topic.MOVEMENTS, movements_to_puck)
 
         print("Waiting for robot to move")
-        rotate_it.wait_for_robot_confirmation(Topic.MOVEMENTS)
+        self.wait_for_robot_confirmation(Topic.MOVEMENTS)
 
         print("Send command to grab puck to robot")
-        rotate_it.send_command_to_robot(
+        self.send_command_to_robot(
             Topic.GRAB_PUCK, PUCK_COLOR_TO_USE.get_resistance_digit()
         )
 
         print("Waiting for robot to grab puck")
-        rotate_it.wait_for_robot_confirmation(Topic.GRAB_PUCK)
+        self.wait_for_robot_confirmation(Topic.GRAB_PUCK)
 
         print("Finding robot position")
-        robot_with_puck_pose = rotate_it.find_robot_pose()
+        robot_with_puck_pose = self.find_robot_pose()
 
         print("Calculating movement needed to go back to puck zone center")
 
@@ -107,13 +107,13 @@ class RotateTowardsPuckIT(IntegrationContext):
         ]
 
         print("Sending movements to robot")
-        rotate_it.send_command_to_robot(Topic.MOVEMENTS, movements_back_to_puck_zone)
+        self.send_command_to_robot(Topic.MOVEMENTS, movements_back_to_puck_zone)
 
         print("Waiting for robot to move")
-        rotate_it.wait_for_robot_confirmation(Topic.MOVEMENTS)
+        self.wait_for_robot_confirmation(Topic.MOVEMENTS)
 
         print("Rotating robot straight")
-        rotate_it._rotation_service.rotate(CardinalOrientation.EAST.value)
+        self._rotation_service.rotate(CardinalOrientation.EAST.value)
 
 
 if __name__ == "__main__":

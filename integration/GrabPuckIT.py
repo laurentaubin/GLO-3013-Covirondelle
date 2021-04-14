@@ -3,14 +3,10 @@ from domain.Orientation import Orientation
 from domain.Position import Position
 from domain.RobotPose import RobotPose
 from domain.StartingZoneCorner import StartingZoneCorner
-from domain.UnitOfMeasure import UnitOfMeasure
 from domain.communication.Message import Message
 from domain.game.Stage import Stage
 from domain.Color import Color
 from domain.game.Topic import Topic
-from domain.movement.Direction import Direction
-from domain.movement.Distance import Distance
-from domain.movement.Movement import Movement
 
 from domain.movement.MovementFactory import MovementFactory
 from integration.IntegrationContext import IntegrationContext
@@ -110,66 +106,64 @@ class GrabPuckIT(IntegrationContext):
         )
 
     def find_orientation_to_puck(self, puck_position, robot_pose):
-        return self._rotation_service.find_orientation_to_puck(
+        return self._rotation_service._find_orientation_to_puck(
             puck_position, robot_pose
         )
 
     def run(self):
         print("Sending start command")
-        grab_puck_it.send_command_to_robot(Topic.START_CYCLE, Stage.TRANSPORT_PUCK)
-        grab_puck_it.wait_for_robot_confirmation(Topic.START_CYCLE)
+        self.send_command_to_robot(Topic.START_CYCLE, Stage.TRANSPORT_PUCK)
+        self.wait_for_robot_confirmation(Topic.START_CYCLE)
 
         print("Rotating robot")
-        grab_puck_it._rotation_service.rotate(CardinalOrientation.WEST.value)
+        self._rotation_service.rotate(CardinalOrientation.WEST.value)
 
         print("Finding robot position")
-        initial_robot_pose = grab_puck_it.find_robot_pose()
+        initial_robot_pose = self.find_robot_pose()
 
         print("Finding movements to puck zone")
-        movements_to_puck_zone = grab_puck_it.find_movements_to_puck_zone(
-            initial_robot_pose
-        )
+        movements_to_puck_zone = self.find_movements_to_puck_zone(initial_robot_pose)
 
         print("Sending movements to robot")
-        grab_puck_it.send_command_to_robot(Topic.MOVEMENTS, movements_to_puck_zone)
+        self.send_command_to_robot(Topic.MOVEMENTS, movements_to_puck_zone)
 
         print("Waiting for robot to move")
-        grab_puck_it.wait_for_robot_confirmation(Topic.MOVEMENTS)
+        self.wait_for_robot_confirmation(Topic.MOVEMENTS)
 
         print("Finding puck position")
-        current_puck_position = grab_puck_it.find_puck_position(PUCK_COLOR_TO_USE)
+        current_puck_position = self.find_puck_position(PUCK_COLOR_TO_USE)
         print(current_puck_position)
 
         self.rotate_towards_puck_it.run()
 
         print("Finding robot position")
-        grab_puck_it.find_robot_pose()
-        dropping_puck_robot_pose = grab_puck_it.find_robot_pose()
+        self.find_robot_pose()
+        dropping_puck_robot_pose = self.find_robot_pose()
 
         print("Finding movements to starting zone center")
-        movements_to_starting_zone = grab_puck_it.find_movements_to_starting_zone(
+        movements_to_starting_zone = self.find_movements_to_starting_zone(
             dropping_puck_robot_pose
         )
 
         print("Sending movements to robot")
-        grab_puck_it.send_command_to_robot(Topic.MOVEMENTS, movements_to_starting_zone)
+        self.send_command_to_robot(Topic.MOVEMENTS, movements_to_starting_zone)
 
         print("Waiting for robot to move")
-        grab_puck_it.wait_for_robot_confirmation(Topic.MOVEMENTS)
+        self.wait_for_robot_confirmation(Topic.MOVEMENTS)
 
         print("Rotating robot towards starting zone center")
         starting_zone_corner_orientation = STARTING_ZONE_CORNER_TO_USE.value
-        grab_puck_it.rotate_robot(starting_zone_corner_orientation)
+        self.rotate_robot(starting_zone_corner_orientation)
 
         print("Sending command to drop puck")
-        grab_puck_it.send_command_to_robot(Topic.DROP_PUCK, None)
+        self.send_command_to_robot(Topic.DROP_PUCK, None)
 
         print("Waiting for robot to drop puck")
-        grab_puck_it.wait_for_robot_confirmation(Topic.DROP_PUCK)
+        self.wait_for_robot_confirmation(Topic.DROP_PUCK)
 
         print("Wrapping up stage")
-        grab_puck_it.send_command_to_robot(Topic.STAGE_COMPLETED, None)
-        grab_puck_it.wait_for_robot_confirmation(Topic.STAGE_COMPLETED)
+        self.send_command_to_robot(Topic.STAGE_COMPLETED, None)
+        self.wait_for_robot_confirmation(Topic.STAGE_COMPLETED)
 
         print("Stage complete")
 
