@@ -77,8 +77,8 @@ from service.game.StageHandlerSelector import StageHandlerSelector
 from service.game.StageService import StageService
 from service.gripper.GripperService import GripperService
 from service.handler.FindCommandPanelHandler import FindCommandPanelHandler
-from service.handler.GoParkHandler import GoParkHandler
 from service.handler.GoToOhmmeterHandler import GoToOhmmeterHandler
+from service.handler.StartHandler import StartHandler
 from service.handler.StopHandler import StopHandler
 from service.handler.TransportPuckHandler import TransportPuckHandler
 from service.movement.MovementService import MovementService
@@ -172,6 +172,7 @@ class RobotContext:
     def _create_stage_handler_selector(
         self, movement_command_factory: MovementCommandFactory
     ):
+        start_handler = StartHandler(self._communication_service)
         ohmmeter_alignment_corrector = self._create_ohmmeter_alignment_corrector(
             OpenCvStartingZoneLineDetector()
         )
@@ -187,16 +188,15 @@ class RobotContext:
             self._communication_service, self._movement_service, self._vision_service
         )
         self._transport_puck_handler = self._create_transport_puck_handler()
-        go_park_handler = GoParkHandler()
         stop_handler = StopHandler(
             self._communication_service, self._movement_service, StmLed(self._serial)
         )
 
         return StageHandlerSelector(
+            start_handler,
             go_to_ohmmeter_handler,
             find_command_panel_handler,
             self._transport_puck_handler,
-            go_park_handler,
             stop_handler,
         )
 

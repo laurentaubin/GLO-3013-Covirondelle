@@ -1,16 +1,19 @@
 import time
-from typing import List
+from typing import List, Any
 
 from config.config import MIN_VERTICAL_ANGLE_VALUE
+from domain.Orientation import Orientation
 from domain.alignment.OhmmeterAlignmentCorrector import OhmmeterAlignmentCorrector
+from domain.communication.Message import Message
 from domain.game.IStageHandler import IStageHandler
 from domain.game.Stage import Stage
+from domain.game.Topic import Topic
 from domain.movement.Direction import Direction
 from domain.movement.Movement import Movement
 from domain.movement.MovementCommand import MovementCommand
 from domain.movement.MovementCommandFactory import MovementCommandFactory
-from domain.resistance.Resistance import Resistance
 from service.communication.CommunicationService import CommunicationService
+from service.exception.StageComplete import StageComplete
 from service.movement.MovementService import MovementService
 from service.resistance.ResistanceService import ResistanceService
 from service.vision.VisionService import VisionService
@@ -34,32 +37,41 @@ class GoToOhmmeterHandler(IStageHandler):
         self._movement_command_factory = movement_command_factory
 
     def execute(self):
-        self._communication_service.send_game_cycle_message(Stage.GO_TO_OHMMETER.value)
+        while True:
+            try:
+                self._route_station_command()
+            except StageComplete:
+                break
 
-        movements: List[Movement] = self._communication_service.receive_object()
-        self._movement_service.move(movements)
+    def _route_station_command(self):
+        command: Message = self._communication_service.receive_object()
+        topic = command.get_topic()
 
-        self._align_with_ohmmeter()
+        if topic == Topic.START_CYCLE:
+            self._send_confirmation_to_station(Topic.START_CYCLE, Stage.TRANSPORT_PUCK)
 
-        resistance_value: Resistance = (
-            self._resistance_service.take_resistance_measurement()
-        )
-        self._communication_service.send_object(resistance_value)
+        elif topic == Topic.MOVEMENTS:
+            self._move(command.get_payload())
+            self._send_confirmation_to_station(Topic.MOVEMENTS, Stage.STAGE_COMPLETED)
 
-        self._route_station_response()
-        self._communication_service.send_game_cycle_message(Stage.STAGE_COMPLETED.value)
+        elif topic == Topic.ROTATION:
+            self._rotate(command.get_payload())
+            self._send_confirmation_to_station(Topic.ROTATION, Stage.STAGE_COMPLETED)
 
-    def _route_station_response(self):
-        game_cycle = self._communication_service.receive_game_cycle_message()
+        elif topic == Topic.READ_RESISTANCE:
+            resistance = self._read_resistance()
+            self._send_confirmation_to_station(Topic.READ_RESISTANCE, resistance)
 
-        if game_cycle == Stage.STAGE_COMPLETED.value:
-            pass
-        else:
-            print("whoops")
+        elif topic == Topic.STAGE_COMPLETED:
+            self._send_confirmation_to_station(
+                Topic.STAGE_COMPLETED, Stage.TRANSPORT_PUCK
+            )
+            raise StageComplete
 
-    def _align_with_ohmmeter(self):
+    def _read_resistance(self):
         self._align_horizontally_with_ohmmeter()
         self._make_contact_with_ohmmeter()
+        return self._resistance_service.take_resistance_measurement()
 
     def _align_horizontally_with_ohmmeter(self):
         self._vision_service.rotate_camera_vertically(MIN_VERTICAL_ANGLE_VALUE)
@@ -107,3 +119,13 @@ class GoToOhmmeterHandler(IStageHandler):
                     self._movement_command_factory.create_stop_command()
                 )
                 break
+
+    def _move(self, movements: List[Movement]):
+        self._movement_service.move(movements)
+
+    def _rotate(self, orientation: Orientation):
+        self._movement_service.rotate(orientation.get_orientation_in_degree())
+
+    def _send_confirmation_to_station(self, command: Topic, payload: Any):
+        message = Message(command, payload)
+        self._communication_service.send_object(message)

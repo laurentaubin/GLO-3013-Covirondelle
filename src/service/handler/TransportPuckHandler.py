@@ -1,5 +1,5 @@
 import time
-from typing import Any
+from typing import Any, List
 
 from domain.Orientation import Orientation
 from domain.alignment.CornerAlignmentCorrector import CornerAlignmentCorrector
@@ -9,6 +9,7 @@ from domain.game.IStageHandler import IStageHandler
 from domain.game.Stage import Stage
 from domain.game.Topic import Topic
 from domain.movement.Direction import Direction
+from domain.movement.Movement import Movement
 from domain.movement.MovementCommand import MovementCommand
 from domain.Color import Color
 from service.communication.CommunicationService import CommunicationService
@@ -89,7 +90,7 @@ class TransportPuckHandler(IStageHandler):
         time.sleep(1)
         self._gripper_service.elevate_gripper()
 
-    def _move(self, movements):
+    def _move(self, movements: List[Movement]):
         self._movement_service.move(movements)
 
     def _open_gripper(self):
