@@ -183,7 +183,9 @@ class RobotContext:
             ohmmeter_alignment_corrector,
             movement_command_factory,
         )
-        find_command_panel_handler = FindCommandPanelHandler()
+        find_command_panel_handler = FindCommandPanelHandler(
+            self._communication_service, self._movement_service, self._vision_service
+        )
         self._transport_puck_handler = self._create_transport_puck_handler()
         go_park_handler = GoParkHandler()
         stop_handler = StopHandler(
