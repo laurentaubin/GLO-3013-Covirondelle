@@ -11,6 +11,7 @@ class CommunicationRunner:
 
     def run(self):
         while True:
-            self._communication_service.send_robot_status("ping pong")
             self._communication_service.send_gripper_status()
+            self._communication_service.send_current_consumption()
+            self._communication_service.send_power_consumption()
             time.sleep(1)

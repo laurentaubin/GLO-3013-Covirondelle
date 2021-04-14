@@ -12,10 +12,10 @@ class TestRobotInformation(TestCase):
         self.serial = MagicMock()
         self.robot_information = StmRobotInformation(self.serial)
 
-    def test_givenCurrentConsumptionAbove300_whenGetGripperStatus_thenGripperHasPuck(
+    def test_givenCurrentConsumptionAbove200_whenGetGripperStatus_thenGripperHasPuck(
         self,
     ):
-        a_current_value = "400"
+        a_current_value = "250"
         expected_serial_response = bytes("8", encoding="utf-8") + bytes(
             a_current_value, encoding="utf-8"
         )
@@ -25,10 +25,10 @@ class TestRobotInformation(TestCase):
 
         self.assertEqual(GripperStatus.HAS_PUCK, actual_gripper_status)
 
-    def test_givenCurrentConsumptionUnder300_whenGetGripperStatus_thenGripperDoesntHavePuck(
+    def test_givenCurrentConsumptionUnder200_whenGetGripperStatus_thenGripperDoesntHavePuck(
         self,
     ):
-        a_current_value = "200"
+        a_current_value = "100"
         expected_serial_response = bytes("8", encoding="utf-8") + bytes(
             a_current_value, encoding="utf-8"
         )

@@ -25,3 +25,11 @@ class ZmqPublisherConnector(IPublisherConnector):
     def publish_gripper_status(self, gripper_status):
         topic = "gripper_status"
         self._ping_socket.send_string("%s %s" % (topic, str(gripper_status)))
+
+    def publish_power_consumption(self, power_consumption):
+        topic = "power_consumption"
+        self._ping_socket.send_string("%s %s" % (topic, str(power_consumption)))
+
+    def publish_battery_consumption(self, battery_consumption):
+        topic = "battery_consumption"
+        self._ping_socket.send_string("%s %s" % (topic, str(battery_consumption)))

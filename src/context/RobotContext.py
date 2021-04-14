@@ -40,7 +40,6 @@ from config.config import (
 from domain.Position import Position
 from domain.alignment.OhmmeterAlignmentCorrector import OhmmeterAlignmentCorrector
 from domain.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
-from domain.communication.IRobotInformation import IRobotInformation
 from domain.movement.CommandDuration import CommandDuration
 from domain.movement.MovementCommandFactory import MovementCommandFactory
 from domain.movement.Speed import Speed
@@ -51,6 +50,9 @@ from infra.IServoController import IServoController
 from infra.MaestroController import MaestroController
 from infra.camera.ImageBasedEmbeddedCamera import ImageBasedEmbeddedCamera
 from infra.camera.OpenCvEmbeddedCamera import OpenCvEmbeddedCamera
+from infra.communication.robot_information.FakeRobotInformation import (
+    FakeRobotInformation,
+)
 from infra.communication.robot_information.StmRobotInformation import (
     StmRobotInformation,
 )
@@ -122,7 +124,7 @@ class RobotContext:
 
     def _create_robot_information(self):
         if self._local_flag:
-            return IRobotInformation()
+            return FakeRobotInformation()
         return StmRobotInformation(self._serial)
 
     def _create_movement_service(
