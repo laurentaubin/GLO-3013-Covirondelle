@@ -7,6 +7,7 @@ from domain.Color import Color
 from domain.Position import Position
 from domain.RobotPose import RobotPose
 from domain.StartingZoneCorner import StartingZoneCorner
+from domain.communication.GripperStatus import GripperStatus
 from domain.game.Stage import Stage
 from domain.resistance import Resistance
 
@@ -23,7 +24,7 @@ class GameState:
         self._puck_colors: List[Color] = None
         self._current_puck: Color = None
         self._current_stage: Stage = None
-        self._prehensor_state: int = None
+        self._gripper_state: GripperStatus = None
         self._starting_zone_corner_order: List[StartingZoneCorner] = None
         self._robot_pose: RobotPose = None
         self._table_image: np.array = None
@@ -31,6 +32,7 @@ class GameState:
         self._game_table: GameTable = None
         self._resistance_value: Resistance = None
         self._current_planned_trajectory: List[Position] = None
+        self._power_consumption: float = None
 
     @staticmethod
     def get_instance() -> "GameState":
@@ -62,11 +64,11 @@ class GameState:
     def set_current_stage(self, current_stage: Stage) -> None:
         self._current_stage = current_stage
 
-    def get_prehensor_state(self) -> int:
-        return self._prehensor_state
+    def get_gripper_state(self) -> int:
+        return self._gripper_state
 
-    def set_prehensor_state(self, prehensor_state) -> None:
-        self._prehensor_state = prehensor_state
+    def set_gripper_state(self, gripper_state) -> None:
+        self._gripper_state = gripper_state
 
     def get_starting_zone_corners(self) -> List[StartingZoneCorner]:
         return self._starting_zone_corner_order
@@ -113,3 +115,9 @@ class GameState:
         self, planned_trajectory: List[Position]
     ) -> None:
         self._current_planned_trajectory = planned_trajectory
+
+    def get_power_consumption(self):
+        return self._power_consumption
+
+    def set_power_consumption(self, power_consumption) -> None:
+        self._power_consumption = power_consumption

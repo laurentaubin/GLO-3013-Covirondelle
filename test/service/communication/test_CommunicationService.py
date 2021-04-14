@@ -47,3 +47,51 @@ class TestCommunicationService(TestCase):
         actual_object = self.communication_service.receive_object()
 
         self.assertEqual(an_object, actual_object)
+
+    def test_whenReceiveGripperStatus_thenGripperTopicIsRead(self):
+        self.communication_service.receive_gripper_status()
+
+        self.robot_update_connector.read_topic.assert_called_with("gripper_status")
+
+    def test_givenGripperStatusSentByRobot_whenReceiveGripperStatus_thenGripperStatusIsReturned(
+        self,
+    ):
+        expected_gripper_status = "GripperStatus.HAS_PUCK"
+        self.robot_update_connector.read_topic.return_value = expected_gripper_status
+
+        actual_gripper_status = self.communication_service.receive_gripper_status()
+        self.assertEqual(expected_gripper_status, actual_gripper_status)
+
+    def test_whenReceivePowerConsumption_thenPowerConsumptionTopicIsRead(self):
+        self.communication_service.receive_power_consumption()
+
+        self.robot_update_connector.read_topic.assert_called_with("power_consumption")
+
+    def test_givenPowerConsumptionSentByRobot_whenReceivePowerConsumption_thenPowerConsumptionIsReturned(
+        self,
+    ):
+        expected_power_consumption = 10.0
+        self.robot_update_connector.read_topic.return_value = expected_power_consumption
+
+        actual_power_consumption = (
+            self.communication_service.receive_power_consumption()
+        )
+        self.assertEqual(expected_power_consumption, actual_power_consumption)
+
+    def test_whenReceiveBatteryConsumption_thenBatteryConsumptionTopicIsRead(self):
+        self.communication_service.receive_battery_consumption()
+
+        self.robot_update_connector.read_topic.assert_called_with("battery_consumption")
+
+    def test_givenBatteryConsumptionSentByRobot_whenReceiveBatteryConsumption_thenBatteryConsumptionIsReturned(
+        self,
+    ):
+        expected_battery_consumption = 10.0
+        self.robot_update_connector.read_topic.return_value = (
+            expected_battery_consumption
+        )
+
+        actual_battery_consumption = (
+            self.communication_service.receive_battery_consumption()
+        )
+        self.assertEqual(expected_battery_consumption, actual_battery_consumption)

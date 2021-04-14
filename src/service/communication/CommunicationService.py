@@ -1,5 +1,6 @@
 from typing import Any
 
+from domain.communication.GripperStatus import GripperStatus
 from domain.communication.IReqRepConnector import IReqRepConnector
 from domain.communication.ISubscriberConnector import ISubscriberConnector
 
@@ -27,3 +28,12 @@ class CommunicationService:
 
     def receive_object(self):
         return self._game_cycle_connector.receive_object()
+
+    def receive_gripper_status(self) -> GripperStatus:
+        return self._robot_status_update_connector.read_topic("gripper_status")
+
+    def receive_power_consumption(self) -> float:
+        return self._robot_status_update_connector.read_topic("power_consumption")
+
+    def receive_battery_consumption(self) -> float:
+        return self._robot_status_update_connector.read_topic("battery_consumption")
