@@ -5,11 +5,12 @@ import RobotStepper from "./RobotStepper";
 import StateCard from "./StateCard";
 import DataCard from "./DataCard";
 import PucksStepper from "./PucksStepper";
-import {AppContext, PuckColor} from "../context/context";
+import {AppContext, PuckColor, Stage} from "../context/context";
 import {io} from "socket.io-client";
 import {SERVER_ENDPOINT, UPDATE_EVENT} from "../config/config"
 import {ActionType} from "../context/reducer";
 import TableDisplay from "./TableDisplay";
+import StopWatch from "../components/StopWatch";
 
 
 const styles = (theme: Theme) => createStyles({
@@ -122,6 +123,12 @@ export const Dashboard = (props: any) => {
                                     ))}
                                 </div>
                             </DataCard>
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                        <Paper className={classes.smallPaper}>
+                            <StopWatch isStarted = {state.IsGameStarted}
+                                       isEnded = {state.CurrentStage === Stage.stop}/>
                         </Paper>
                     </Grid>
                     <Grid item xs={12}>

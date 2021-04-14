@@ -11,7 +11,7 @@ export const appReducer = (state: ApplicationState, action: any) => {
             console.log(action)
             return {
                 ...state,
-                isGameStarted: true
+                IsGameStarted: true
             }
         case ActionType.UPDATE_STATE:
             console.log(action)
