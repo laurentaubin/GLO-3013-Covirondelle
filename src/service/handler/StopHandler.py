@@ -29,6 +29,7 @@ class StopHandler(IStageHandler):
     def execute(self):
         GameState.get_instance().set_current_stage(Stage.STOP)
 
+        self._start_stage()
         self._move_to_starting_zone_center()
         self._rotation_service.rotate(CardinalOrientation.WEST.value)
         self._turn_on_led()
@@ -71,3 +72,7 @@ class StopHandler(IStageHandler):
             return
         else:
             print("Wrong command whoops !")
+
+    def _start_stage(self):
+        self._send_command_to_robot(Topic.START_STAGE, Stage.STOP)
+        self._wait_for_robot_confirmation(Topic.START_CYCLE)
