@@ -212,6 +212,7 @@ class RobotContext:
             self._communication_service,
             self._vision_service,
             self._movement_service,
+            self._gripper_service,
             puck_alignment_corrector,
             starting_zone_corner_corrector,
         )

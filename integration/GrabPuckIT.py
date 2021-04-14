@@ -91,7 +91,7 @@ class GrabPuckIT(IntegrationContext):
 
     def move(self, movements):
         if USE_REAL_MOVEMENTS:
-            self._movement_service.move(movements)
+            self._movement_service._move(movements)
         else:
             print("Déplacez manuellement le robot près de la rondelle Jaune")
             input("Appuyez sur Entrer lorsque c'est fait")
@@ -105,7 +105,7 @@ class GrabPuckIT(IntegrationContext):
 
     def open_gripper(self):
         if GRAB_PUCK_FOR_REAL:
-            self._gripper_service.open_gripper()
+            self._gripper_service._open_gripper()
             self._gripper_service.lower_gripper()
 
     def align_with_starting_zone_corner(self):
@@ -120,13 +120,13 @@ class GrabPuckIT(IntegrationContext):
 
         if DROP_PUCK_FOR_REAL:
             self._gripper_service.lower_gripper()
-            self._gripper_service.open_gripper()
+            self._gripper_service._open_gripper()
         else:
             print("Descendre le préhenseur et ouvrez le")
             input("Appuyez sur Entrer lorsque c'est fait")
 
     def rotate(self, orientation: Orientation):
-        self._movement_service.rotate(orientation.get_orientation_in_degree())
+        self._movement_service._rotate(orientation.get_orientation_in_degree())
 
 
 if __name__ == "__main__":
