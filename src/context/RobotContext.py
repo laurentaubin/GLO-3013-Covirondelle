@@ -55,6 +55,7 @@ from infra.camera.OpenCvEmbeddedCamera import OpenCvEmbeddedCamera
 from infra.communication.robot_information.FakeRobotInformation import (
     FakeRobotInformation,
 )
+from infra.communication.robot_information.StmLed import StmLed
 from infra.communication.robot_information.StmRobotInformation import (
     StmRobotInformation,
 )
@@ -185,7 +186,9 @@ class RobotContext:
         find_command_panel_handler = FindCommandPanelHandler()
         self._transport_puck_handler = self._create_transport_puck_handler()
         go_park_handler = GoParkHandler()
-        stop_handler = StopHandler()
+        stop_handler = StopHandler(
+            self._communication_service, self._movement_service, StmLed(self._serial)
+        )
 
         return StageHandlerSelector(
             go_to_ohmmeter_handler,

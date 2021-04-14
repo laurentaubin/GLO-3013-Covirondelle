@@ -12,5 +12,5 @@ class Topic(Enum):
     DROP_PUCK = "drop puck"
     READ_RESISTANCE = "read resistance"
     ANALYZE_COMMAND_PANEL = "analyze command panel"
-    OPEN_LED = "open led"
+    TURN_LED_ON = "turn led on"
     ERROR = "error"
