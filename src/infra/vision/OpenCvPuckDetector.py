@@ -6,8 +6,8 @@ from domain.vision.IPuckDetector import IPuckDetector
 
 
 class OpenCvPuckDetector(IPuckDetector):
-    HORIZONTAL_CROP = (975, 1530)
-    VERTICAL_CROP = (280, 920)
+    HORIZONTAL_CROP = (390, 612)
+    VERTICAL_CROP = (112, 368)
 
     def detect(self, image: np.array, color: Color) -> Position:
         image = self._cut_image(image)
@@ -39,8 +39,8 @@ class OpenCvPuckDetector(IPuckDetector):
             15,
             param1=30,
             param2=20,
-            minRadius=20,
-            maxRadius=40,
+            minRadius=8,
+            maxRadius=16,
         )
         for i in circles[0, :]:
             i[2] = i[2] - 1

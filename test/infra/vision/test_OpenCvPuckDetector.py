@@ -7,14 +7,14 @@ from infra.vision.OpenCvPuckDetector import OpenCvPuckDetector
 
 
 class TestOpenCvPuckDetector(TestCase):
-    AN_IMAGE = "resources/test/puck-detector-test-marker-3.jpg"
+    AN_IMAGE = "resources/test/puck/puck_configuration_1.jpg"
 
     def setUp(self) -> None:
         self.detector = OpenCvPuckDetector()
 
     def test_givenAnImageAndPuckColor_whenDetect_thenDetectThePuckCenter(self):
         an_image = cv2.imread(self.AN_IMAGE)
-        expected_puck_center = Position(1471, 303)
+        expected_puck_center = Position(483, 341)
 
         actual_puck_center = self.detector.detect(an_image, Color.BLACK)
 

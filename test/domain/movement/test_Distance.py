@@ -17,7 +17,7 @@ class TestDistance(TestCase):
     def test_givenPixelUnitOfMeasure_whenCreateDistance_thenDistanceIsConvertedToMeter(
         self,
     ):
-        expected_distance_value = 2
+        expected_distance_value = 5
 
         actual_distance = Distance(1286, unit_of_measure=UnitOfMeasure.PIXEL)
 
@@ -26,7 +26,7 @@ class TestDistance(TestCase):
     def test_givenDistanceInPixels_whenCreateEquivalentDistanceInMeters_thenDistancesAreEqual(
         self,
     ):
-        pixel_distance = Distance(321.5, unit_of_measure=UnitOfMeasure.PIXEL)
+        pixel_distance = Distance(128.6, unit_of_measure=UnitOfMeasure.PIXEL)
 
         meter_distance = Distance(0.5, unit_of_measure=UnitOfMeasure.METER)
 
