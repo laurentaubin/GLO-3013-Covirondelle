@@ -83,7 +83,6 @@ export const Dashboard = (props: any) => {
                         <Paper className={classes.smallPaper}>
                             <DataCard
                                 title={'Charge électrique de la batterie'}
-                                // TODO: add charge
                                 value={state.BatteryElectricCharge}
                                 unit={'Watt'}
                             />
