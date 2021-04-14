@@ -19,10 +19,26 @@ class MovementFactory:
             Direction.BACKWARDS: Orientation(180),
         }
         self._orientation_to_direction = {
+            88: Direction.LEFT,
+            89: Direction.LEFT,
             90: Direction.LEFT,
+            91: Direction.LEFT,
+            92: Direction.LEFT,
+            268: Direction.RIGHT,
+            269: Direction.RIGHT,
             270: Direction.RIGHT,
+            271: Direction.RIGHT,
+            272: Direction.RIGHT,
+            358: Direction.FORWARD,
+            359: Direction.FORWARD,
             0: Direction.FORWARD,
+            1: Direction.FORWARD,
+            2: Direction.FORWARD,
+            178: Direction.BACKWARDS,
+            179: Direction.BACKWARDS,
             180: Direction.BACKWARDS,
+            181: Direction.BACKWARDS,
+            182: Direction.BACKWARDS,
         }
 
     def create_movements(

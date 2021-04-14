@@ -21,7 +21,7 @@ class RotationService:
             orientation_to_send = (
                 robot_pose.get_orientation_in_degree() - desired_orientation
             )
-            if orientation_to_send.get_orientation_in_degree() == 0:
+            if -2 <= orientation_to_send.get_orientation_in_degree() <= 2:
                 break
             orientation_to_send = self._find_smallest_orientation_to_send(
                 orientation_to_send
@@ -41,7 +41,7 @@ class RotationService:
             robot_pose.get_position(), puck_position
         )
 
-        return orientation_to_puck - robot_pose.get_orientation_in_degree()
+        return orientation_to_puck
 
     def _is_correctly_oriented(self, desired_orientation: Orientation) -> bool:
         _, robot_pose = self._vision_service.get_vision_state()
@@ -50,12 +50,9 @@ class RotationService:
         ) == Orientation(0)
 
     def _find_smallest_orientation_to_send(self, orientation_delta: Orientation):
-        if orientation_delta.get_orientation_in_degree() < 0:
-            orientation_delta = Orientation(
-                orientation_delta.get_orientation_in_degree() - 360
-            )
+        if orientation_delta.get_orientation_in_degree() < -180:
+            return Orientation(orientation_delta.get_orientation_in_degree() + 360)
         if orientation_delta.get_orientation_in_degree() >= 180:
-            orientation_delta = Orientation(
-                orientation_delta.get_orientation_in_degree() - 360
-            )
+            return Orientation(orientation_delta.get_orientation_in_degree() - 360)
+
         return orientation_delta

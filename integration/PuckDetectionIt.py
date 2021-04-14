@@ -50,7 +50,7 @@ class PuckDetectionIt(IntegrationContext):
             try:
                 puck_position = self._vision_service.find_puck_position(color)
                 successes.append((color, puck_position))
-            except PuckCenterNotFound:
+            except:
                 failures.append(color)
 
         for success in successes:

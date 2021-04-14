@@ -125,12 +125,11 @@ class TestRotationService(TestCase):
         self.assertEqual(expected_orientation, actual_orientation)
 
     @patch("infra.utils.GeometryUtils.GeometryUtils.calculate_angle_between_positions")
-    def test_givenCalculatedAngleOf48AndRobotOrientationOf90_whenFindAngleBetweenRobotAndPuck_thenReturnNegative42(
+    def test_givenCalculatedAngleOf48A_whenFindAngleBetweenRobotAndPuck_thenReturn48(
         self, geometryUtils_mock
     ):
         geometryUtils_mock.return_value = Orientation(48)
-        self.A_ROBOT_POSE.get_orientation_in_degree.return_value = Orientation(90)
-        expected_orientation = Orientation(-42)
+        expected_orientation = Orientation(48)
 
         actual_orientation = self._rotation_service.find_orientation_to_puck(
             self.A_POSITION, self.A_ROBOT_POSE

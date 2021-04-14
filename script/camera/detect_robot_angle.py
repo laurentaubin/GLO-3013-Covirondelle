@@ -5,6 +5,10 @@ from config.config import (
     CALIBRATION_FILE_PATH,
     LAPTOP_CAMERA_INDEX,
     ROBOT_ARUCO_MARKER_ID,
+    ROBOT_ARUCO_MARKER_SIZE,
+    CAMERA_MATRIX,
+    DISTORTION_COEFFICIENTS,
+    ROBOT_HEIGHT,
 )
 from domain.Orientation import Orientation
 from domain.Position import Position
@@ -15,7 +19,14 @@ from infra.vision.OpenCvRobotDetector import OpenCvRobotDetector
 
 calibrator = OpenCvCalibrator(CALIBRATION_FILE_PATH)
 camera = OpenCvWorldCamera(LAPTOP_CAMERA_INDEX, calibrator)
-robot_detector = OpenCvRobotDetector(DICT_4X4_50, ROBOT_ARUCO_MARKER_ID)
+robot_detector = OpenCvRobotDetector(
+    DICT_4X4_50,
+    ROBOT_ARUCO_MARKER_ID,
+    ROBOT_ARUCO_MARKER_SIZE,
+    CAMERA_MATRIX,
+    DISTORTION_COEFFICIENTS,
+    ROBOT_HEIGHT,
+)
 
 if __name__ == "__main__":
     while True:
@@ -27,13 +38,12 @@ if __name__ == "__main__":
             pass
         x, y = robot_pose.get_position().to_tuple()
 
-        cv2.putText(
+        cv2.circle(
             image,
-            str(robot_pose.get_orientation_in_degree().get_orientation_in_degree()),
-            (x + 100, y + 100),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            0.8,
-            20,
+            robot_pose.get_gripper_position().to_tuple(),
+            3,
+            [255, 0, 0],
+            thickness=10,
         )
 
         cv2.imshow("robot", image)

@@ -379,7 +379,7 @@ class TestMovementFactory(TestCase):
     def test_givenOrientationNotExactlySnappedToCardinalOrientations_whenCreateMovements_thenRaiseInvalidOrientationException(
         self,
     ):
-        an_invalid_orientation = Orientation(91)
+        an_invalid_orientation = Orientation(93)
         a_path = Path(
             [
                 Position(1, 4),
@@ -390,6 +390,26 @@ class TestMovementFactory(TestCase):
         )
         with self.assertRaises(InvalidOrientationException):
             self.movement_factory.create_movements(a_path, an_invalid_orientation)
+
+    def test_givenOrientationCloseToCardinalOrientation_whenCreateMovements_thenReturnMovementWithRightDirection(
+        self,
+    ):
+        a_close_orientation = Orientation(91)
+        a_path = Path(
+            [
+                Position(1, 4),
+                Position(1, 3),
+                Position(1, 2),
+                Position(1, 1),
+            ]
+        )
+        expected_direction = Direction.FORWARD
+
+        movement = self.movement_factory.create_movements(a_path, a_close_orientation)[
+            0
+        ]
+
+        self.assertEqual(movement.get_direction(), expected_direction)
 
     @patch(
         "infra.utils.GeometryUtils.GeometryUtils.calculate_distance_between_two_positions"
