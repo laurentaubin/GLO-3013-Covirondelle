@@ -24,9 +24,9 @@ class OpenCvStartingZoneLineDetector(IStartingZoneLineDetector):
 
     def _prepare_mask(self, image: np.ndarray):
         hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-        hsv_lower_bound, hsv_higher_bound = Color.STARTING_ZONE.get_hsv_bounds()
+        hsv_bounds = Color.STARTING_ZONE.get_hsv_bounds()
         return cv2.inRange(
-            hsv_image, np.array(hsv_lower_bound), np.array(hsv_higher_bound)
+            hsv_image, np.array(hsv_bounds[0][0]), np.array(hsv_bounds[0][1])
         )
 
     def _find_line_contour(self, hsv_image: np.ndarray):

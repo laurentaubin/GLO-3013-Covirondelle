@@ -1,29 +1,29 @@
 from enum import Enum
-from typing import Tuple, List
 
 
 class Color(Enum):
-    BLACK = 0, ([0, 0, 0], [179, 255, 21])
-    BROWN = 1, ([6, 63, 0], [23, 255, 81])
-    RED = 2, ([0, 123, 40], [5, 255, 114])
-    ORANGE = 3, ([4, 103, 100], [15, 255, 255])
-    YELLOW = 4, ([20, 100, 100], [30, 255, 255])
+    BLACK = 0, ([70, 0, 0], [133, 255, 57])
+    BROWN = 1, (([4, 68, 0], [18, 255, 72]), ([8, 25, 17], [18, 185, 143]))
+    RED = 2, (([0, 70, 0], [2, 255, 255]), ([170, 70, 50], [180, 255, 255]))
+    ORANGE = 3, ([5, 120, 120], [19, 255, 255])
+    YELLOW = 4, ([19, 171, 0], [31, 255, 255])
     GREEN = 5, ([48, 105, 39], [79, 255, 255])
-    BLUE = 6, ([80, 160, 20], [120, 255, 255])
-    PURPLE = 7, ([119, 37, 95], [176, 84, 138])
-    GREY = 8, ([23, 0, 0], [80, 105, 107])
-    WHITE = 9, ([37, 0, 131], [170, 25, 152])
+    BLUE = 6, ([103, 0, 83], [126, 255, 255])
+    PURPLE = 7, ([99, 13, 34], [142, 69, 255])
+    GREY = 8, ([20, 4, 0], [47, 141, 133])
+    WHITE = 9, ([0, 0, 157], [172, 111, 255])
     NONE = 10, ([0, 0, 0], [0, 0, 0])
     STARTING_ZONE = 11, ([58, 110, 5], [86, 255, 255])
+    INTERIOR_BLUE = 12, ([77, 0, 124], [94, 255, 255])
 
-    def __init__(self, resistance_digit: int, hsv_bounds: Tuple[List[int], List[int]]):
+    def __init__(self, resistance_digit: int, *hsv_bounds):
         self._resistance_digit = resistance_digit
         self._hsv_bounds = hsv_bounds
 
     def get_resistance_digit(self) -> int:
         return self._resistance_digit
 
-    def get_hsv_bounds(self) -> Tuple[List[int], List[int]]:
+    def get_hsv_bounds(self):
         return self._hsv_bounds
 
     @staticmethod

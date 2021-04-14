@@ -9,12 +9,7 @@ from infra.vision.OpenCvPuckDetector import OpenCvPuckDetector
 
 
 class TestOpenCvPuckDetector(TestCase):
-    AN_IMAGE_WITH_BLUE_PUCK = cv2.imread(
-        "test/infra/vision/resources/image_with_blue_puck.jpg"
-    )
-    AN_IMAGE_WITHOUT_GREEN_PUCK = cv2.imread(
-        "test/infra/vision/resources/image_without_green_puck.jpg"
-    )
+    AN_IMAGE_WITH_BLUE_PUCK = cv2.imread("resources/puck-color/image-7.jpg")
 
     def setUp(self) -> None:
         self.puck_detector = OpenCvPuckDetector()
@@ -22,7 +17,7 @@ class TestOpenCvPuckDetector(TestCase):
     def test_givenAnImage_whenDetectBluePuck_thenReturnTheCenterPositionOfTheBluePuck(
         self,
     ):
-        expected_position = Position(514, 471)
+        expected_position = Position(115, 277)
 
         actual_position = self.puck_detector.detect(
             self.AN_IMAGE_WITH_BLUE_PUCK, Color.BLUE
@@ -34,4 +29,4 @@ class TestOpenCvPuckDetector(TestCase):
         self,
     ):
         with self.assertRaises(PuckNotFoundException):
-            self.puck_detector.detect(self.AN_IMAGE_WITHOUT_GREEN_PUCK, Color.GREEN)
+            self.puck_detector.detect(self.AN_IMAGE_WITH_BLUE_PUCK, Color.YELLOW)

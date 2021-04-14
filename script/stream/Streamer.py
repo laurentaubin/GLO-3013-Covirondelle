@@ -2,6 +2,7 @@
 
 import socket
 import time
+
 import cv2
 import imagezmq
 
@@ -10,17 +11,25 @@ from domain.vision.exception.PuckNotFoundException import PuckNotFoundException
 from infra.vision.OpenCvPuckDetector import OpenCvPuckDetector
 
 if __name__ == "__main__":
-    sender = imagezmq.ImageSender(connect_to="tcp://10.240.26.77:5557")
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    bottomLeftCornerOfText = (10, 500)
+    fontScale = 1
+    fontColor = (255, 255, 255)
+    lineType = 2
+
+    sender = imagezmq.ImageSender(connect_to="tcp://10.240.80.139:5557")
     puck_detector = OpenCvPuckDetector()
 
     rpi_name = socket.gethostname()
-    capture = cv2.VideoCapture(1)
-    if not capture.isOpened():
-        raise Exception("camera not opened")
+    capture = None
+    for i in range(20):
+        capture = cv2.VideoCapture(0)
+        if capture.isOpened():
+            break
 
     time.sleep(2.0)
     while True:
-        count = 5
+        count = 4
         print("dsaADS")
         while count > 0:
             capture.grab()
@@ -28,7 +37,7 @@ if __name__ == "__main__":
         ret, image = capture.read()
         if ret:
             try:
-                position = puck_detector.detect(image, Color.YELLOW)
+                position = puck_detector.detect(image, Color.WHITE)
                 cv2.circle(
                     image,
                     (
@@ -41,5 +50,7 @@ if __name__ == "__main__":
                 )
                 print(position.get_x_coordinate(), position.get_y_coordinate())
             except PuckNotFoundException:
+                print("puck not found")
                 pass
-            sender.send_image(rpi_name, image)
+        print("sending")
+        sender.send_image(rpi_name, image)
