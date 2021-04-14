@@ -36,8 +36,10 @@ from config.config import (
     PUCK_ALIGNMENT_HORIZONTAL_THRESHOLD,
     CAMERA_LOOK_UP_TARGET,
     CAMERA_LOOK_DOWN_TARGET,
+    STARTING_ZONE_CORNER_POSITION,
 )
 from domain.Position import Position
+from domain.alignment.CornerAlignmentCorrector import CornerAlignmentCorrector
 from domain.alignment.OhmmeterAlignmentCorrector import OhmmeterAlignmentCorrector
 from domain.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
 from domain.movement.CommandDuration import CommandDuration
@@ -63,6 +65,7 @@ from infra.gripper.MaestroGripper import MaestroGripper
 from infra.motor_controller.FakeMotorController import FakeMotorController
 from infra.motor_controller.StmMotorController import StmMotorController
 from infra.resistance.StmOhmmeter import StmOhmmeter
+from infra.vision.OpenCvCornerDetector import OpenCvCornerDetector
 from infra.vision.OpenCvPuckDetector import OpenCvPuckDetector
 from infra.vision.OpenCvStartingZoneLineDetector import OpenCvStartingZoneLineDetector
 from infra.vision.PytesseractLetterPositionExtractor import (
@@ -180,25 +183,36 @@ class RobotContext:
             movement_command_factory,
         )
         find_command_panel_handler = FindCommandPanelHandler()
-        self._puck_alignment_corrector = self._create_puck_alignment_corrector(
-            OpenCvPuckDetector()
-        )
-        transport_puck_handler = TransportPuckHandler(
-            self._communication_service,
-            self._vision_service,
-            self._movement_service,
-            self._puck_alignment_corrector,
-        )
+        self._transport_puck_handler = self._create_transport_puck_handler()
         go_park_handler = GoParkHandler()
         stop_handler = StopHandler()
 
         return StageHandlerSelector(
             go_to_ohmmeter_handler,
             find_command_panel_handler,
-            transport_puck_handler,
+            self._transport_puck_handler,
             go_park_handler,
             stop_handler,
         )
+
+    def _create_transport_puck_handler(self):
+        starting_zone_corner_position = Position(
+            STARTING_ZONE_CORNER_POSITION[0], STARTING_ZONE_CORNER_POSITION[1]
+        )
+        starting_zone_corner_corrector = CornerAlignmentCorrector(
+            OpenCvCornerDetector(), starting_zone_corner_position
+        )
+        puck_alignment_corrector = self._create_puck_alignment_corrector(
+            OpenCvPuckDetector()
+        )
+        transport_puck_handler = TransportPuckHandler(
+            self._communication_service,
+            self._vision_service,
+            self._movement_service,
+            puck_alignment_corrector,
+            starting_zone_corner_corrector,
+        )
+        return transport_puck_handler
 
     def _create_and_configure_maestro(self):
         maestro = self._create_servo_controller()

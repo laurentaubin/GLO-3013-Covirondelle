@@ -1,5 +1,6 @@
 import time
 
+from domain.alignment.CornerAlignmentCorrector import CornerAlignmentCorrector
 from domain.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
 from domain.game.IStageHandler import IStageHandler
 from domain.game.Stage import Stage
@@ -18,6 +19,7 @@ class TransportPuckHandler(IStageHandler):
         vision_service: VisionService,
         movement_service: MovementService,
         puck_alignment_corrector: PuckAlignmentCorrector,
+        starting_zone_corner_corrector: CornerAlignmentCorrector,
     ):
         self._communication_service: CommunicationService = communication_service
         self._vision_service: VisionService = vision_service
@@ -25,6 +27,7 @@ class TransportPuckHandler(IStageHandler):
         self._puck_alignment_corrector: PuckAlignmentCorrector = (
             puck_alignment_corrector
         )
+        self._starting_zone_corner_corrector = starting_zone_corner_corrector
 
     def execute(self) -> None:
         self._communication_service.send_game_cycle_message(Stage.STAGE_STARTED)
@@ -101,6 +104,68 @@ class TransportPuckHandler(IStageHandler):
             vertical_movement_command = (
                 self._puck_alignment_corrector.calculate_vertical_correction(
                     current_image, puck_color
+                )
+            )
+            if vertical_movement_command.get_direction() == Direction.STOP:
+                self._movement_service.execute_movement_command(
+                    vertical_movement_command
+                )
+                break
+
+    def _align_with_starting_zone_corner(self) -> None:
+        self._correct_horizontal_alignment_with_corner()
+        self._correct_vertical_alignment_with_corner()
+
+    def _correct_horizontal_alignment_with_corner(self) -> None:
+        current_image = self._vision_service.take_image()
+        horizontal_movement_command = (
+            self._starting_zone_corner_corrector.calculate_horizontal_correction(
+                current_image
+            )
+        )
+        if horizontal_movement_command.get_direction() == Direction.STOP:
+            return
+        else:
+            self._align_horizontally_with_corner(horizontal_movement_command)
+
+    def _align_horizontally_with_corner(
+        self, horizontal_movement_command: MovementCommand
+    ) -> None:
+        self._movement_service.execute_movement_command(horizontal_movement_command)
+        while True:
+            time.sleep(0.5)
+            current_image = self._vision_service.take_image()
+            horizontal_movement_command = (
+                self._starting_zone_corner_corrector.calculate_horizontal_correction(
+                    current_image
+                )
+            )
+            if horizontal_movement_command.get_direction() == Direction.STOP:
+                self._movement_service.execute_movement_command(
+                    horizontal_movement_command
+                )
+                break
+
+    def _correct_vertical_alignment_with_corner(self) -> None:
+        current_image = self._vision_service.take_image()
+        vertical_movement_command = (
+            self._starting_zone_corner_corrector.calculate_vertical_correction(
+                current_image
+            )
+        )
+        if vertical_movement_command.get_direction() == Direction.STOP:
+            return
+        else:
+            self._align_vertically_with_corner(vertical_movement_command)
+
+    def _align_vertically_with_corner(self, vertical_movement_command: MovementCommand):
+        self._movement_service.execute_movement_command(vertical_movement_command)
+        while True:
+            time.sleep(0.5)
+            current_image = self._vision_service.take_image()
+            vertical_movement_command = (
+                self._starting_zone_corner_corrector.calculate_vertical_correction(
+                    current_image
                 )
             )
             if vertical_movement_command.get_direction() == Direction.STOP:

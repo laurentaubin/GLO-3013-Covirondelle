@@ -26,12 +26,14 @@ class TestTransportPuckHandler(TestCase):
         self.vision_service = MagicMock()
         self.movement_service = MagicMock()
         self.puck_alignment_corrector = MagicMock()
+        self.corner_alignment_corrector = MagicMock()
 
         self.transport_puck_handler = TransportPuckHandler(
             self.communication_service,
             self.vision_service,
             self.movement_service,
             self.puck_alignment_corrector,
+            self.corner_alignment_corrector,
         )
 
     def test_whenExecute_thenStageStartedIsSentToStation(self):
