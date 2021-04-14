@@ -24,8 +24,6 @@ class MasterGameCycle(IGameCycle):
         print("\n")
         self.stage_service.execute(Stage.TRANSPORT_PUCK)
         print("\n")
-        self.stage_service.execute(Stage.GO_PARK)
-        print("\n")
         self.stage_service.execute(Stage.STOP)
         print("\n")
 

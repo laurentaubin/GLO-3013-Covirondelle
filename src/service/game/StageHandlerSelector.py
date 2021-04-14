@@ -9,7 +9,6 @@ class StageHandlerSelector:
         go_to_ohmmeter_handler: IStageHandler,
         find_command_panel_handler: IStageHandler,
         transport_puck_handler: IStageHandler,
-        go_park_handler: IStageHandler,
         stop_handler: IStageHandler,
     ):
         self.handlers = {
@@ -17,7 +16,6 @@ class StageHandlerSelector:
             Stage.GO_TO_OHMMETER: go_to_ohmmeter_handler,
             Stage.FIND_COMMAND_PANEL: find_command_panel_handler,
             Stage.TRANSPORT_PUCK: transport_puck_handler,
-            Stage.GO_PARK: go_park_handler,
             Stage.STOP: stop_handler,
         }
 

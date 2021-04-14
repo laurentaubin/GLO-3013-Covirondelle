@@ -117,14 +117,12 @@ class StationContext:
         go_to_ohmmeter_handler = self._create_go_to_ohmmeter_handler()
         find_command_panel_handler = self._create_find_command_panel_handler()
         transport_puck_handler = self._create_transport_puck_handler()
-        go_park_handler = self._create_go_park_handler()
         stop_handler = self._create_stop_handler()
         return StageHandlerSelector(
             start_game_cycle_handler,
             go_to_ohmmeter_handler,
             find_command_panel_handler,
             transport_puck_handler,
-            go_park_handler,
             stop_handler,
         )
 
