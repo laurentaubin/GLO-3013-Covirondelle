@@ -17,7 +17,7 @@ OBSTACLE_RADIUS = 12
 
 # Vision
 CALIBRATION_FILE_PATH = (
-    os.path.dirname(os.path.abspath(__file__)) + "/numpy-1600x1200.npz"
+    os.path.dirname(os.path.abspath(__file__)) + "/numpy-640x480.npz"
 )
 
 LAPTOP_CAMERA_INDEX = 1
@@ -38,7 +38,7 @@ DISTORTION_COEFFICIENTS = CALIBRATION_ARRAYS["distortion_coefficients"]
 WORLD_CAMERA_IMAGE_SIZE = (640, 480)
 
 # in meter
-OBSTACLE_HEIGHT = 0.41
+OBSTACLE_HEIGHT = 0.40
 ROBOT_HEIGHT = 0.232
 
 BASE_TABLE_IMAGE = (

@@ -10,6 +10,8 @@ class OpenCvCalibrator(ICalibrator):
         calibration_matrix = np.load(calibration_file_path)
         self._camera_matrix = calibration_matrix["camera_matrix"]
         self._distortion_coefficients = calibration_matrix["distortion_coefficients"]
+        print(self._camera_matrix)
+        print(self._distortion_coefficients)
 
     def calibrate(self, image):
         height, width = image.shape[:2]
@@ -28,7 +30,6 @@ class OpenCvCalibrator(ICalibrator):
             new_camera_matrix,
         )
         x, y, width, height = region_of_interest
-        undistorted_image = undistorted_image[y : y + height, x : x + width]
         return undistorted_image
 
     def get_camera_matrix(self):
