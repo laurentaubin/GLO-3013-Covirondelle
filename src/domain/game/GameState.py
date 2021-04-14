@@ -9,6 +9,7 @@ from domain.RobotPose import RobotPose
 from domain.StartingZoneCorner import StartingZoneCorner
 from domain.communication.GripperStatus import GripperStatus
 from domain.game.Stage import Stage
+from domain.pathfinding.Path import Path
 from domain.resistance import Resistance
 
 
@@ -31,7 +32,7 @@ class GameState:
         self._battery_consumption: float = None
         self._game_table: GameTable = None
         self._resistance_value: Resistance = None
-        self._current_planned_trajectory: List[Position] = None
+        self._current_planned_trajectory: Path = None
         self._power_consumption: float = None
 
     @staticmethod
@@ -45,6 +46,9 @@ class GameState:
 
     def start_game_cycle(self) -> None:
         self._is_started = True
+
+    def end_game_cycle(self) -> None:
+        self._is_started = False
 
     def get_puck_colors(self) -> List[Color]:
         return self._puck_colors
@@ -108,12 +112,10 @@ class GameState:
     def set_resistance_value(self, value: Resistance):
         self._resistance_value = value
 
-    def get_current_planned_trajectory(self) -> List[Position]:
+    def get_current_planned_trajectory(self) -> Path:
         return self._current_planned_trajectory
 
-    def set_current_planned_trajectory(
-        self, planned_trajectory: List[Position]
-    ) -> None:
+    def set_current_planned_trajectory(self, planned_trajectory: Path) -> None:
         self._current_planned_trajectory = planned_trajectory
 
     def get_power_consumption(self):

@@ -112,6 +112,7 @@ class StationContext:
         return StageService(self.stage_handler_selector)
 
     def _create_stage_handler_selector(self):
+        self._movement_factory = MovementFactory()
         start_game_cycle_handler = self._create_start_game_cycle_handler()
         go_to_ohmmeter_handler = self._create_go_to_ohmmeter_handler()
         find_command_panel_handler = self._create_find_command_panel_handler()
@@ -135,9 +136,8 @@ class StationContext:
         )
 
     def _create_go_to_ohmmeter_handler(self):
-        movement_factory = MovementFactory()
         return GoToOhmmeterHandler(
-            self._communication_service, self._path_service, movement_factory
+            self._communication_service, self._path_service, self._movement_factory
         )
 
     def _create_find_command_panel_handler(self):
@@ -154,7 +154,12 @@ class StationContext:
         return GoParkHandler(self._communication_service, self._stage_request_router)
 
     def _create_stop_handler(self):
-        return StopHandler(self._communication_service, self._stage_request_router)
+        return StopHandler(
+            self._communication_service,
+            self._path_service,
+            self._rotation_service,
+            self._movement_factory,
+        )
 
     def _create_vision_service(self):
         starting_zone_corners_detector = HardcodedStartingZoneDetector()

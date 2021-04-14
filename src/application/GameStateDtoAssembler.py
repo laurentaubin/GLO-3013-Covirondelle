@@ -11,6 +11,7 @@ from domain.RobotPose import RobotPose
 from domain.StartingZoneCorner import StartingZoneCorner
 from domain.game.GameState import GameState
 from domain.game.Stage import Stage
+from domain.pathfinding.Path import Path
 
 
 class GameStateDtoAssembler:
@@ -25,7 +26,7 @@ class GameStateDtoAssembler:
         puck_colors = self._get_puck_colors(game_state.get_puck_colors())
         current_puck = self._get_current_colors(game_state.get_current_puck())
         current_stage = self._get_current_stage(game_state.get_current_stage())
-        gripper_state = self._get_gripper_state(game_state.get_prehensor_state())
+        gripper_state = self._get_gripper_state(game_state.get_gripper_state())
         starting_zone_corner_order = self._get_starting_zone_corner_order(
             game_state.get_starting_zone_corners()
         )
@@ -103,7 +104,7 @@ class GameStateDtoAssembler:
         return base64.b64encode(buffer_img).decode()
 
     def _get_current_planned_trajectory(
-        self, current_planned_trajectory: List[Position]
+        self, current_planned_trajectory: Path
     ) -> List[Position]:
         return (
             [position.to_dictionary() for position in current_planned_trajectory]
