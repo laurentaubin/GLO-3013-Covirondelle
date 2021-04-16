@@ -6,7 +6,7 @@ from infra.camera.OpenCvWorldCamera import OpenCvWorldCamera
 
 if __name__ == "__main__":
     calibrator = OpenCvCalibrator(CALIBRATION_FILE_PATH)
-    camera = OpenCvWorldCamera(LAPTOP_CAMERA_INDEX, calibrator)
+    camera = OpenCvWorldCamera(0, calibrator)
     should_continue = True
     images = []
 
@@ -26,7 +26,7 @@ if __name__ == "__main__":
     filename = "../../resources/obstacle/obstacle_configuration_{}.jpg"
 
     for index, image in enumerate(images):
-        print(filename.format(index + 1))
-        cv2.imwrite(filename.format(index + 1), image)
+        print(filename.format(index + 14))
+        cv2.imwrite(filename.format(index + 14), image)
 
     print("Script done ...")
