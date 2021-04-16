@@ -60,6 +60,13 @@ class TestResistance(TestCase):
 
         self.assertEqual(third_color, Color.BROWN)
 
+    def test_givenResistanceOf270000_whenGettingColors_thenThirdColorIsYellow(self):
+        resistance = Resistance.round_to_nearest_e12_value(261468.0)
+
+        *_, third_color = resistance.get_colors()
+
+        self.assertEqual(third_color, Color.YELLOW)
+
     def test_givenResistanceValueOf50_whenRoundToNearestE12Value_thenThrowInvalidResistanceException(
         self,
     ):

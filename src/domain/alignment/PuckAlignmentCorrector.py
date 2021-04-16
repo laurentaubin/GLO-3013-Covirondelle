@@ -8,6 +8,7 @@ from domain.movement.MovementCommand import MovementCommand
 from domain.movement.Speed import Speed
 from domain.vision import IPuckDetector
 from domain.Color import Color
+from domain.vision.exception.PuckNotFoundException import PuckNotFoundException
 
 
 class PuckAlignmentCorrector:
@@ -31,18 +32,25 @@ class PuckAlignmentCorrector:
     def calculate_horizontal_correction(
         self, image: np.ndarray, puck_color: Color
     ) -> MovementCommand:
-        puck_position: Position = self._puck_detector.detect(image, puck_color)
-        horizontal_distance_from_center: int = (
-            puck_position.get_x_coordinate()
-            - self.correctly_placed_position.get_x_coordinate()
-        )
-        if self._is_puck_position_within_horizontal_threshold(
-            horizontal_distance_from_center
-        ):
-            return self.STOP_MOVEMENT_COMMAND
-        return self._calculate_horizontal_movement_command(
-            horizontal_distance_from_center
-        )
+        try:
+            puck_position: Position = self._puck_detector.detect(image, puck_color)
+            horizontal_distance_from_center: int = (
+                puck_position.get_x_coordinate()
+                - self.correctly_placed_position.get_x_coordinate()
+            )
+            if self._is_puck_position_within_horizontal_threshold(
+                horizontal_distance_from_center
+            ):
+                return self.STOP_MOVEMENT_COMMAND
+            return self._calculate_horizontal_movement_command(
+                horizontal_distance_from_center
+            )
+        except PuckNotFoundException:
+            return MovementCommand(
+                Direction.FORWARD,
+                Speed(ROBOT_ALIGNMENT_SPEED),
+                self.CONTINUOUS_COMMAND_DURATION,
+            )
 
     def calculate_vertical_correction(
         self, image: np.ndarray, puck_color: Color

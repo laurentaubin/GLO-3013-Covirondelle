@@ -120,7 +120,7 @@ class OpenCvPuckDetector(IPuckDetector):
 # 14 avril: On peut  le laisser pour tester rapidement en cas de problème, le code ne fonctionne pas encore parfaitement
 if __name__ == "__main__":
     # filename = "../../../resources/puck-color/image-{}.jpg"
-    filename = "../../../resources/puck-color/image-7.jpg"
+    filename = "../../../resources/puck-color/image-5.jpg"
     files = []
     for i in range(1):
         files.append(filename.format(i))
@@ -128,7 +128,7 @@ if __name__ == "__main__":
         image = cv2.imread(image_filename)
         detector = OpenCvPuckDetector()
         try:
-            position = detector.detect(image, Color.YELLOW)
+            position = detector.detect(image, Color.RED)
             cv2.circle(
                 image,
                 (int(position.get_x_coordinate()), int(position.get_y_coordinate())),

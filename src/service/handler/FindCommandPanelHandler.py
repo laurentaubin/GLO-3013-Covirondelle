@@ -34,9 +34,9 @@ class FindCommandPanelHandler(IStageHandler):
         command: Message = self._communication_service.receive_object()
         topic = command.get_topic()
 
-        if topic == Topic.START_CYCLE:
+        if topic == Topic.START_STAGE:
             self._send_confirmation_to_station(
-                Topic.START_CYCLE, Stage.FIND_COMMAND_PANEL
+                Topic.START_STAGE, Stage.FIND_COMMAND_PANEL
             )
 
         elif topic == Topic.MOVEMENTS:

@@ -18,7 +18,12 @@ class ZmqReqRepConnector(IReqRepConnector):
         self._socket.send_string(request)
 
     def receive_object(self) -> Any:
-        return self._socket.recv_pyobj()
+        print("Receive:")
+        message = self._socket.recv_pyobj()
+        print(message.get_topic(), message.get_payload())
+        return message
 
     def send_object(self, object_to_send: Any) -> None:
+        print("Send:")
+        print(object_to_send.get_topic(), object_to_send.get_payload())
         self._socket.send_pyobj(object_to_send)

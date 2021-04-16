@@ -31,6 +31,7 @@ class OhmmeterAlignmentCorrector:
         starting_zone_line_position: Position = (
             self._starting_zone_line_detector.detect(image)
         )
+        print("line position: {}".format(starting_zone_line_position.to_tuple()))
         horizontal_distance_from_being_aligned = (
             self._aligned_ohmmeter_position.get_x_coordinate()
             - starting_zone_line_position.get_x_coordinate()
@@ -41,10 +42,14 @@ class OhmmeterAlignmentCorrector:
 
         if self._is_line_to_the_right(horizontal_distance_from_being_aligned):
             return MovementCommand(
-                Direction.RIGHT, ROBOT_ALIGNMENT_SPEED, self.CONTINUOUS_COMMAND_DURATION
+                Direction.RIGHT,
+                Speed(ROBOT_ALIGNMENT_SPEED),
+                self.CONTINUOUS_COMMAND_DURATION,
             )
         return MovementCommand(
-            Direction.LEFT, ROBOT_ALIGNMENT_SPEED, self.CONTINUOUS_COMMAND_DURATION
+            Direction.LEFT,
+            Speed(ROBOT_ALIGNMENT_SPEED),
+            self.CONTINUOUS_COMMAND_DURATION,
         )
 
     def _is_line_to_the_right(

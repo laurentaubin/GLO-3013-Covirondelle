@@ -8,6 +8,7 @@ import imagezmq
 
 from domain.Color import Color
 from domain.vision.exception.PuckNotFoundException import PuckNotFoundException
+from infra.vision.OpenCvCornerDetector import OpenCvCornerDetector
 from infra.vision.OpenCvPuckDetector import OpenCvPuckDetector
 
 if __name__ == "__main__":
@@ -19,6 +20,7 @@ if __name__ == "__main__":
 
     sender = imagezmq.ImageSender(connect_to="tcp://10.240.80.139:5557")
     puck_detector = OpenCvPuckDetector()
+    corner_detector = OpenCvCornerDetector()
 
     rpi_name = socket.gethostname()
     capture = None
@@ -37,7 +39,8 @@ if __name__ == "__main__":
         ret, image = capture.read()
         if ret:
             try:
-                position = puck_detector.detect(image, Color.WHITE)
+                # position = corner_detector.detect_inferior_corner(image)
+                position = puck_detector.detect(image, Color.RED)
                 cv2.circle(
                     image,
                     (

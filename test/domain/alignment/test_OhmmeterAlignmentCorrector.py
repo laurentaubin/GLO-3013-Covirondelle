@@ -12,7 +12,7 @@ from domain.movement.Speed import Speed
 
 class TestOhmmeterAlignmentCorrector(TestCase):
     AN_IMAGE = MagicMock()
-    ALIGNMENT_SPEED = ROBOT_ALIGNMENT_SPEED
+    ALIGNMENT_SPEED = Speed(ROBOT_ALIGNMENT_SPEED)
     HORIZONTAL_THRESHOLD = 10
     ALIGNED_OHMMETER_POSITION = Position(350, 200)
     ANY_POSITION = Position(69, 420)

@@ -12,6 +12,7 @@ from domain.movement.Direction import Direction
 from domain.movement.Movement import Movement
 from domain.movement.MovementCommand import MovementCommand
 from domain.Color import Color
+from domain.vision.exception.PuckNotFoundException import PuckNotFoundException
 from service.communication.CommunicationService import CommunicationService
 from service.exception.StageComplete import StageComplete
 from service.gripper.GripperService import GripperService
@@ -51,8 +52,8 @@ class TransportPuckHandler(IStageHandler):
         command: Message = self._communication_service.receive_object()
         topic = command.get_topic()
 
-        if topic == Topic.START_CYCLE:
-            self._send_confirmation_to_station(Topic.START_CYCLE, Stage.TRANSPORT_PUCK)
+        if topic == Topic.START_STAGE:
+            self._send_confirmation_to_station(Topic.START_STAGE, Stage.TRANSPORT_PUCK)
 
         elif topic == Topic.MOVEMENTS:
             self._move(command.get_payload())
@@ -68,6 +69,7 @@ class TransportPuckHandler(IStageHandler):
 
         elif topic == Topic.DROP_PUCK:
             self._drop_puck()
+            self._gripper_service.elevate_gripper()
             self._send_confirmation_to_station(Topic.DROP_PUCK, Stage.STAGE_COMPLETED)
 
         elif topic == Topic.STAGE_COMPLETED:
@@ -140,6 +142,7 @@ class TransportPuckHandler(IStageHandler):
                     horizontal_movement_command
                 )
                 break
+            self._movement_service.execute_movement_command(horizontal_movement_command)
 
     def _correct_vertical_alignment(self, puck_color: Color) -> None:
         current_image = self._vision_service.take_image()
@@ -158,18 +161,21 @@ class TransportPuckHandler(IStageHandler):
     ):
         self._movement_service.execute_movement_command(vertical_movement_command)
         while True:
-            time.sleep(0.5)
-            current_image = self._vision_service.take_image()
-            vertical_movement_command = (
-                self._puck_alignment_corrector.calculate_vertical_correction(
-                    current_image, puck_color
+            try:
+                time.sleep(0.5)
+                current_image = self._vision_service.take_image()
+                vertical_movement_command = (
+                    self._puck_alignment_corrector.calculate_vertical_correction(
+                        current_image, puck_color
+                    )
                 )
-            )
-            if vertical_movement_command.get_direction() == Direction.STOP:
-                self._movement_service.execute_movement_command(
-                    vertical_movement_command
-                )
-                break
+                if vertical_movement_command.get_direction() == Direction.STOP:
+                    self._movement_service.execute_movement_command(
+                        vertical_movement_command
+                    )
+                    break
+            except PuckNotFoundException:
+                pass
 
     def _align_with_starting_zone_corner(self) -> None:
         self._correct_horizontal_alignment_with_corner()
@@ -192,7 +198,6 @@ class TransportPuckHandler(IStageHandler):
     ) -> None:
         self._movement_service.execute_movement_command(horizontal_movement_command)
         while True:
-            time.sleep(0.5)
             current_image = self._vision_service.take_image()
             horizontal_movement_command = (
                 self._starting_zone_corner_corrector.calculate_horizontal_correction(
@@ -204,6 +209,7 @@ class TransportPuckHandler(IStageHandler):
                     horizontal_movement_command
                 )
                 break
+            self._movement_service.execute_movement_command(horizontal_movement_command)
 
     def _correct_vertical_alignment_with_corner(self) -> None:
         current_image = self._vision_service.take_image()

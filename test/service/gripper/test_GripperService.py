@@ -1,9 +1,10 @@
 from unittest import TestCase
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from service.gripper.GripperService import GripperService
 
 
+@patch("time.sleep", MagicMock())
 class TestGripperService(TestCase):
     def setUp(self) -> None:
         self.gripper = MagicMock()

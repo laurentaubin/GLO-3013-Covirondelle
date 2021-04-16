@@ -34,8 +34,8 @@ class StopHandler(IStageHandler):
         command: Message = self._communication_service.receive_object()
         topic = command.get_topic()
 
-        if topic == Topic.START_CYCLE:
-            self._send_confirmation_to_station(Topic.START_CYCLE, Stage.TRANSPORT_PUCK)
+        if topic == Topic.START_STAGE:
+            self._send_confirmation_to_station(Topic.START_STAGE, Stage.TRANSPORT_PUCK)
 
         elif topic == Topic.MOVEMENTS:
             self._move(command.get_payload())

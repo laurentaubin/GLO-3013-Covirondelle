@@ -1,7 +1,7 @@
 import time
 from typing import List, Any
 
-from config.config import MIN_VERTICAL_ANGLE_VALUE
+from config.config import MIN_VERTICAL_ANGLE_VALUE, HORIZONTAL_MIDDLE_TARGET
 from domain.Orientation import Orientation
 from domain.alignment.OhmmeterAlignmentCorrector import OhmmeterAlignmentCorrector
 from domain.communication.Message import Message
@@ -46,9 +46,8 @@ class GoToOhmmeterHandler(IStageHandler):
     def _route_station_command(self):
         command: Message = self._communication_service.receive_object()
         topic = command.get_topic()
-
-        if topic == Topic.START_CYCLE:
-            self._send_confirmation_to_station(Topic.START_CYCLE, Stage.TRANSPORT_PUCK)
+        if topic == Topic.START_STAGE:
+            self._send_confirmation_to_station(Topic.START_STAGE, Stage.GO_TO_OHMMETER)
 
         elif topic == Topic.MOVEMENTS:
             self._move(command.get_payload())
@@ -69,6 +68,8 @@ class GoToOhmmeterHandler(IStageHandler):
             raise StageComplete
 
     def _read_resistance(self):
+        self._vision_service.make_camera_look_down()
+        self._vision_service.rotate_camera_horizontally(HORIZONTAL_MIDDLE_TARGET)
         self._align_horizontally_with_ohmmeter()
         self._make_contact_with_ohmmeter()
         return self._resistance_service.take_resistance_measurement()
@@ -90,7 +91,6 @@ class GoToOhmmeterHandler(IStageHandler):
     def _correct_horizontal_alignment(self, movement_command: MovementCommand):
         self._movement_service.execute_movement_command(movement_command)
         while movement_command.get_direction() != Direction.STOP:
-            time.sleep(0.5)
             current_image = self._vision_service.take_image()
             horizontal_movement_command = (
                 self._ohmmeter_alignment_corrector.calculate_horizontal_correction(
@@ -102,6 +102,7 @@ class GoToOhmmeterHandler(IStageHandler):
                     horizontal_movement_command
                 )
                 break
+            self._movement_service.execute_movement_command(horizontal_movement_command)
 
     def _make_contact_with_ohmmeter(self):
         backwards_alignment_movement_command = (
@@ -115,6 +116,7 @@ class GoToOhmmeterHandler(IStageHandler):
         while True:
             time.sleep(0.5)
             if self._resistance_service.confirm_contact():
+                time.sleep(2)
                 self._movement_service.execute_movement_command(
                     self._movement_command_factory.create_stop_command()
                 )

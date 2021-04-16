@@ -20,7 +20,7 @@ class OpenCvStartingZoneLineDetector(IStartingZoneLineDetector):
         cx, cy = int(moments["m10"] / moments["m00"]), int(
             moments["m01"] / moments["m00"]
         )
-        return Position(int(cx), int(cy))
+        return Position(int(cx), int(cy) + 320)
 
     def _prepare_mask(self, image: np.ndarray):
         hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
@@ -42,3 +42,15 @@ class OpenCvStartingZoneLineDetector(IStartingZoneLineDetector):
 
     def _cut_image(self, image: np.ndarray) -> np.ndarray:
         return image[320:, :]
+
+
+if __name__ == "__main__":
+    detector = OpenCvStartingZoneLineDetector()
+    image = cv2.imread("../../../resources/aligment-good-angle/station-aligned.jpeg")
+
+    position = detector.detect(image)
+    print(position.to_tuple())
+    cv2.circle(image, position.to_tuple(), 20, (0, 255, 0), 2)
+    cv2.imshow("ima", image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()

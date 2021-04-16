@@ -27,7 +27,6 @@ from config.config import (
     MOVE_GRIPPER_DOWN_TARGET,
     PUCK_ALIGNMENT_X_CENTER_POSITION,
     PUCK_ALIGNMENT_Y_CENTER_POSITION,
-    PUCK_ALIGNMENT_THRESHOLD,
     CAMERA_INDEX,
     ALIGNED_OHMMETER_HORIZONTAL_POSITION,
     OHMMETER_ALIGNMENT_THRESHOLD,
@@ -37,6 +36,7 @@ from config.config import (
     CAMERA_LOOK_UP_TARGET,
     CAMERA_LOOK_DOWN_TARGET,
     STARTING_ZONE_CORNER_POSITION,
+    PUCK_ALIGNMENT_UP_THRESHOLD,
 )
 from domain.Position import Position
 from domain.alignment.CornerAlignmentCorrector import CornerAlignmentCorrector
@@ -172,7 +172,7 @@ class RobotContext:
     def _create_stage_handler_selector(
         self, movement_command_factory: MovementCommandFactory
     ):
-        start_handler = StartHandler(self._communication_service)
+        start_handler = StartHandler(self._communication_service, self._gripper_service)
         ohmmeter_alignment_corrector = self._create_ohmmeter_alignment_corrector(
             OpenCvStartingZoneLineDetector()
         )
@@ -295,7 +295,7 @@ class RobotContext:
         return PuckAlignmentCorrector(
             puck_correctly_placed_position,
             PUCK_ALIGNMENT_HORIZONTAL_THRESHOLD,
-            PUCK_ALIGNMENT_THRESHOLD,
+            PUCK_ALIGNMENT_UP_THRESHOLD,
             puck_detector,
         )
 
