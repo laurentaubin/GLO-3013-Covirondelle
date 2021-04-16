@@ -12,6 +12,11 @@ A_CURRENT_VALUE = 10.0
 
 A_POWER_CONSUMPTION = 10.0
 
+A_POWER_CONSUMPTION_FIRST_WHEEL = 5.0
+A_POWER_CONSUMPTION_SECOND_WHEEL = 5.0
+A_POWER_CONSUMPTION_THIRD_WHEEL = 5.0
+A_POWER_CONSUMPTION_FOURTH_WHEEL = 5.0
+
 
 class TestCommunicationService(TestCase):
     A_MESSAGE = Message(Topic.READ_RESISTANCE, False)
@@ -73,4 +78,56 @@ class TestCommunicationService(TestCase):
 
         self.pub_sub_connector.publish_power_consumption.assert_called_with(
             A_POWER_CONSUMPTION
+        )
+
+    def test_givenPowerConsumptionFirstWheelReturnedByRobotInformation_whenSendPowerConsumptionFirstWheel_thenPublishPowerConsumptionFirstWheel(
+        self,
+    ):
+        self.robot_information.get_power_consumption_first_wheel.return_value = (
+            A_POWER_CONSUMPTION_FIRST_WHEEL
+        )
+
+        self.communication_service.send_power_consumption_first_wheel()
+
+        self.pub_sub_connector.publish_power_consumption_first_wheel.assert_called_with(
+            A_POWER_CONSUMPTION_FIRST_WHEEL
+        )
+
+    def test_givenPowerConsumptionSecondWheelReturnedByRobotInformation_whenSendPowerConsumptionSecondWheel_thenPublishPowerConsumptionSecondWheel(
+        self,
+    ):
+        self.robot_information.get_power_consumption_second_wheel.return_value = (
+            A_POWER_CONSUMPTION_SECOND_WHEEL
+        )
+
+        self.communication_service.send_power_consumption_second_wheel()
+
+        self.pub_sub_connector.publish_power_consumption_second_wheel.assert_called_with(
+            A_POWER_CONSUMPTION_SECOND_WHEEL
+        )
+
+    def test_givenPowerConsumptionThirdWheelReturnedByRobotInformation_whenSendPowerConsumptionThirdWheel_thenPublishPowerConsumptionThirdWheel(
+        self,
+    ):
+        self.robot_information.get_power_consumption_third_wheel.return_value = (
+            A_POWER_CONSUMPTION_THIRD_WHEEL
+        )
+
+        self.communication_service.send_power_consumption_third_wheel()
+
+        self.pub_sub_connector.publish_power_consumption_third_wheel.assert_called_with(
+            A_POWER_CONSUMPTION_THIRD_WHEEL
+        )
+
+    def test_givenPowerConsumptionFourthWheelReturnedByRobotInformation_whenSendPowerConsumptionFourthWheel_thenPublishPowerConsumptionFourthWheel(
+        self,
+    ):
+        self.robot_information.get_power_consumption_fourth_wheel.return_value = (
+            A_POWER_CONSUMPTION_FOURTH_WHEEL
+        )
+
+        self.communication_service.send_power_consumption_fourth_wheel()
+
+        self.pub_sub_connector.publish_power_consumption_fourth_wheel.assert_called_with(
+            A_POWER_CONSUMPTION_FOURTH_WHEEL
         )

@@ -10,3 +10,15 @@ class IRobotInformation:
 
     def get_power_consumption(self):
         pass
+
+    def get_power_consumption_first_wheel(self):
+        pass
+
+    def get_power_consumption_second_wheel(self):
+        pass
+
+    def get_power_consumption_third_wheel(self):
+        pass
+
+    def get_power_consumption_fourth_wheel(self):
+        pass

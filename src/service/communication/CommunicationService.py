@@ -42,3 +42,35 @@ class CommunicationService:
     def send_power_consumption(self):
         power_consumption = self._robot_information.get_power_consumption()
         self._robot_status_publisher.publish_power_consumption(power_consumption)
+
+    def send_power_consumption_first_wheel(self):
+        power_consumption_first_wheel = (
+            self._robot_information.get_power_consumption_first_wheel()
+        )
+        self._robot_status_publisher.publish_power_consumption_first_wheel(
+            power_consumption_first_wheel
+        )
+
+    def send_power_consumption_second_wheel(self):
+        power_consumption_second_wheel = (
+            self._robot_information.get_power_consumption_second_wheel()
+        )
+        self._robot_status_publisher.publish_power_consumption_second_wheel(
+            power_consumption_second_wheel
+        )
+
+    def send_power_consumption_third_wheel(self):
+        power_consumption_third_wheel = (
+            self._robot_information.get_power_consumption_third_wheel()
+        )
+        self._robot_status_publisher.publish_power_consumption_third_wheel(
+            power_consumption_third_wheel
+        )
+
+    def send_power_consumption_fourth_wheel(self):
+        power_consumption_fourth_wheel = (
+            self._robot_information.get_power_consumption_fourth_wheel()
+        )
+        self._robot_status_publisher.publish_power_consumption_fourth_wheel(
+            power_consumption_fourth_wheel
+        )

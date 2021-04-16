@@ -90,3 +90,103 @@ class TestRobotInformation(TestCase):
         actual_power_consumption = self.robot_information.get_power_consumption()
 
         self.assertEqual(expected_power_consumption_value, actual_power_consumption)
+
+    def test_givenAReadPowerConsumptionFirstWheelCommand_whenGetConsumptionFirstWheel_thenTheRightCommandIsSent(
+        self,
+    ):
+        expected_command = expected_command = b"\x08\x01"
+
+        self.robot_information.get_power_consumption_first_wheel()
+
+        self.serial.write.assert_called_with(expected_command)
+
+    def test_givenAReadLinePowerConsumptionFirstWheelValue_whenGetPowerConsumptionFirstWheel_thenTheRightValueIsReturned(
+        self,
+    ):
+        expected_power_consumption_first_wheel_value = 1.02
+        expected_serial_response = bytes("08", encoding="utf-8") + bytes(
+            "5", encoding="utf-8"
+        )
+        self.serial.readline.return_value = expected_serial_response
+        actual_power_consumption_first_wheel = (
+            self.robot_information.get_power_consumption_first_wheel()
+        )
+        self.assertEqual(
+            expected_power_consumption_first_wheel_value,
+            actual_power_consumption_first_wheel,
+        )
+
+    def test_givenAReadPowerConsumptionSecondWheelCommand_whenGetConsumptionSecondWheel_thenTheRightCommandIsSent(
+        self,
+    ):
+        expected_command = expected_command = b"\x08\x02"
+
+        self.robot_information.get_power_consumption_second_wheel()
+
+        self.serial.write.assert_called_with(expected_command)
+
+    def test_givenAReadLinePowerConsumptionSecondWheelValue_whenGetPowerConsumptionSecondWheel_thenTheRightValueIsReturned(
+        self,
+    ):
+        expected_power_consumption_second_wheel_value = 1.02
+        expected_serial_response = bytes("08", encoding="utf-8") + bytes(
+            "5", encoding="utf-8"
+        )
+        self.serial.readline.return_value = expected_serial_response
+        actual_power_consumption_second_wheel = (
+            self.robot_information.get_power_consumption_second_wheel()
+        )
+        self.assertEqual(
+            expected_power_consumption_second_wheel_value,
+            actual_power_consumption_second_wheel,
+        )
+
+    def test_givenAReadPowerConsumptionThirdWheelCommand_whenGetConsumptionThirdWheel_thenTheRightCommandIsSent(
+        self,
+    ):
+        expected_command = expected_command = b"\x08\x03"
+
+        self.robot_information.get_power_consumption_third_wheel()
+
+        self.serial.write.assert_called_with(expected_command)
+
+    def test_givenAReadLinePowerConsumptionThirdWheelValue_whenGetPowerConsumptionThirdWheel_thenTheRightValueIsReturned(
+        self,
+    ):
+        expected_power_consumption_third_wheel_value = 1.02
+        expected_serial_response = bytes("08", encoding="utf-8") + bytes(
+            "5", encoding="utf-8"
+        )
+        self.serial.readline.return_value = expected_serial_response
+        actual_power_consumption_third_wheel = (
+            self.robot_information.get_power_consumption_third_wheel()
+        )
+        self.assertEqual(
+            expected_power_consumption_third_wheel_value,
+            actual_power_consumption_third_wheel,
+        )
+
+    def test_givenAReadPowerConsumptionFourthWheelCommand_whenGetConsumptionFourthWheel_thenTheRightCommandIsSent(
+        self,
+    ):
+        expected_command = expected_command = b"\x08\x04"
+
+        self.robot_information.get_power_consumption_fourth_wheel()
+
+        self.serial.write.assert_called_with(expected_command)
+
+    def test_givenAReadLinePowerConsumptionFourthWheelValue_whenGetPowerConsumptionFourthWheel_thenTheRightValueIsReturned(
+        self,
+    ):
+        expected_power_consumption_fourth_wheel_value = 1.02
+        expected_serial_response = bytes("08", encoding="utf-8") + bytes(
+            "5", encoding="utf-8"
+        )
+        self.serial.readline.return_value = expected_serial_response
+        actual_power_consumption_fourth_wheel = (
+            self.robot_information.get_power_consumption_fourth_wheel()
+        )
+        self.assertEqual(
+            expected_power_consumption_fourth_wheel_value,
+            actual_power_consumption_fourth_wheel,
+        )
