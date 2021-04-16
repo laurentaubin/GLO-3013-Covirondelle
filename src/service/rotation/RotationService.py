@@ -1,3 +1,5 @@
+import time
+
 from domain.Orientation import Orientation
 from domain.Position import Position
 from domain.RobotPose import RobotPose
@@ -17,11 +19,12 @@ class RotationService:
 
     def rotate(self, desired_orientation: Orientation):
         while True:
+            time.sleep(0.5)
             _, robot_pose = self._vision_service.get_vision_state()
             orientation_to_send = (
                 robot_pose.get_orientation_in_degree() - desired_orientation
             )
-            if -2 <= orientation_to_send.get_orientation_in_degree() <= 2:
+            if abs(orientation_to_send.get_orientation_in_degree()) <= 2:
                 break
             orientation_to_send = self._find_smallest_orientation_to_send(
                 orientation_to_send

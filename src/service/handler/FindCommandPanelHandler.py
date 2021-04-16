@@ -37,8 +37,8 @@ class FindCommandPanelHandler(IStageHandler):
 
     def _start_stage(self):
         GameState.get_instance().set_current_stage(Stage.FIND_COMMAND_PANEL)
-        self._send_command_to_robot(Topic.START_CYCLE, Stage.FIND_COMMAND_PANEL)
-        self._wait_for_robot_confirmation(Topic.START_CYCLE)
+        self._send_command_to_robot(Topic.START_STAGE, Stage.FIND_COMMAND_PANEL)
+        self._wait_for_robot_confirmation(Topic.START_STAGE)
 
     def _rotate_robot(self, wanted_orientation: Orientation):
         self._rotation_service.rotate(wanted_orientation)
@@ -69,7 +69,7 @@ class FindCommandPanelHandler(IStageHandler):
         self._wait_for_robot_confirmation(Topic.ANALYZE_COMMAND_PANEL)
 
         # TODO Do not hard code this
-        corners = [StartingZoneCorner.D, StartingZoneCorner.A, StartingZoneCorner.B]
+        corners = [StartingZoneCorner.C, StartingZoneCorner.D, StartingZoneCorner.A]
         GameState.get_instance().set_starting_zone_corners(corners)
 
     def _send_command_to_robot(self, command: Topic, payload: object):

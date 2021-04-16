@@ -75,4 +75,4 @@ class StopHandler(IStageHandler):
 
     def _start_stage(self):
         self._send_command_to_robot(Topic.START_STAGE, Stage.STOP)
-        self._wait_for_robot_confirmation(Topic.START_CYCLE)
+        self._wait_for_robot_confirmation(Topic.START_STAGE)

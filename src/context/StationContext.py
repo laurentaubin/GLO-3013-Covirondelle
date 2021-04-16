@@ -135,7 +135,10 @@ class StationContext:
 
     def _create_go_to_ohmmeter_handler(self):
         return GoToOhmmeterHandler(
-            self._communication_service, self._path_service, self._movement_factory
+            self._communication_service,
+            self._path_service,
+            self._rotation_service,
+            self._movement_factory,
         )
 
     def _create_find_command_panel_handler(self):

@@ -48,10 +48,11 @@ class PuckDetectionIt(IntegrationContext):
             if color is Color.NONE:
                 continue
             try:
-                puck_position = self._vision_service._find_puck_position(color)
+                puck_position = self._vision_service.find_puck_position(color)
                 successes.append((color, puck_position))
-            except:
+            except Exception as e:
                 failures.append(color)
+                print(e)
 
         for success in successes:
             color, puck_position = success

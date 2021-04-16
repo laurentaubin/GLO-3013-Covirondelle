@@ -1,5 +1,6 @@
 from typing import List
 
+from domain.CardinalOrientation import CardinalOrientation
 from domain.Orientation import Orientation
 from domain.Position import Position
 from domain.exception.InvalidOrientationException import InvalidOrientationException
@@ -13,37 +14,19 @@ from infra.utils.GeometryUtils import GeometryUtils
 class MovementFactory:
     def __init__(self):
         self._direction_to_orientation = {
-            Direction.LEFT: Orientation(90),
-            Direction.RIGHT: Orientation(270),
-            Direction.FORWARD: Orientation(0),
-            Direction.BACKWARDS: Orientation(180),
+            Direction.LEFT: CardinalOrientation.SOUTH.value,
+            Direction.RIGHT: CardinalOrientation.NORTH.value,
+            Direction.FORWARD: CardinalOrientation.WEST.value,
+            Direction.BACKWARDS: CardinalOrientation.EAST.value,
         }
-        self._orientation_to_direction = {
-            88: Direction.LEFT,
-            89: Direction.LEFT,
-            90: Direction.LEFT,
-            91: Direction.LEFT,
-            92: Direction.LEFT,
-            268: Direction.RIGHT,
-            269: Direction.RIGHT,
-            270: Direction.RIGHT,
-            271: Direction.RIGHT,
-            272: Direction.RIGHT,
-            358: Direction.FORWARD,
-            359: Direction.FORWARD,
-            0: Direction.FORWARD,
-            1: Direction.FORWARD,
-            2: Direction.FORWARD,
-            178: Direction.BACKWARDS,
-            179: Direction.BACKWARDS,
-            180: Direction.BACKWARDS,
-            181: Direction.BACKWARDS,
-            182: Direction.BACKWARDS,
-        }
+        self._orientation_to_direction = self._create_orientation_to_direction()
 
     def create_movements(
         self, original_path: Path, orientation: Orientation
     ) -> List[Movement]:
+        if len(original_path) <= 1:
+            return [self._create_movement_with_zero_distance()]
+
         sub_paths = self._split_path_in_sub_paths(original_path)
 
         movements = list()
@@ -56,7 +39,6 @@ class MovementFactory:
 
     def _split_path_in_sub_paths(self, full_path: Path) -> List[Path]:
         sub_paths = list()
-
         if not self._path_has_turn(full_path):
             sub_paths.append(full_path)
             return sub_paths
@@ -174,13 +156,16 @@ class MovementFactory:
         if orientation.get_orientation_in_degree() < 0:
             orientation = Orientation(360 + orientation.get_orientation_in_degree())
 
-        direction = self._orientation_to_direction.get(
-            orientation.get_orientation_in_degree()
-        )
+        direction = self._find_closest_direction(orientation)
 
         if direction is None:
             raise InvalidOrientationException
         return direction
+
+    def _find_closest_direction(self, orientation) -> Direction:
+        return self._orientation_to_direction.get(
+            orientation.get_orientation_in_degree()
+        )
 
     def create_movement_to_get_to_point_with_direction(
         self, first_position, second_position, direction
@@ -190,3 +175,19 @@ class MovementFactory:
         )
 
         return Movement(direction, distance)
+
+    def _create_orientation_to_direction(self):
+        orientation_map = dict()
+        for i in range(-3, 4):
+            orientation_map[i + 90] = Direction.LEFT
+            orientation_map[i + 180] = Direction.BACKWARDS
+            orientation_map[i + 270] = Direction.RIGHT
+
+        for i in range(4):
+            orientation_map[i] = Direction.FORWARD
+            orientation_map[360 - i] = Direction.FORWARD
+
+        return orientation_map
+
+    def _create_movement_with_zero_distance(self):
+        return Movement(Direction.FORWARD, Distance(0))

@@ -43,13 +43,13 @@ ROBOT_HEIGHT = 0.232
 
 BASE_TABLE_IMAGE = (
     os.path.dirname(os.path.abspath(__file__))
-    + "/../../resources/test/puck-detector-test-marker-3.jpg"
+    + "/../../resources/test/puck/puck_configuration_1.jpg"
 )
 
-DEFAULT_OHMMETER_POSITION = 20, 20
+DEFAULT_OHMMETER_POSITION = 75, 336
 
-GRIPPER_OFFSET = 40
-DEFAULT_PUCK_ZONE_POSITION = (536, 238)
+GRIPPER_OFFSET = 60
+DEFAULT_PUCK_ZONE_POSITION = (490, 250)
 
 STARTING_ZONE_CORNERS_POSITION = [
     (248, 156),
@@ -57,4 +57,4 @@ STARTING_ZONE_CORNERS_POSITION = [
     (80, 321),
     (83, 157),
 ]
-STARTING_ZONE_CENTER_POSITION = (402, 597)
+STARTING_ZONE_CENTER_POSITION = (161, 239)

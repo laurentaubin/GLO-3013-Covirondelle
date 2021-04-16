@@ -27,7 +27,6 @@ class RobotPose:
         return self._orientation_in_degree
 
     def get_gripper_position(self):
-        print(np.cos(self._orientation_in_degree.get_orientation_in_degree()))
         gripper_position_x = (
             self._position.get_x_coordinate()
             + np.cos(self._orientation_in_degree.get_orientation_in_radians())

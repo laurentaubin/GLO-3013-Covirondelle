@@ -9,6 +9,7 @@ from domain.game.Topic import Topic
 from service.rotation.RotationService import RotationService
 
 
+@patch("time.sleep", MagicMock())
 class TestRotationService(TestCase):
     AN_IMAGE = MagicMock()
     A_POSITION = Position(100, 100)

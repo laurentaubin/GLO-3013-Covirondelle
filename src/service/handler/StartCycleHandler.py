@@ -32,17 +32,17 @@ class StartCycleHandler(IStageHandler):
         game_table = self._vision_service.create_game_table()
         self._path_service.set_game_table(game_table)
         GameState.get_instance().set_game_table(game_table)
+        print(GameState.get_instance())
+        print(GameState.get_instance().get_game_table())
 
     def _send_start_signal(self):
         print("Sending start signal...")
         self._communication_service.send_object(
-            Message(Topic.START_CYCLE, Stage.START_CYCLE)
+            Message(Topic.START_STAGE, Stage.START_CYCLE)
         )
-        time.sleep(1)
 
     def _route_robot_response(self):
         message = self._communication_service.receive_object()
-
         if message.get_payload() == Stage.STAGE_COMPLETED:
             return
 

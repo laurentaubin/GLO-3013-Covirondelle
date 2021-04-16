@@ -1,7 +1,6 @@
 from config.config import DEFAULT_OHMMETER_POSITION
 from domain.GameTable import GameTable
 from domain.Position import Position
-from domain.StartingZone import StartingZone
 from domain.StartingZoneCorner import StartingZoneCorner
 from domain.pathfinding.IShortestPathAlgorithm import IShortestPathAlgorithm
 from domain.pathfinding.Path import Path
@@ -12,7 +11,7 @@ class PathService:
         self,
         shortest_path_algorithm: IShortestPathAlgorithm,
     ) -> None:
-        self._game_table: StartingZone
+        self._game_table: GameTable = None
         self._shortest_path_algorithm = shortest_path_algorithm
         self._current_corner_letter = None
 

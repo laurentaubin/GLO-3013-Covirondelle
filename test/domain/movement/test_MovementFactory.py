@@ -17,6 +17,7 @@ class TestMovementFactory(TestCase):
     ANOTHER_POSITION = MagicMock()
     A_DIRECTION = Direction.FORWARD
     A_DISTANCE = Distance(10)
+    AN_ORIENTATION = Orientation(90)
 
     def setUp(self) -> None:
         self.movement_factory = MovementFactory()
@@ -376,22 +377,7 @@ class TestMovementFactory(TestCase):
         )[0]
         self.assertEqual(Direction.RIGHT, right_movement.get_direction())
 
-    def test_givenOrientationNotExactlySnappedToCardinalOrientations_whenCreateMovements_thenRaiseInvalidOrientationException(
-        self,
-    ):
-        an_invalid_orientation = Orientation(93)
-        a_path = Path(
-            [
-                Position(1, 4),
-                Position(1, 3),
-                Position(1, 2),
-                Position(1, 1),
-            ]
-        )
-        with self.assertRaises(InvalidOrientationException):
-            self.movement_factory.create_movements(a_path, an_invalid_orientation)
-
-    def test_givenOrientationCloseToCardinalOrientation_whenCreateMovements_thenReturnMovementWithRightDirection(
+    def test_givenOrientationCloseToCardinalOrientationSouth_whenCreateMovements_thenReturnMovementWithRightDirection(
         self,
     ):
         a_close_orientation = Orientation(91)
@@ -410,6 +396,26 @@ class TestMovementFactory(TestCase):
         ]
 
         self.assertEqual(movement.get_direction(), expected_direction)
+
+    def test_givenOrientationFarFromCardinalOrientation_whenCreateMovements_thenRaiseInvalidOrientationException(
+        self,
+    ):
+        a_far_orientation = Orientation(188)
+        a_path = Path(
+            [
+                Position(1, 4),
+                Position(1, 3),
+                Position(1, 2),
+                Position(1, 1),
+            ]
+        )
+
+        creating_movements = lambda: self.movement_factory.create_movements(
+            a_path, a_far_orientation
+        )
+
+        with self.assertRaises(InvalidOrientationException):
+            creating_movements()
 
     @patch(
         "infra.utils.GeometryUtils.GeometryUtils.calculate_distance_between_two_positions"
@@ -439,3 +445,14 @@ class TestMovementFactory(TestCase):
         )
 
         self.assertEqual(expected_movement, actual_movement)
+
+    def test_givenPathOfOnePosition_whenCreateMovement_thenReturnSingleMovementPath(
+        self,
+    ):
+        a_one_position_path = Path([Position(0, 0)])
+
+        movements = self.movement_factory.create_movements(
+            a_one_position_path, self.AN_ORIENTATION
+        )
+
+        self.assertEqual(len(movements), 1)
