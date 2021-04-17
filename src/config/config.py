@@ -2,6 +2,9 @@ import os
 
 import numpy as np
 
+# Config
+CONFIG_FILE_PATH = os.path.dirname(os.path.abspath(__file__)) + "/"
+
 # Communication
 SOCKET_DOCKER_ADDRESS = "tcp://0.0.0.0:"
 PING_PORT = "5555"
@@ -16,11 +19,11 @@ ROBOT_RADIUS = 40
 OBSTACLE_RADIUS = 12
 
 # Vision
-CALIBRATION_FILE_PATH = (
-    os.path.dirname(os.path.abspath(__file__)) + "/numpy-640x480.npz"
-)
+CALIBRATION_FILE_PATH = CONFIG_FILE_PATH + "numpy-640x480.npz"
+PUCK_TEMPLATE_LOCATION = CONFIG_FILE_PATH + "../infra/vision/templates/"
 
-LAPTOP_CAMERA_INDEX = 1
+
+LAPTOP_CAMERA_INDEX = 0
 PC_CAMERA_INDEX = 1
 
 PIXEL_TO_METERS_RATIO = 257.2
@@ -42,8 +45,7 @@ OBSTACLE_HEIGHT = 0.40
 ROBOT_HEIGHT = 0.232
 
 BASE_TABLE_IMAGE = (
-    os.path.dirname(os.path.abspath(__file__))
-    + "/../../resources/test/puck/puck_configuration_1.jpg"
+    CONFIG_FILE_PATH + "../../resources/test/puck/puck_configuration_1.jpg"
 )
 
 DEFAULT_OHMMETER_POSITION = 75, 336

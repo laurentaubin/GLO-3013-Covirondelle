@@ -6,12 +6,12 @@ from config.config import CALIBRATION_FILE_PATH, LAPTOP_CAMERA_INDEX
 from domain.Color import Color
 from infra.camera.OpenCvCalibrator import OpenCvCalibrator
 from infra.camera.OpenCvWorldCamera import OpenCvWorldCamera
-from infra.vision.OpenCvPuckDetector import OpenCvPuckDetector
+from infra.vision.TemplateMatchingPuckDetector import TemplateMatchingPuckDetector
 
 if __name__ == "__main__":
     calibrator = OpenCvCalibrator(CALIBRATION_FILE_PATH)
     camera = OpenCvWorldCamera(LAPTOP_CAMERA_INDEX, calibrator)
-    detector = OpenCvPuckDetector()
+    detector = TemplateMatchingPuckDetector()
     should_continue = True
     images = []
 
@@ -25,21 +25,21 @@ if __name__ == "__main__":
             cv2.circle(
                 image,
                 position.to_tuple(),
-                25,
+                15,
                 (0, 255, 0),
                 1,
             )
             text_position = (
-                position.get_x_coordinate() - 20,
-                position.get_y_coordinate() - 16,
+                position.get_x_coordinate() - 15,
+                position.get_y_coordinate() - 40,
             )
             cv2.putText(
                 image,
                 color.name,
                 text_position,
                 cv2.FONT_HERSHEY_SIMPLEX,
-                0.8,
-                20,
+                0.3,
+                10,
             )
 
         cv2.imshow("image", image)

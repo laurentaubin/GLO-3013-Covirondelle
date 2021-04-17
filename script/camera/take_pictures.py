@@ -26,7 +26,7 @@ if __name__ == "__main__":
     filename = "resources/calibration/calibration_{}.jpg"
 
     for index, image in enumerate(images):
-        print(filename.format(index + 14))
-        cv2.imwrite(filename.format(index + 14), image)
+        print(filename.format(index))
+        cv2.imwrite(filename.format(index), image)
 
     print("Script done ...")

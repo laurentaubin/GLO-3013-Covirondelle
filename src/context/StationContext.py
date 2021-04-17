@@ -32,14 +32,14 @@ from domain.pathfinding.MazeFactory import MazeFactory
 from infra.camera.ImageBasedWorldCamera import ImageBasedWorldCamera
 from infra.camera.OpenCvCalibrator import OpenCvCalibrator
 from infra.camera.OpenCvWorldCamera import OpenCvWorldCamera
-from infra.communication.robot.ZmqSubscriberConnector import ZmqSubscriberConnector
 from infra.communication.robot.ZmqReqRepConnector import ZmqReqRepConnector
+from infra.communication.robot.ZmqSubscriberConnector import ZmqSubscriberConnector
 from infra.game.MasterGameCycle import MasterGameCycle
 from infra.vision.HardcodedStartingZoneDetector import HardcodedStartingZoneDetector
 from infra.vision.OpenCvObstacleDetector import OpenCvObstacleDetector
-from infra.vision.OpenCvPuckDetector import OpenCvPuckDetector
 from infra.vision.OpenCvRobotDetector import OpenCvRobotDetector
 from infra.vision.OpenCvTableDetector import OpenCvTableDetector
+from infra.vision.TemplateMatchingPuckDetector import TemplateMatchingPuckDetector
 from service.communication.CommunicationService import CommunicationService
 from service.game.StageHandlerSelector import StageHandlerSelector
 from service.game.StageRequestRouter import StageRequestRouter
@@ -201,7 +201,7 @@ class StationContext:
             self._world_camera,
             maze_factory,
             robot_detector,
-            OpenCvPuckDetector(),
+            TemplateMatchingPuckDetector(),
             puck_zone_center_position,
         )
 

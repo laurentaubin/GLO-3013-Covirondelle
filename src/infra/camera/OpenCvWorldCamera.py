@@ -33,6 +33,9 @@ class OpenCvWorldCamera(IWorldCamera):
         capture.set(cv2.CAP_PROP_FRAME_WIDTH, WORLD_CAMERA_IMAGE_SIZE[0])
         capture.set(cv2.CAP_PROP_FRAME_HEIGHT, WORLD_CAMERA_IMAGE_SIZE[1])
         capture.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc("M", "J", "P", "G"))
+        capture.set(cv2.CAP_PROP_BRIGHTNESS, 100)
+        capture.set(cv2.CAP_PROP_CONTRAST, 22)
+        capture.set(cv2.CAP_PROP_SATURATION, 30)
         return capture
 
     def _close_capture(self):

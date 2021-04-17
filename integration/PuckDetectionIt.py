@@ -4,6 +4,8 @@ import cv2
 import os
 
 from domain.Color import Color
+from infra.vision.TemplateMatchingPuckDetector import TemplateMatchingPuckDetector
+from IntegrationContext import IntegrationContext
 from integration.IntegrationContext import IntegrationContext
 
 
@@ -15,7 +17,10 @@ class PuckDetectionIt(IntegrationContext):
 
     def _setup_vision_service(self):
         self._vision_service._calibrator = MagicMock()
-        self.image_paths = self._find_files_in_directory("../resources/test/puck")
+        self._vision_service._puck_detector = TemplateMatchingPuckDetector()
+        self.image_paths = self._find_files_in_directory(
+            "../resources/camera-config/all-color"
+        )
         for image_path in self.image_paths:
             self.images.append(cv2.imread(image_path))
         number_of_colors_to_detect = len(Color) - 1
@@ -72,7 +77,7 @@ class PuckDetectionIt(IntegrationContext):
             1,
         )
         text_position = (
-            puck_position.get_x_coordinate() - 50,
+            puck_position.get_x_coordinate() - 10,
             puck_position.get_y_coordinate() - 40,
         )
         cv2.putText(
@@ -80,8 +85,8 @@ class PuckDetectionIt(IntegrationContext):
             color.name,
             text_position,
             cv2.FONT_HERSHEY_SIMPLEX,
-            0.8,
-            20,
+            0.3,
+            10,
         )
 
 

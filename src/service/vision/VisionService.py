@@ -77,7 +77,6 @@ class VisionService:
         return self._robot_detector.detect(image)
 
     def _detect_pucks(self, table_image) -> List[Puck]:
-
         pucks = list()
         for color in Color:
             if color == Color.NONE:

@@ -55,3 +55,6 @@ class Position:
 
     def __repr__(self):
         return str((self._x_coordinate, self._y_coordinate))
+
+    def __hash__(self):
+        return hash((self._x_coordinate, self._y_coordinate))
