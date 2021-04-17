@@ -21,7 +21,8 @@ class OpenCvWorldCamera(IWorldCamera):
     def _get_camera_frame(self):
         self._clear_buffer()
         ret, current_frame = self._capture.read()
-        return self._camera_calibrator.calibrate(current_frame)
+        return current_frame
+        # return self._camera_calibrator.calibrate(current_frame)
 
     def _clear_buffer(self):
         for i in range(self._buffer_size):
