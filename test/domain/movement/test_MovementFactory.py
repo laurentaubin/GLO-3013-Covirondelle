@@ -456,3 +456,36 @@ class TestMovementFactory(TestCase):
         )
 
         self.assertEqual(len(movements), 1)
+
+    def test_givenExperimentallyFoundBreakingPath_whenCreateMovement_thenDoNotThrow(
+        self,
+    ):
+        pass
+
+        a_breaking_path = Path(
+            [
+                Position(148, 238),
+                Position(149, 238),
+                Position(150, 238),
+                Position(151, 238),
+                Position(152, 238),
+                Position(153, 238),
+                Position(154, 238),
+                Position(155, 238),
+                Position(156, 238),
+                Position(157, 238),
+                Position(158, 238),
+                Position(159, 238),
+                Position(160, 238),
+                Position(161, 238),
+                Position(161, 239),
+            ]
+        )
+        an_orientation = CardinalOrientation.EAST.value
+
+        try:
+            movements = self.movement_factory.create_movements(
+                a_breaking_path, an_orientation
+            )
+        except Exception as e:
+            self.fail(f"MovementFactory.create_movements threw exception '{e}'")

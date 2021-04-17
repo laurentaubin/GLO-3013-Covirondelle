@@ -46,7 +46,7 @@ class MovementFactory:
         current_position = 1
         path_length = len(full_path) + 1
         current_path = Path([])
-        while current_position < path_length:
+        while current_position < path_length - 1:
             is_current_direction_vertical = self._are_positions_moving_vertically(
                 full_path[current_position - 1], full_path[current_position]
             )

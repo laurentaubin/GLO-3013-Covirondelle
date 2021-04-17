@@ -4,7 +4,6 @@ import cv2
 import os
 
 from domain.Color import Color
-from infra.exception.PuckCenterNotFound import PuckCenterNotFound
 from integration.IntegrationContext import IntegrationContext
 
 
