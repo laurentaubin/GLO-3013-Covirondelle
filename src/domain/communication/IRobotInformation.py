@@ -22,3 +22,9 @@ class IRobotInformation:
 
     def get_power_consumption_fourth_wheel(self):
         pass
+
+    def get_battery_time_left(self):
+        pass
+
+    def get_battery_percentage(self):
+        pass

@@ -22,3 +22,9 @@ class IPublisherConnector:
 
     def publish_power_consumption_fourth_wheel(self, power_consumption_fourth_wheel):
         pass
+
+    def publish_battery_time_left(self, battery_time_left):
+        pass
+
+    def publish_battery_percentage(self, battery_percentage):
+        pass

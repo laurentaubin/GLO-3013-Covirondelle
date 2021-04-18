@@ -1,6 +1,13 @@
+from unittest.mock import MagicMock
+
 from serial import Serial
 
-from config.config import CURRENT_CONSUMPTION_THRESHOLD, POWER_SENT_TO_WHEELS
+from config.config import (
+    CURRENT_CONSUMPTION_THRESHOLD,
+    POWER_SENT_TO_WHEELS,
+    TIME_BETWEEN_COMMAND,
+    TOTAL_CHARGE,
+)
 from domain.communication.IRobotInformation import IRobotInformation
 from domain.communication.StmCommand import StmCommand
 from domain.communication.StmPeripherals import StmPeripherals
@@ -8,6 +15,9 @@ from domain.gripper.GripperStatus import GripperStatus
 
 
 class StmRobotInformation(IRobotInformation):
+    TOTAL_TIME = 0
+    CURRENT_CONSUMPTION_TOTAL = 0
+
     def __init__(self, serial: Serial):
         self._serial = serial
 
@@ -66,6 +76,32 @@ class StmRobotInformation(IRobotInformation):
             current_fourth_wheel
         )
         return power_consumption_fourth_wheel
+
+    def get_battery_time_left(self):
+        self.TOTAL_TIME += 1
+        command = bytes([StmCommand.ASK_CURRENT]) + bytes([StmPeripherals.BATTERY])
+        self._serial.write(command)
+        current_consumption = float(self._serial.readline()[1:].decode("utf-8"))
+
+        self.CURRENT_CONSUMPTION_TOTAL += current_consumption
+        current_consumption_average = (
+            self.CURRENT_CONSUMPTION_TOTAL / self.TOTAL_TIME * TIME_BETWEEN_COMMAND
+        )
+
+        actual_charge = TOTAL_CHARGE - current_consumption_average * self.TOTAL_TIME
+        battery_time_left = actual_charge / current_consumption_average
+
+        return battery_time_left
+
+    def get_battery_percentage(self):
+        current_consumption_average = (
+            self.CURRENT_CONSUMPTION_TOTAL * TIME_BETWEEN_COMMAND
+        )
+        battery_percent = (
+            (TOTAL_CHARGE - current_consumption_average) / TOTAL_CHARGE
+        ) * 100
+
+        return battery_percent
 
     def _calculate_wheel_power_consumption(self, wheel_current):
         return (wheel_current / 1000) * POWER_SENT_TO_WHEELS

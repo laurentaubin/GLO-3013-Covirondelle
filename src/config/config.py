@@ -82,3 +82,9 @@ RESISTANCE_READ_THRESHOLD = 1e6
 
 # wheel
 POWER_SENT_TO_WHEELS = 12
+
+# battery
+
+# charge totale de la batterie en mAs
+TOTAL_CHARGE = 21600000
+TIME_BETWEEN_COMMAND = 1
