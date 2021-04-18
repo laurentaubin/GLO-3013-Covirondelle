@@ -74,11 +74,3 @@ class CommunicationService:
         self._robot_status_publisher.publish_power_consumption_fourth_wheel(
             power_consumption_fourth_wheel
         )
-
-    def send_battery_time_left(self):
-        battery_time_left = self._robot_information.get_battery_time_left()
-        self._robot_status_publisher.publish_battery_time_left(battery_time_left)
-
-    def send_battery_percentage(self):
-        battery_percentage = self._robot_information.get_battery_percentage()
-        self._robot_status_publisher.publish_battery_percentage(battery_percentage)
