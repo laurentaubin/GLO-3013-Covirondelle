@@ -13,6 +13,8 @@ class OpenCvPuckDetector(IPuckDetector):
         image = self._cut_image(image)
         image_result = self._prepare_image(image, color)
         puck_contour = self._find_contour(image_result)
+        if len(puck_contour) == 0:
+            return Position(0, 0)
         center, _ = cv2.minEnclosingCircle(puck_contour)
         return Position(
             int(center[0]) + self.HORIZONTAL_CROP[0],
@@ -61,4 +63,6 @@ class OpenCvPuckDetector(IPuckDetector):
         contours, _hierarchy = cv2.findContours(
             image, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE
         )
+        if len(contours) == 0:
+            return np.array([])
         return max(contours, key=cv2.contourArea)

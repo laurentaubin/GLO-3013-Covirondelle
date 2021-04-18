@@ -31,7 +31,6 @@ class GameStateDtoAssembler:
             game_state.get_starting_zone_corners()
         )
         robot_position = self._get_robot_position(game_state.get_robot_pose())
-        table_image = self._get_table_image(game_state.get_table_image())
         battery_consumption = self._get_battery_consumption(
             game_state.get_battery_consumption()
         )
@@ -47,7 +46,6 @@ class GameStateDtoAssembler:
             gripper_state,
             starting_zone_corner_order,
             robot_position,
-            self._encode_image(table_image),
             battery_consumption,
             is_game_started,
             current_planned_trajectory,
@@ -77,7 +75,7 @@ class GameStateDtoAssembler:
         self, starting_zone_corner_order: List[StartingZoneCorner]
     ) -> List[str]:
         return (
-            [corner.value for corner in starting_zone_corner_order]
+            [corner.name for corner in starting_zone_corner_order]
             if starting_zone_corner_order is not None
             else self.EMPTY_ARRAY
         )
@@ -98,10 +96,6 @@ class GameStateDtoAssembler:
             if battery_consumption is not None
             else self.NO_CONSUMPTION
         )
-
-    def _encode_image(self, image: np.ndarray):
-        _, buffer_img = cv2.imencode(".jpg", image)
-        return base64.b64encode(buffer_img).decode()
 
     def _get_current_planned_trajectory(
         self, current_planned_trajectory: Path

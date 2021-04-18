@@ -12,7 +12,6 @@ class GameStateDto:
         gripper_state: int,
         starting_zone_corner_order: List[str],
         robot_position: dict,
-        encoded_table_image: str,
         battery_consumption: float,
         is_game_started: bool,
         current_planned_trajectory: List[Position],
@@ -23,7 +22,9 @@ class GameStateDto:
         self._gripper_state: int = gripper_state
         self._starting_zone_corner_order: List[str] = starting_zone_corner_order
         self._robot_position: dict = robot_position
-        self._encoded_table_image: str = encoded_table_image
         self._battery_consumption: float = battery_consumption
         self._is_game_started: bool = is_game_started
         self._current_planned_trajectory: List[Position] = current_planned_trajectory
+
+    def __repr__(self):
+        return f"{self._robot_position}"

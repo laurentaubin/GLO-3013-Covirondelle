@@ -6,7 +6,6 @@ import os
 from domain.Color import Color
 from infra.vision.TemplateMatchingPuckDetector import TemplateMatchingPuckDetector
 from IntegrationContext import IntegrationContext
-from integration.IntegrationContext import IntegrationContext
 
 
 class PuckDetectionIt(IntegrationContext):
