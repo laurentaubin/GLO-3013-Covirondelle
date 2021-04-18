@@ -29,6 +29,9 @@ class RotationService:
             orientation_to_send = self._find_smallest_orientation_to_send(
                 orientation_to_send
             )
+            if abs(orientation_to_send.get_orientation_in_degree()) <= 5:
+                orientation_to_send = self._shrink_rotation(orientation_to_send)
+
             self._communication_service.send_object(
                 Message(Topic.ROTATION, orientation_to_send)
             )
@@ -59,3 +62,10 @@ class RotationService:
             return Orientation(orientation_delta.get_orientation_in_degree() - 360)
 
         return orientation_delta
+
+    def _shrink_rotation(self, orientation_delta: Orientation):
+        return (
+            Orientation(-1)
+            if orientation_delta.get_orientation_in_degree() < 0
+            else Orientation(1)
+        )

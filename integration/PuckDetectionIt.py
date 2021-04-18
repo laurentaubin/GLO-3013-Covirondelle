@@ -91,6 +91,6 @@ class PuckDetectionIt(IntegrationContext):
 
 
 if __name__ == "__main__":
-    puck_detection_it = PuckDetectionIt(local_flag=True)
+    puck_detection_it = PuckDetectionIt(local_flag=False)
 
     puck_detection_it.run()
