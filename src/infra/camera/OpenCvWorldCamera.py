@@ -29,9 +29,11 @@ class OpenCvWorldCamera(IWorldCamera):
             self._capture.grab()
 
     def _open_capture(self):
-        capture = cv2.VideoCapture(self._camera_index)
-        capture.set(cv2.CAP_PROP_FRAME_WIDTH, WORLD_CAMERA_IMAGE_SIZE[0])
-        capture.set(cv2.CAP_PROP_FRAME_HEIGHT, WORLD_CAMERA_IMAGE_SIZE[1])
+        capture = cv2.VideoCapture(self._camera_index, cv2.CAP_V4L2)
+        capture.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+        capture.set(cv2.CAP_PROP_FOCUS, 0)
+        capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+        capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 800)
         capture.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc("M", "J", "P", "G"))
         capture.set(cv2.CAP_PROP_BRIGHTNESS, 100)
         capture.set(cv2.CAP_PROP_CONTRAST, 22)

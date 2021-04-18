@@ -21,7 +21,6 @@ from infra.utils.GeometryUtils import GeometryUtils
 
 # https://github.com/ddelago/Aruco-Marker-Calibration-and-Pose-Estimation/blob/master/pose_marker.py
 # https://docs.opencv.org/master/d7/d53/tutorial_py_pose.html
-from infra.utils.VisionDebugUtils import VisionDebugUtils
 
 
 class OpenCvObstacleDetector(IObstacleDetector):
@@ -141,34 +140,3 @@ class OpenCvObstacleDetector(IObstacleDetector):
                 )
             )
         return real_obstacle_positions
-
-
-if __name__ == "__main__":
-    obstacle_detector = OpenCvObstacleDetector(
-        OBSTACLE_ARUCO_MARKER_ID,
-        aruco.DICT_4X4_50,
-        CAMERA_MATRIX,
-        DISTORTION_COEFFICIENTS,
-        OBSTACLE_ARUCO_MARKER_SIZE,
-        OBSTACLE_HEIGHT,
-    )
-    calibrator = OpenCvCalibrator(CALIBRATION_FILE_PATH)
-    image1 = cv2.imread("obstacle_configuration_1.jpg")
-    image2 = cv2.imread("obstacle_configuration_2.jpg")
-    image3 = cv2.imread("obstacle_configuration_3.jpg")
-    image4 = cv2.imread("obstacle_configuration_4.jpg")
-    image5 = cv2.imread("obstacle_configuration_5.jpg")
-    image6 = cv2.imread("obstacle_configuration_6.jpg")
-    image7 = cv2.imread("obstacle_configuration_7.jpg")
-    image8 = cv2.imread("obstacle_configuration_8.jpg")
-    image9 = cv2.imread("obstacle_configuration_9.jpg")
-    image10 = cv2.imread("obstacle_configuration_10.jpg")
-    image11 = cv2.imread("obstacle_configuration_7.jpg")
-    image12 = cv2.imread("obstacle_configuration_7.jpg")
-    image13 = cv2.imread("obstacle_configuration_7.jpg")
-
-    images = [image1, image2, image3, image4, image5, image6, image7]
-
-    for image in images:
-        image = calibrator.calibrate(image)
-        obstacle_detector.detect(image)
