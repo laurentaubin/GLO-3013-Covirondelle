@@ -11,7 +11,7 @@ from infra.vision.TemplateMatchingPuckDetector import TemplateMatchingPuckDetect
 class TestTemplateMatchingPuckDetector(TestCase):
     AN_IMAGE_PATH = (
         os.path.dirname(os.path.abspath(__file__))
-        + "/../../../resources/camera-config/all-color/image_0.jpg"
+        + "/../../../resources/camera-config/image_0.jpg"
     )
     AN_IMAGE = cv2.imread(AN_IMAGE_PATH)
 
@@ -19,7 +19,7 @@ class TestTemplateMatchingPuckDetector(TestCase):
         self.template_matching_puck_detector = TemplateMatchingPuckDetector()
 
     def test_givenColorGrey_whenDetect_thenReturnRightPositionForGreyPuck(self):
-        expected_position = Position(537, 354)
+        expected_position = Position(1181, 192)
 
         actual_position = self.template_matching_puck_detector.detect(
             self.AN_IMAGE, Color.GREY
@@ -28,7 +28,7 @@ class TestTemplateMatchingPuckDetector(TestCase):
         self.assertEqual(actual_position, expected_position)
 
     def test_givenColorRed_whenDetect_thenReturnRightPositionForRedPuck(self):
-        expected_position = Position(534, 130)
+        expected_position = Position(1184, 335)
 
         actual_position = self.template_matching_puck_detector.detect(
             self.AN_IMAGE, Color.RED
@@ -37,7 +37,7 @@ class TestTemplateMatchingPuckDetector(TestCase):
         self.assertEqual(actual_position, expected_position)
 
     def test_givenColorGreen_whenDetect_thenReturnRightPositionForGreenPuck(self):
-        expected_position = Position(581, 359)
+        expected_position = Position(1078, 182)
 
         actual_position = self.template_matching_puck_detector.detect(
             self.AN_IMAGE, Color.GREEN
@@ -46,7 +46,7 @@ class TestTemplateMatchingPuckDetector(TestCase):
         self.assertEqual(actual_position, expected_position)
 
     def test_givenColorYellow_whenDetect_thenReturnRightPositionForYellowPuck(self):
-        expected_position = Position(447, 350)
+        expected_position = Position(967, 632)
 
         actual_position = self.template_matching_puck_detector.detect(
             self.AN_IMAGE, Color.YELLOW
@@ -55,7 +55,7 @@ class TestTemplateMatchingPuckDetector(TestCase):
         self.assertEqual(actual_position, expected_position)
 
     def test_givenColorOrange_whenDetect_thenReturnRightPositionForOrangePuck(self):
-        expected_position = Position(582, 283)
+        expected_position = Position(888, 636)
 
         actual_position = self.template_matching_puck_detector.detect(
             self.AN_IMAGE, Color.ORANGE
@@ -64,7 +64,7 @@ class TestTemplateMatchingPuckDetector(TestCase):
         self.assertEqual(actual_position, expected_position)
 
     def test_givenColorBlue_whenDetect_thenReturnRightPositionForBluePuck(self):
-        expected_position = Position(581, 211)
+        expected_position = Position(1072, 626)
 
         actual_position = self.template_matching_puck_detector.detect(
             self.AN_IMAGE, Color.BLUE
@@ -73,7 +73,7 @@ class TestTemplateMatchingPuckDetector(TestCase):
         self.assertEqual(actual_position, expected_position)
 
     def test_givenColorPurple_whenDetect_thenReturnRightPositionForPurplePuck(self):
-        expected_position = Position(433, 123)
+        expected_position = Position(1155, 625)
 
         actual_position = self.template_matching_puck_detector.detect(
             self.AN_IMAGE, Color.PURPLE
@@ -82,7 +82,7 @@ class TestTemplateMatchingPuckDetector(TestCase):
         self.assertEqual(actual_position, expected_position)
 
     def test_givenColorWhite_whenDetect_thenReturnRightPositionForWhitePuck(self):
-        expected_position = Position(578, 136)
+        expected_position = Position(902, 175)
 
         actual_position = self.template_matching_puck_detector.detect(
             self.AN_IMAGE, Color.WHITE
@@ -91,7 +91,7 @@ class TestTemplateMatchingPuckDetector(TestCase):
         self.assertEqual(actual_position, expected_position)
 
     def test_givenColorBrown_whenDetect_thenReturnRightPositionForBrownPuck(self):
-        expected_position = Position(491, 129)
+        expected_position = Position(985, 180)
 
         actual_position = self.template_matching_puck_detector.detect(
             self.AN_IMAGE, Color.BROWN
@@ -100,7 +100,7 @@ class TestTemplateMatchingPuckDetector(TestCase):
         self.assertEqual(actual_position, expected_position)
 
     def test_givenColorBlack_whenDetect_thenReturnRightPositionForBlackPuck(self):
-        expected_position = Position(495, 351)
+        expected_position = Position(1175, 489)
 
         actual_position = self.template_matching_puck_detector.detect(
             self.AN_IMAGE, Color.BLACK

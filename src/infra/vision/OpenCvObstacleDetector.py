@@ -51,8 +51,59 @@ class OpenCvObstacleDetector(IObstacleDetector):
             distCoeff=self._distortion_coefficients,
         )
         all_image_points = self._get_obstacles_aruco_marker_image_points(corners, ids)
+        all_obstacle_corners = self._filter_only_obstacle_corners(corners, ids)
+        positions = self._get_obstacle_positions_from_projection_points(
+            all_obstacle_corners
+        )
         projection_points = self._get_projection_points(all_image_points)
-        return self._get_obstacle_positions_from_projection_points(projection_points)
+        projected_positions = self._get_obstacle_positions_from_projection_points(
+            projection_points
+        )
+        good_position = self._validate_projection(positions, projected_positions)
+        return good_position
+
+    def _validate_projection(
+        self,
+        not_projected_positions: List[Position],
+        projected_positions: List[Position],
+    ):
+        good_positions = []
+        for not_projected, projected_position in zip(
+            not_projected_positions, projected_positions
+        ):
+            if (
+                500 <= not_projected.get_x_coordinate() <= 800
+                and 250 <= not_projected.get_y_coordinate() <= 600
+            ):
+                good_positions.append(not_projected)
+            else:
+                if not_projected.get_x_coordinate() <= 630:
+                    if (
+                        not_projected.get_x_coordinate()
+                        > projected_position.get_x_coordinate()
+                    ):
+                        raise ObstacleNotFoundException()
+                elif not_projected.get_x_coordinate() >= 650:
+                    if (
+                        not_projected.get_x_coordinate()
+                        < projected_position.get_x_coordinate()
+                    ):
+                        raise ObstacleNotFoundException()
+                else:
+                    if not_projected.get_y_coordinate() < 385:
+                        if (
+                            not_projected.get_y_coordinate()
+                            > projected_position.get_y_coordinate()
+                        ):
+                            raise ObstacleNotFoundException()
+                    elif not_projected.get_y_coordinate() > 415:
+                        if (
+                            not_projected.get_y_coordinate()
+                            < projected_position.get_y_coordinate()
+                        ):
+                            raise ObstacleNotFoundException()
+                good_positions.append(projected_position)
+        return good_positions
 
     def _get_obstacles_aruco_marker_image_points(
         self, corners: List[np.ndarray], ids: List[np.ndarray]
@@ -135,8 +186,29 @@ class OpenCvObstacleDetector(IObstacleDetector):
         real_obstacle_positions = []
         for obstacle_projection_points in all_obstacle_projection_points:
             real_obstacle_positions.append(
-                GeometryUtils.get_quadrangle_center_coordinates_from_corner_coordinates(
+                self.get_quadrangle_center_coordinates_from_corner_coordinates(
                     obstacle_projection_points[0]
                 )
             )
         return real_obstacle_positions
+
+    def get_quadrangle_center_coordinates_from_corner_coordinates(
+        self,
+        corners: np.ndarray,
+    ) -> Position:
+        return Position(
+            int(self.get_quadrangle_center_x_coordinate_from_corners(corners)),
+            int(self.get_quadrangle_center_y_coordinate_from_corners(corners)),
+        )
+
+    def get_quadrangle_center_x_coordinate_from_corners(
+        self,
+        corners: np.ndarray,
+    ) -> np.float64:
+        return (corners[0][0] + corners[1][0] + corners[2][0] + corners[3][0]) / 4
+
+    def get_quadrangle_center_y_coordinate_from_corners(
+        self,
+        corners: np.ndarray,
+    ) -> np.float64:
+        return (corners[0][1] + corners[1][1] + corners[2][1] + corners[3][1]) / 4

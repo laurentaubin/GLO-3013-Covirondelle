@@ -1,4 +1,4 @@
-from cv2.aruco import DICT_4X4_50
+from cv2.aruco import DICT_4X4_50, DICT_6X6_50
 
 from application.ApplicationServer import ApplicationServer
 from application.GameStateDtoAssembler import GameStateDtoAssembler
@@ -171,8 +171,8 @@ class StationContext:
     def _create_vision_service(self):
         starting_zone_corners_detector = HardcodedStartingZoneDetector()
         obstacle_detector = OpenCvObstacleDetector(
-            OBSTACLE_ARUCO_MARKER_ID,
             DICT_4X4_50,
+            OBSTACLE_ARUCO_MARKER_ID,
             CAMERA_MATRIX,
             DISTORTION_COEFFICIENTS,
             OBSTACLE_ARUCO_MARKER_SIZE,

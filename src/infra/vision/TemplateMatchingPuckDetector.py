@@ -7,9 +7,9 @@ from domain.vision.IPuckDetector import IPuckDetector
 
 
 class TemplateMatchingPuckDetector(IPuckDetector):
-    PUCK_RADIUS = 10
-    HORIZONTAL_CROP = (350, 620)
-    VERTICAL_CROP = (93, 387)
+    PUCK_RADIUS = 22
+    HORIZONTAL_CROP = (780, 1250)
+    VERTICAL_CROP = (120, 700)
 
     def detect(self, image: np.array, color: Color) -> Position:
         image = self._cut_image(image)

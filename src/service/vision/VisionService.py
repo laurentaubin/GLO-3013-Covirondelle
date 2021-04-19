@@ -15,6 +15,7 @@ from domain.vision.IPuckDetector import IPuckDetector
 from domain.vision.IRobotDetector import IRobotDetector
 from domain.vision.IStartingZoneDetector import IStartingZoneDetector
 from domain.vision.ITableDetector import ITableDetector
+from domain.vision.exception.ObstacleNotFoundException import ObstacleNotFoundException
 
 
 class VisionService:
@@ -42,10 +43,10 @@ class VisionService:
         self._puck_zone_center = puck_zone_center
 
     def create_game_table(self) -> GameTable:
-        table_image = self._get_calibrated_table_image(self._world_image)
+        table_image = self._world_camera.take_world_image()
 
         starting_zone = self._find_starting_zone(table_image)
-        maze = self._create_maze(table_image)
+        maze = self._create_maze()
         pucks = self._detect_pucks(table_image)
 
         return GameTable(starting_zone, maze, self._puck_zone_center, pucks)
@@ -56,22 +57,25 @@ class VisionService:
         return world_image, robot_pose
 
     def find_puck_position(self, puck_color: Color) -> Position:
-        table_image = self._get_calibrated_table_image(self._world_image)
+        table_image = self._world_image
 
         return self._puck_detector.detect(table_image, puck_color)
 
     def _find_starting_zone(self, table_image) -> StartingZone:
         return self._starting_zone_corner_detector.detect(table_image)
 
-    def _create_maze(self, image) -> Maze:
-        obstacles_on_table = self._obstacle_detector.detect(image)
+    def _create_maze(self) -> Maze:
+        obstacles_on_table = []
+        while True:
+            try:
+                image = self._world_camera.take_world_image()
+                obstacles_on_table = self._obstacle_detector.detect(image)
+                break
+            except ObstacleNotFoundException:
+                pass
         return self._maze_factory.create_from_shape_and_obstacles(
             image.shape, obstacles_on_table
         )
-
-    def _get_calibrated_table_image(self, image):
-        return self._calibrator.calibrate(image)
-        # return self._table_detector.crop_table(undistorted_image)
 
     def _find_robot_position(self, image) -> RobotPose:
         return self._robot_detector.detect(image)

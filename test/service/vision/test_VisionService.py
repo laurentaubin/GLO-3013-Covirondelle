@@ -49,19 +49,17 @@ class TestVisionService(TestCase):
         self.robot_detector = MagicMock()
         self.puck_detector = MagicMock()
 
-    def test_whenCreateGameTable_thenImageIsUndistorted(self):
+    def test_whenCreateGameTable_thenWorldImageIsTaken(self):
         self.vision_service.create_game_table()
 
-        self.image_calibrator.calibrate.assert_called_with(self.AN_IMAGE)
+        self.world_camera.take_world_image.assert_called()
 
-    def test_whenCreateGameTable_thenStartingZoneDetectorUseUndistortedTableImage(self):
-        self.image_calibrator.calibrate.return_value = self.UNDISTORTED_TABLE_IMAGE
+    def test_whenCreateGameTable_thenStartingZoneDetectorUseWorldImage(self):
+        self.world_camera.take_world_image.return_value = self.AN_IMAGE
 
         self.vision_service.create_game_table()
 
-        self.starting_zone_detector.detect.assert_called_with(
-            self.UNDISTORTED_TABLE_IMAGE
-        )
+        self.starting_zone_detector.detect.assert_called_with(self.AN_IMAGE)
 
     def test_whenCreateGameTable_thenGameTableContainsStartingZoneDetected(self):
         self.starting_zone_detector.detect.return_value = self.A_STARTING_ZONE
@@ -73,12 +71,12 @@ class TestVisionService(TestCase):
         self.assertEqual(self.A_STARTING_ZONE, actual_starting_zone)
 
     def test_whenCreateGameTable_thenObstaclesAreDetectedUsingUndistortedImage(self):
-        self.image_calibrator.calibrate.return_value = self.UNDISTORTED_TABLE_IMAGE
+        self.world_camera.take_world_image.return_value = self.AN_IMAGE
         self.UNDISTORTED_TABLE_IMAGE.shape = self.AN_IMAGE_SHAPE
 
         self.vision_service.create_game_table()
 
-        self.obstacle_detector.detect.assert_called_with(self.UNDISTORTED_TABLE_IMAGE)
+        self.obstacle_detector.detect.assert_called_with(self.AN_IMAGE)
 
     def test_whenCreateGameTable_thenGameTableHasRightPuckZonePosition(self):
         game_table = self.vision_service.create_game_table()

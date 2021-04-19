@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
     cv2.destroyAllWindows()
 
-    filename = "resources/calibration/calibration_{}.jpg"
+    filename = "../../resources/camera-config/image_{}.jpg"
 
     for index, image in enumerate(images):
         print(filename.format(index))
