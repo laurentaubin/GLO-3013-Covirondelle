@@ -21,7 +21,7 @@ communication_service = CommunicationService(
     game_cycle_connector, publisher_connector, robot_information
 )
 
-serial.readline.return_value = bytes("8", encoding="utf-8") + bytes(
+serial.write_and_readline.return_value = bytes("8", encoding="utf-8") + bytes(
     "400", encoding="utf-8"
 )
 
@@ -30,7 +30,7 @@ for i in range(5):
     communication_service.send_gripper_status()
     time.sleep(0.5)
 
-serial.readline.return_value = bytes("8", encoding="utf-8") + bytes(
+serial.write_and_readline.return_value = bytes("8", encoding="utf-8") + bytes(
     "400", encoding="utf-8"
 )
 

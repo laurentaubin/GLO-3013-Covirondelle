@@ -61,7 +61,9 @@ class TestStmMotorController(TestCase):
 
         self.stm_motor_controller.rotate(rotation_command)
 
-        self.serial_communication.write.assert_called_with(expected_serialization)
+        self.serial_communication.write_and_readline.assert_called_with(
+            expected_serialization
+        )
 
     def test_whenRotate_thenWaitForRobotResponse(self):
         a_direction = Direction.CLOCKWISE
@@ -70,4 +72,4 @@ class TestStmMotorController(TestCase):
 
         self.stm_motor_controller.rotate(rotation_command)
 
-        self.serial_communication.readline.assert_called()
+        self.serial_communication.write_and_readline.assert_called()

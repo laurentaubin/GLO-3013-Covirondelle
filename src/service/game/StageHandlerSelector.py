@@ -7,13 +7,13 @@ class StageHandlerSelector:
         self,
         start_handler: IStageHandler,
         go_to_ohmmeter_handler: IStageHandler,
-        find_command_panel_handler: IStageHandler,
+        read_command_panel_handler: IStageHandler,
         transport_puck: IStageHandler,
         stop_handler: IStageHandler,
     ):
         self._start_handler = start_handler
         self._go_to_ohmmeter_handler = go_to_ohmmeter_handler
-        self._find_command_panel_handler = find_command_panel_handler
+        self._read_command_panel_handler = read_command_panel_handler
         self.transport_puck_handler = transport_puck
         self._stop_handler = stop_handler
 
@@ -22,8 +22,8 @@ class StageHandlerSelector:
             return self._start_handler
         elif stage == Stage.GO_TO_OHMMETER:
             return self._go_to_ohmmeter_handler
-        elif stage == Stage.FIND_COMMAND_PANEL:
-            return self._find_command_panel_handler
+        elif stage == Stage.READ_COMMAND_PANEL:
+            return self._read_command_panel_handler
         elif stage == Stage.TRANSPORT_PUCK:
             return self.transport_puck_handler
         elif stage == Stage.STOP:

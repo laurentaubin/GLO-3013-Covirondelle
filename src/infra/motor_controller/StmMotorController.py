@@ -1,7 +1,8 @@
 import struct
+import time
 from typing import List
 
-from serial import Serial, time
+from infra.communication import ThreadSafeSerial
 
 from domain.IMotorController import IMotorController
 from domain.movement.MovementCommand import MovementCommand
@@ -9,7 +10,7 @@ from domain.movement.RotationCommand import RotationCommand
 
 
 class StmMotorController(IMotorController):
-    def __init__(self, serial: Serial) -> None:
+    def __init__(self, serial: ThreadSafeSerial) -> None:
         self._serial = serial
 
     def actuate_wheels(self, commands: List[MovementCommand]) -> None:
@@ -44,5 +45,4 @@ class StmMotorController(IMotorController):
         )
         encoded_direction = bytes(([command.get_direction()]))
         encoded_speed = struct.pack("f", command.get_angle())
-        self._serial.write(encoded_direction + encoded_speed)
-        self._serial.readline()
+        self._serial.write_and_readline(encoded_direction + encoded_speed)

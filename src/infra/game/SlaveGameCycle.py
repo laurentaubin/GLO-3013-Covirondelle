@@ -31,7 +31,7 @@ class SlaveGameCycle(IGameCycle):
         self.stage_service.execute(Stage.GO_TO_OHMMETER)
 
     def _find_command_panel(self):
-        self.stage_service.execute(Stage.FIND_COMMAND_PANEL)
+        self.stage_service.execute(Stage.READ_COMMAND_PANEL)
 
     def _transport_puck(self):
         self.stage_service.execute(Stage.TRANSPORT_PUCK)
