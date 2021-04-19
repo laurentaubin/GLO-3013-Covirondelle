@@ -21,6 +21,12 @@ class GameStateDtoAssembler:
     BASE_POSITION: Position = Position(0, 0)
     EMPTY_IMAGE: np.ndarray = np.ndarray([])
     NO_CONSUMPTION: float = 0.0
+    NO_BATTERY_TIME_LEFT: float = 0.0
+    NO_BATTERY_PERCENTAGE: float = 0.0
+    NO_POWER_CONSUMPTION_FIRST_WHEEL: float = 0.0
+    NO_POWER_CONSUMPTION_SECOND_WHEEL: float = 0.0
+    NO_POWER_CONSUMPTION_THIRD_WHEEL: float = 0.0
+    NO_POWER_CONSUMPTION_FOURTH_WHEEL: float = 0.0
 
     def assemble_from_game_state(self, game_state: GameState):
         puck_colors = self._get_puck_colors(game_state.get_puck_colors())
@@ -38,7 +44,15 @@ class GameStateDtoAssembler:
         current_planned_trajectory = self._get_current_planned_trajectory(
             game_state.get_current_planned_trajectory()
         )
-
+        battery_time_left = self._get_power_consumption_first_wheel(
+            game_state.get_battery_time_left()
+        )
+        battery_percentage = self._get_battery_time_left(
+            game_state.get_battery_percentage()
+        )
+        power_consumption_first_wheel = self._get_power_consumption_first_wheel(
+            game_state.get_power_consumption_first_wheel()
+        )
         return GameStateDto(
             puck_colors,
             current_puck,
@@ -49,6 +63,8 @@ class GameStateDtoAssembler:
             battery_consumption,
             is_game_started,
             current_planned_trajectory,
+            battery_time_left,
+            battery_percentage,
         )
 
     def _get_puck_colors(self, puck_colors: List[Color]) -> List[str]:
@@ -104,4 +120,54 @@ class GameStateDtoAssembler:
             [position.to_dictionary() for position in current_planned_trajectory]
             if current_planned_trajectory is not None
             else self.EMPTY_ARRAY
+        )
+
+    def _get_battery_time_left(self, battery_time_left: float) -> float:
+        return (
+            battery_time_left
+            if battery_time_left is not None
+            else self.NO_BATTERY_TIME_LEFT
+        )
+
+    def _get_battery_percentage(self, battery_percentage: float) -> float:
+        return (
+            battery_percentage
+            if battery_percentage is not None
+            else self.NO_BATTERY_PERCENTAGE
+        )
+
+    def _get_power_consumption_first_wheel(
+        self, power_consumption_first_wheel: float
+    ) -> float:
+        return (
+            power_consumption_first_wheel
+            if power_consumption_first_wheel is not None
+            else self.NO_POWER_CONSUMPTION_FIRST_WHEEL
+        )
+
+    def _get_power_consumption_second_wheel(
+        self, power_consumption_second_wheel: float
+    ) -> float:
+        return (
+            power_consumption_second_wheel
+            if power_consumption_second_wheel is not None
+            else self.NO_POWER_CONSUMPTION_SECOND_WHEEL
+        )
+
+    def _get_power_consumption_third_wheel(
+        self, power_consumption_third_wheel: float
+    ) -> float:
+        return (
+            power_consumption_third_wheel
+            if power_consumption_third_wheel is not None
+            else self.NO_POWER_CONSUMPTION_THIRD_WHEEL
+        )
+
+    def _get_power_consumption_fourth_wheel(
+        self, power_consumption_fourth_wheel: float
+    ) -> float:
+        return (
+            power_consumption_fourth_wheel
+            if power_consumption_fourth_wheel is not None
+            else self.NO_POWER_CONSUMPTION_FIRST_WHEEL
         )

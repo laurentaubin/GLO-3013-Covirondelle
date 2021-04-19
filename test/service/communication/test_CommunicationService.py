@@ -95,3 +95,135 @@ class TestCommunicationService(TestCase):
             self.communication_service.receive_battery_consumption()
         )
         self.assertEqual(expected_battery_consumption, actual_battery_consumption)
+
+    def test_whenReceiveBatteryTimeLeft_thenBatteryTimeLeftTopicIsRead(self):
+        self.communication_service.receive_battery_time_left()
+
+        self.robot_update_connector.read_topic.assert_called_with("battery_time_left")
+
+    def test_givenBatteryTimeLeftSentByRobot_whenReceiveBatteryTimeLeft_thenBatteryTimeLeftIsReturned(
+        self,
+    ):
+        expected_battery_time_left = 2000000.0000
+        self.robot_update_connector.read_topic.return_value = expected_battery_time_left
+
+        actual_battery_time_left = (
+            self.communication_service.receive_battery_time_left()
+        )
+        self.assertEqual(expected_battery_time_left, actual_battery_time_left)
+
+    def test_whenReceiveBatteryPercentage_thenBatteryPercentageTopicIsRead(self):
+        self.communication_service.receive_battery_percentage()
+
+        self.robot_update_connector.read_topic.assert_called_with("battery_percentage")
+
+    def test_givenBatteryPercentageSentByRobot_whenReceiveBatteryPercentage_thenBatteryPercentageIsReturned(
+        self,
+    ):
+        expected_battery_percentage = 99.9949494
+        self.robot_update_connector.read_topic.return_value = (
+            expected_battery_percentage
+        )
+
+        actual_battery_percentage = (
+            self.communication_service.receive_battery_percentage()
+        )
+        self.assertEqual(expected_battery_percentage, actual_battery_percentage)
+
+    def test_whenReceivePowerConsumptionFirstWheel_thenPowerConsumptionFirstWheelTopicIsRead(
+        self,
+    ):
+        self.communication_service.receive_power_consumption_first_wheel()
+
+        self.robot_update_connector.read_topic.assert_called_with(
+            "power_consumption_first_wheel"
+        )
+
+    def test_givenPowerConsumptionFirstWheelSentByRobot_whenReceivePowerConsumptionFirstWheel_thenPowerConsumptionFirstWheelIsReturned(
+        self,
+    ):
+        expected_power_consumption_first_wheel = 10.0
+        self.robot_update_connector.read_topic.return_value = (
+            expected_power_consumption_first_wheel
+        )
+
+        actual_power_consumption_first_wheel = (
+            self.communication_service.receive_power_consumption_first_wheel()
+        )
+        self.assertEqual(
+            expected_power_consumption_first_wheel, actual_power_consumption_first_wheel
+        )
+
+    def test_whenReceivePowerConsumptionSecondWheel_thenPowerConsumptionSecondWheelTopicIsRead(
+        self,
+    ):
+        self.communication_service.receive_power_consumption_second_wheel()
+
+        self.robot_update_connector.read_topic.assert_called_with(
+            "power_consumption_second_wheel"
+        )
+
+    def test_givenPowerConsumptionSecondWheelSentByRobot_whenReceivePowerConsumptionSecondWheel_thenPowerConsumptionSecondWheelIsReturned(
+        self,
+    ):
+        expected_power_consumption_second_wheel = 10.0
+        self.robot_update_connector.read_topic.return_value = (
+            expected_power_consumption_second_wheel
+        )
+
+        actual_power_consumption_second_wheel = (
+            self.communication_service.receive_power_consumption_second_wheel()
+        )
+        self.assertEqual(
+            expected_power_consumption_second_wheel,
+            actual_power_consumption_second_wheel,
+        )
+
+    def test_whenReceivePowerConsumptionThirdWheel_thenPowerConsumptionThirdWheelTopicIsRead(
+        self,
+    ):
+        self.communication_service.receive_power_consumption_third_wheel()
+
+        self.robot_update_connector.read_topic.assert_called_with(
+            "power_consumption_third_wheel"
+        )
+
+    def test_givenPowerConsumptionThirdWheelSentByRobot_whenReceivePowerConsumptionThirdWheel_thenPowerConsumptionThirdWheelIsReturned(
+        self,
+    ):
+        expected_power_consumption_third_wheel = 10.0
+        self.robot_update_connector.read_topic.return_value = (
+            expected_power_consumption_third_wheel
+        )
+
+        actual_power_consumption_third_wheel = (
+            self.communication_service.receive_power_consumption_third_wheel()
+        )
+        self.assertEqual(
+            expected_power_consumption_third_wheel, actual_power_consumption_third_wheel
+        )
+
+    def test_whenReceivePowerConsumptionFourthWheel_thenPowerConsumptionFourthWheelTopicIsRead(
+        self,
+    ):
+        self.communication_service.receive_power_consumption_fourth_wheel()
+
+        self.robot_update_connector.read_topic.assert_called_with(
+            "power_consumption_fourth_wheel"
+        )
+
+    def test_givenPowerConsumptionFourthWheelSentByRobot_whenReceivePowerConsumptionFourthWheel_thenPowerConsumptionFourthWheelIsReturned(
+        self,
+    ):
+        expected_power_consumption_fourth_wheel = 10.0
+        self.robot_update_connector.read_topic.return_value = (
+            expected_power_consumption_fourth_wheel
+        )
+
+        actual_power_consumption_fourth_wheel = (
+            self.communication_service.receive_power_consumption_fourth_wheel()
+        )
+        self.assertEqual(
+            expected_power_consumption_fourth_wheel,
+            actual_power_consumption_fourth_wheel,
+        )

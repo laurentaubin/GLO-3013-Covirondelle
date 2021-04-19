@@ -15,6 +15,12 @@ class GameStateDto:
         battery_consumption: float,
         is_game_started: bool,
         current_planned_trajectory: List[Position],
+        battery_time_left: float,
+        battery_percentage: float,
+        power_consumption_first_wheel: float,
+        power_consumption_second_wheel: float,
+        power_consumption_third_wheel: float,
+        power_consumption_fourth_wheel: float,
     ):
         self._puck_colors: List[str] = puck_colors
         self._current_puck: str = current_puck
@@ -25,6 +31,12 @@ class GameStateDto:
         self._battery_consumption: float = battery_consumption
         self._is_game_started: bool = is_game_started
         self._current_planned_trajectory: List[Position] = current_planned_trajectory
+        self._battery_time_left = battery_time_left
+        self._battery_percentage = battery_percentage
+        self._power_consumption_first_wheel = power_consumption_first_wheel
+        self._power_consumption_second_wheel = power_consumption_second_wheel
+        self._power_consumption_third_wheel = power_consumption_third_wheel
+        self._power_consumption_fourth_wheel = power_consumption_fourth_wheel
 
     def __repr__(self):
         return f"{self._robot_position}"

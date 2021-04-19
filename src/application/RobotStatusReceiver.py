@@ -13,6 +13,34 @@ class RobotStatusReceiver:
             battery_consumption = (
                 self.communication_service.receive_battery_consumption()
             )
+            battery_time_left = self.communication_service.receive_battery_time_left()
+            battery_percentage = self.communication_service.receive_battery_percentage()
+            power_consumption_first_wheel = (
+                self.communication_service.receive_power_consumption_first_wheel()
+            )
+            power_consumption_second_wheel = (
+                self.communication_service.receive_power_consumption_second_wheel()
+            )
+            power_consumption_third_wheel = (
+                self.communication_service.receive_power_consumption_third_wheel()
+            )
+            power_consumption_fourth_wheel = (
+                self.communication_service.receive_power_consumption_fourth_wheel()
+            )
             GameState.get_instance().set_battery_consumption(battery_consumption)
             power_consumption = self.communication_service.receive_power_consumption()
             GameState.get_instance().set_power_consumption(power_consumption)
+            GameState.get_instance().set_battery_time_left(battery_time_left)
+            GameState.get_instance().set_battery_percentage(battery_percentage)
+            GameState.get_instance().set_power_consumption_first_wheel(
+                power_consumption_first_wheel
+            )
+            GameState.get_instance().set_power_consumption_second_wheel(
+                power_consumption_second_wheel
+            )
+            GameState.get_instance().set_power_consumption_third_wheel(
+                power_consumption_third_wheel
+            )
+            GameState.get_instance().set_power_consumption_fourth_wheel(
+                power_consumption_fourth_wheel
+            )

@@ -37,3 +37,29 @@ class CommunicationService:
 
     def receive_battery_consumption(self) -> float:
         return self._robot_status_update_connector.read_topic("battery_consumption")
+
+    def receive_battery_time_left(self) -> float:
+        return self._robot_status_update_connector.read_topic("battery_time_left")
+
+    def receive_battery_percentage(self) -> float:
+        return self._robot_status_update_connector.read_topic("battery_percentage")
+
+    def receive_power_consumption_first_wheel(self) -> float:
+        return self._robot_status_update_connector.read_topic(
+            "power_consumption_first_wheel"
+        )
+
+    def receive_power_consumption_second_wheel(self) -> float:
+        return self._robot_status_update_connector.read_topic(
+            "power_consumption_second_wheel"
+        )
+
+    def receive_power_consumption_third_wheel(self) -> float:
+        return self._robot_status_update_connector.read_topic(
+            "power_consumption_third_wheel"
+        )
+
+    def receive_power_consumption_fourth_wheel(self) -> float:
+        return self._robot_status_update_connector.read_topic(
+            "power_consumption_fourth_wheel"
+        )

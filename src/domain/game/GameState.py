@@ -34,6 +34,12 @@ class GameState:
         self._resistance_value: Resistance = None
         self._current_planned_trajectory: Path = None
         self._power_consumption: float = None
+        self._battery_time_left: float = None
+        self._battery_percentage: float = None
+        self._power_consumption_first_wheel: float = None
+        self._power_consumption_second_wheel: float = None
+        self._power_consumption_third_wheel: float = None
+        self._power_consumption_fourth_wheel: float = None
 
     @staticmethod
     def get_instance() -> "GameState":
@@ -123,3 +129,39 @@ class GameState:
 
     def set_power_consumption(self, power_consumption) -> None:
         self._power_consumption = power_consumption
+
+    def get_battery_time_left(self):
+        return self._battery_time_left
+
+    def set_battery_time_left(self, battery_time_left):
+        self._battery_time_left = battery_time_left
+
+    def get_battery_percentage(self):
+        return self._battery_percentage
+
+    def set_battery_percentage(self, battery_percentage):
+        self._battery_percentage = battery_percentage
+
+    def get_power_consumption_first_wheel(self):
+        return self._power_consumption_first_wheel
+
+    def set_power_consumption_first_wheel(self, power_consumption_first_wheel):
+        self._power_consumption_first_wheel = power_consumption_first_wheel
+
+    def get_power_consumption_second_wheel(self):
+        return self._power_consumption_second_wheel
+
+    def set_power_consumption_second_wheel(self, power_consumption_second_wheel):
+        self._power_consumption_second_wheel = power_consumption_second_wheel
+
+    def get_power_consumption_third_wheel(self):
+        return self._power_consumption_third_wheel
+
+    def set_power_consumption_third_wheel(self, power_consumption_third_wheel):
+        self._power_consumption_third_wheel = power_consumption_third_wheel
+
+    def get_power_consumption_fourth_wheel(self):
+        return self._power_consumption_fourth_wheel
+
+    def set_power_consumption_fourth_wheel(self, power_consumption_fourth_wheel):
+        self._power_consumption_fourth_wheel = power_consumption_fourth_wheel
