@@ -1,5 +1,3 @@
-import serial
-
 from application.ApplicationServer import ApplicationServer
 from application.CommunicationRunner import CommunicationRunner
 from config.config import (
@@ -52,6 +50,7 @@ from infra.IServoController import IServoController
 from infra.MaestroController import MaestroController
 from infra.camera.ImageBasedEmbeddedCamera import ImageBasedEmbeddedCamera
 from infra.camera.OpenCvEmbeddedCamera import OpenCvEmbeddedCamera
+from infra.communication.ThreadSafeSerial import ThreadSafeSerial
 from infra.communication.robot_information.FakeRobotInformation import (
     FakeRobotInformation,
 )
@@ -93,7 +92,7 @@ class RobotContext:
         self._local_flag = local_flag
 
         if not self._local_flag:
-            self._serial = serial.Serial(port=STM_PORT_NAME, baudrate=STM_BAUD_RATE)
+            self._serial = ThreadSafeSerial(STM_PORT_NAME, STM_BAUD_RATE)
 
         movement_command_factory = MovementCommandFactory(
             Speed(ROBOT_MAXIMUM_SPEED),

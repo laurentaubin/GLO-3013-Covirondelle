@@ -1,10 +1,10 @@
 from domain.communication.ILed import ILed
 from domain.communication.StmCommand import StmCommand
-from serial import Serial
+from infra.communication import ThreadSafeSerial
 
 
 class StmLed(ILed):
-    def __init__(self, serial: Serial):
+    def __init__(self, serial: ThreadSafeSerial):
         self._serial = serial
         self._is_led_on = False
 

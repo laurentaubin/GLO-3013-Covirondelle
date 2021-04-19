@@ -7,7 +7,7 @@ from infra.communication.robot_information.StmRobotInformation import (
 )
 
 
-class TestRobotInformation(TestCase):
+class TestStmRobotInformation(TestCase):
     def setUp(self) -> None:
         self.serial = MagicMock()
         self.robot_information = StmRobotInformation(self.serial)
@@ -19,7 +19,7 @@ class TestRobotInformation(TestCase):
         expected_serial_response = bytes("8", encoding="utf-8") + bytes(
             a_current_value, encoding="utf-8"
         )
-        self.serial.readline.return_value = expected_serial_response
+        self.serial.write_and_readline.return_value = expected_serial_response
 
         actual_gripper_status = self.robot_information.get_gripper_status()
 
@@ -32,7 +32,7 @@ class TestRobotInformation(TestCase):
         expected_serial_response = bytes("8", encoding="utf-8") + bytes(
             a_current_value, encoding="utf-8"
         )
-        self.serial.readline.return_value = expected_serial_response
+        self.serial.write_and_readline.return_value = expected_serial_response
 
         actual_gripper_status = self.robot_information.get_gripper_status()
 
@@ -45,7 +45,7 @@ class TestRobotInformation(TestCase):
 
         self.robot_information.get_gripper_status()
 
-        self.serial.write.assert_called_with(expected_command)
+        self.serial.write_and_readline.assert_called_with(expected_command)
 
     def test_givenAReadCurrentConsumptionCommand_whenGetCurrentConsumption_thenTheRightCommandIsSent(
         self,
@@ -54,16 +54,16 @@ class TestRobotInformation(TestCase):
 
         self.robot_information.get_current_consumption()
 
-        self.serial.write.assert_called_with(expected_command)
+        self.serial.write_and_readline.assert_called_with(expected_command)
 
-    def test_givenAReadLineCurrentConsumptionValue_whenGetCurrentConsumption_thenTheRightValueIsReturned(
+    def test_givenACurrentConsumptionValue_whenGetCurrentConsumption_thenTheRightValueIsReturned(
         self,
     ):
         expected_current_consumption_value = 10.0
         expected_serial_response = bytes("8", encoding="utf-8") + bytes(
             "10", encoding="utf-8"
         )
-        self.serial.readline.return_value = expected_serial_response
+        self.serial.write_and_readline.return_value = expected_serial_response
 
         actual_current_consumption = self.robot_information.get_current_consumption()
 
@@ -76,16 +76,16 @@ class TestRobotInformation(TestCase):
 
         self.robot_information.get_power_consumption()
 
-        self.serial.write.assert_called_with(expected_command)
+        self.serial.write_and_readline.assert_called_with(expected_command)
 
-    def test_givenAReadLinePowerConsumptionValue_whenGetPowerConsumption_thenTheRightValueIsReturned(
+    def test_givenAPowerConsumptionValue_whenGetPowerConsumption_thenTheRightValueIsReturned(
         self,
     ):
         expected_power_consumption_value = 10.0
         expected_serial_response = bytes("0A", encoding="utf-8") + bytes(
             "10", encoding="utf-8"
         )
-        self.serial.readline.return_value = expected_serial_response
+        self.serial.write_and_readline.return_value = expected_serial_response
 
         actual_power_consumption = self.robot_information.get_power_consumption()
 
@@ -98,7 +98,7 @@ class TestRobotInformation(TestCase):
 
         self.robot_information.get_power_consumption_first_wheel()
 
-        self.serial.write.assert_called_with(expected_command)
+        self.serial.write_and_readline.assert_called_with(expected_command)
 
     def test_givenAReadLinePowerConsumptionFirstWheelValue_whenGetPowerConsumptionFirstWheel_thenTheRightValueIsReturned(
         self,
@@ -107,7 +107,7 @@ class TestRobotInformation(TestCase):
         expected_serial_response = bytes("08", encoding="utf-8") + bytes(
             "5", encoding="utf-8"
         )
-        self.serial.readline.return_value = expected_serial_response
+        self.serial.write_and_readline.return_value = expected_serial_response
         actual_power_consumption_first_wheel = (
             self.robot_information.get_power_consumption_first_wheel()
         )
@@ -123,7 +123,7 @@ class TestRobotInformation(TestCase):
 
         self.robot_information.get_power_consumption_second_wheel()
 
-        self.serial.write.assert_called_with(expected_command)
+        self.serial.write_and_readline.assert_called_with(expected_command)
 
     def test_givenAReadLinePowerConsumptionSecondWheelValue_whenGetPowerConsumptionSecondWheel_thenTheRightValueIsReturned(
         self,
@@ -132,7 +132,7 @@ class TestRobotInformation(TestCase):
         expected_serial_response = bytes("08", encoding="utf-8") + bytes(
             "5", encoding="utf-8"
         )
-        self.serial.readline.return_value = expected_serial_response
+        self.serial.write_and_readline.return_value = expected_serial_response
         actual_power_consumption_second_wheel = (
             self.robot_information.get_power_consumption_second_wheel()
         )
@@ -148,7 +148,7 @@ class TestRobotInformation(TestCase):
 
         self.robot_information.get_power_consumption_third_wheel()
 
-        self.serial.write.assert_called_with(expected_command)
+        self.serial.write_and_readline.assert_called_with(expected_command)
 
     def test_givenAReadLinePowerConsumptionThirdWheelValue_whenGetPowerConsumptionThirdWheel_thenTheRightValueIsReturned(
         self,
@@ -157,7 +157,7 @@ class TestRobotInformation(TestCase):
         expected_serial_response = bytes("08", encoding="utf-8") + bytes(
             "5", encoding="utf-8"
         )
-        self.serial.readline.return_value = expected_serial_response
+        self.serial.write_and_readline.return_value = expected_serial_response
         actual_power_consumption_third_wheel = (
             self.robot_information.get_power_consumption_third_wheel()
         )
@@ -173,7 +173,7 @@ class TestRobotInformation(TestCase):
 
         self.robot_information.get_power_consumption_fourth_wheel()
 
-        self.serial.write.assert_called_with(expected_command)
+        self.serial.write_and_readline.assert_called_with(expected_command)
 
     def test_givenAReadLinePowerConsumptionFourthWheelValue_whenGetPowerConsumptionFourthWheel_thenTheRightValueIsReturned(
         self,
@@ -182,7 +182,7 @@ class TestRobotInformation(TestCase):
         expected_serial_response = bytes("08", encoding="utf-8") + bytes(
             "5", encoding="utf-8"
         )
-        self.serial.readline.return_value = expected_serial_response
+        self.serial.write_and_readline.return_value = expected_serial_response
         actual_power_consumption_fourth_wheel = (
             self.robot_information.get_power_consumption_fourth_wheel()
         )
