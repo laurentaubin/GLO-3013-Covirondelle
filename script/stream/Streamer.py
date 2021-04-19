@@ -6,10 +6,12 @@ import time
 import cv2
 import imagezmq
 
-from domain.Color import Color
 from domain.vision.exception.PuckNotFoundException import PuckNotFoundException
 from infra.vision.OpenCvCornerDetector import OpenCvCornerDetector
 from infra.vision.OpenCvPuckDetector import OpenCvPuckDetector
+from infra.vision.PytesseractLetterPositionExtractor import (
+    PytesseractLetterPositionExtractor,
+)
 
 if __name__ == "__main__":
     font = cv2.FONT_HERSHEY_SIMPLEX
@@ -18,8 +20,9 @@ if __name__ == "__main__":
     fontColor = (255, 255, 255)
     lineType = 2
 
-    sender = imagezmq.ImageSender(connect_to="tcp://10.240.80.139:5557")
+    sender = imagezmq.ImageSender(connect_to="tcp://10.240.11.144:5557")
     puck_detector = OpenCvPuckDetector()
+    command_panel_letters_extractor = PytesseractLetterPositionExtractor()
     corner_detector = OpenCvCornerDetector()
 
     rpi_name = socket.gethostname()
@@ -39,19 +42,21 @@ if __name__ == "__main__":
         ret, image = capture.read()
         if ret:
             try:
-                # position = corner_detector.detect_inferior_corner(image)
-                position = puck_detector.detect(image, Color.RED)
-                cv2.circle(
-                    image,
-                    (
-                        int(position.get_x_coordinate()),
-                        int(position.get_y_coordinate()),
-                    ),
-                    70,
-                    (0, 255, 0),
-                    2,
+                letters = command_panel_letters_extractor.extract_letters_from_image(
+                    image
                 )
-                print(position.get_x_coordinate(), position.get_y_coordinate())
+                # position = corner_detector.detect_inferior_corner(image)
+                # position = puck_detector.detect(image, Color.RED)
+                # cv2.circle(
+                #     image,
+                #     (
+                #         int(position.get_x_coordinate()),
+                #         int(position.get_y_coordinate()),
+                #     ),
+                #     70,
+                #     (0, 255, 0),
+                #     2,
+                print(letters)
             except PuckNotFoundException:
                 print("puck not found")
                 pass

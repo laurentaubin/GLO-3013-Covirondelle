@@ -34,9 +34,15 @@ from config.config import (
     CAMERA_LOOK_UP_TARGET,
     CAMERA_LOOK_DOWN_TARGET,
     STARTING_ZONE_CORNER_POSITION,
+    NUMBER_OF_LETTERS_TO_READ,
+    COMMAND_PANEL_VERTICAL_POSITION,
+    COMMAND_PANEL_HORIZONTAL_POSITION,
     PUCK_ALIGNMENT_UP_THRESHOLD,
 )
 from domain.Position import Position
+from domain.alignment.CommandPanelAlignmentCorrector import (
+    CommandPanelAlignmentCorrector,
+)
 from domain.alignment.CornerAlignmentCorrector import CornerAlignmentCorrector
 from domain.alignment.OhmmeterAlignmentCorrector import OhmmeterAlignmentCorrector
 from domain.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
@@ -65,6 +71,7 @@ from infra.gripper.MaestroGripper import MaestroGripper
 from infra.motor_controller.FakeMotorController import FakeMotorController
 from infra.motor_controller.StmMotorController import StmMotorController
 from infra.resistance.StmOhmmeter import StmOhmmeter
+from infra.vision.OpenCvCommandPanelDetector import OpenCvCommandPanelDetector
 from infra.vision.OpenCvCornerDetector import OpenCvCornerDetector
 from infra.vision.OpenCvPuckDetector import OpenCvPuckDetector
 from infra.vision.OpenCvStartingZoneLineDetector import OpenCvStartingZoneLineDetector
@@ -75,7 +82,7 @@ from service.communication.CommunicationService import CommunicationService
 from service.game.StageHandlerSelector import StageHandlerSelector
 from service.game.StageService import StageService
 from service.gripper.GripperService import GripperService
-from service.handler.FindCommandPanelHandler import FindCommandPanelHandler
+from service.handler.ReadCommandPanelHandler import ReadCommandPanelHandler
 from service.handler.GoToOhmmeterHandler import GoToOhmmeterHandler
 from service.handler.StartHandler import StartHandler
 from service.handler.StopHandler import StopHandler
@@ -183,8 +190,22 @@ class RobotContext:
             ohmmeter_alignment_corrector,
             movement_command_factory,
         )
-        find_command_panel_handler = FindCommandPanelHandler(
-            self._communication_service, self._movement_service, self._vision_service
+        panel_command_detector = OpenCvCommandPanelDetector()
+        command_panel_letters_extractor = PytesseractLetterPositionExtractor()
+        self.command_panel_alignment_corrector = CommandPanelAlignmentCorrector(
+            NUMBER_OF_LETTERS_TO_READ,
+            Position(
+                COMMAND_PANEL_HORIZONTAL_POSITION, COMMAND_PANEL_VERTICAL_POSITION
+            ),
+            panel_command_detector,
+            command_panel_letters_extractor,
+        )
+        self._read_command_panel_handler = ReadCommandPanelHandler(
+            self._communication_service,
+            self._movement_service,
+            self._vision_service,
+            self.command_panel_alignment_corrector,
+            command_panel_letters_extractor,
         )
         self._transport_puck_handler = self._create_transport_puck_handler()
         stop_handler = StopHandler(
@@ -194,7 +215,7 @@ class RobotContext:
         return StageHandlerSelector(
             start_handler,
             go_to_ohmmeter_handler,
-            find_command_panel_handler,
+            self._read_command_panel_handler,
             self._transport_puck_handler,
             stop_handler,
         )
