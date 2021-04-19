@@ -190,3 +190,40 @@ class TestStmRobotInformation(TestCase):
             expected_power_consumption_fourth_wheel_value,
             actual_power_consumption_fourth_wheel,
         )
+
+    def test_givenAReadCurrentCommand_whenGetBatteryTimeLeft_thenTheRightCommandIsSent(
+        self,
+    ):
+        expected_command = b"\x08\x00"
+
+        self.robot_information.get_battery_time_left()
+
+        self.serial.write.assert_called_with(expected_command)
+
+    def test_givenAReadLineCurrentValue_whenGetBatteryTimeLeft_thenTheRightValueIsReturned(
+        self,
+    ):
+        expected_time_left = 2159999.0
+        expected_serial_response = bytes("8", encoding="utf-8") + bytes(
+            "10", encoding="utf-8"
+        )
+        self.serial.readline.return_value = expected_serial_response
+
+        actual_time_left = self.robot_information.get_battery_time_left()
+
+        self.assertEqual(expected_time_left, actual_time_left)
+
+    def test_givenASecondCurrentConsumptionCall_whenGetBatteryPercentage_thenValueIsLowerThan100(
+        self,
+    ):
+        expected_serial_response = bytes("8", encoding="utf-8") + bytes(
+            "10", encoding="utf-8"
+        )
+        self.serial.readline.return_value = expected_serial_response
+
+        self.robot_information.get_battery_time_left()
+        expected_battery_percentage = 99.99995370370371
+
+        actual_battery_percentage = self.robot_information.get_battery_percentage()
+
+        self.assertEqual(expected_battery_percentage, actual_battery_percentage)

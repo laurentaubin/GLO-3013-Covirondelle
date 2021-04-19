@@ -18,4 +18,6 @@ class CommunicationRunner:
             # self._communication_service.send_power_consumption_second_wheel()
             # self._communication_service.send_power_consumption_third_wheel()
             # self._communication_service.send_power_consumption_fourth_wheel()
+            self._communication_service.send_battery_time_left()
+            self._communication_service.send_battery_percentage()
             time.sleep(1)
