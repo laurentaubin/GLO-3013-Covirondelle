@@ -19,7 +19,7 @@ const TableDisplay = () => {
     }, [])
 
     useEffect(() => {
-        if (image && canvas && state.RobotPosition) {
+        if (image && canvas) {
             // @ts-ignore
             const context = canvas.current.getContext("2d");
             context.drawImage(image, 0, 0, 640, 480);

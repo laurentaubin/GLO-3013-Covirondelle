@@ -32,31 +32,6 @@ const styles = (theme: Theme) => createStyles({
     },
 });
 
-// TODO: make sure everything is there
-// Etape du cycle de jeu en cours DONE
-// Liste des étapes du jeu complétées DONE
-
-// Etat du prehenseur DONE
-// Statut actuel du robot DONE
-
-// Charge electrique courante de la batterie DONE
-// Consommation electrique du robot DONE
-// Temps restant à la batterie DONE
-
-// Couleur de la rondelle en train d'etre déplacé DONE
-// Couleur des rondelles déplacées avec succès DONE
-
-// Afficher la valeur de la résistance mesurée DONE
-// Code de couleur de la résistance mesurée DONE
-
-// Les coins du carré vert où les rondelles seront déposées DONE
-
-// Afficher la position du robot en temps réel EN COURS
-
-// Stopwatch : À la réception de la commande de départ, le
-// chronographe, mesurant le temps qui s’écoule pendant l’exécution de la tâche, est mis
-// en marche EN COURS
-
 export const Dashboard = (props: any) => {
     const {classes} = props
     const {state, dispatch} = useContext(AppContext);
@@ -76,7 +51,7 @@ export const Dashboard = (props: any) => {
 
     return (
         <>
-            <TableDisplay />
+            <TableDisplay/>
             <div className={classes.root}>
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={6}>
@@ -92,7 +67,6 @@ export const Dashboard = (props: any) => {
                         <Paper className={classes.smallPaper}>
                             <DataCard
                                 title={'Consommation électrique du robot'}
-                                // TODO: check if its the right value
                                 value={state.RobotConsumption}
                                 unit={'Watt'}
                             />
@@ -102,7 +76,6 @@ export const Dashboard = (props: any) => {
                         <Paper className={classes.smallPaper}>
                             <DataCard
                                 title={'Temps restant à la batterie'}
-                                // TODO: add battery time
                                 value={state.BatteryTime}
                                 unit={'secondes'}
                             />
@@ -112,7 +85,6 @@ export const Dashboard = (props: any) => {
                         <Paper className={classes.smallPaper}>
                             <DataCard
                                 title={'Résistance mesurée'}
-                                // TODO: add resistance
                                 value={state.Resistance}
                                 unit={'Ω'}
                             >
@@ -126,8 +98,8 @@ export const Dashboard = (props: any) => {
                     </Grid>
                     <Grid item xs={12} sm={3}>
                         <Paper className={classes.smallPaper}>
-                            <StopWatch isStarted = {state.IsGameStarted}
-                                       isEnded = {state.CurrentStage === Stage.stop}/>
+                            <StopWatch isStarted={state.IsGameStarted}
+                                       isEnded={state.CurrentStage === Stage.cycle_completed}/>
                         </Paper>
                     </Grid>
                     <Grid item xs={12}>
@@ -143,7 +115,7 @@ export const Dashboard = (props: any) => {
                         <Paper className={classes.smallPaper}>
                             <StateCard
                                 title={'État du préhenseur'}
-                                active={'RONDELLE'}
+                                active={'OCCUPÉ'}
                                 neutral={'VIDE'}
                                 isActive={state.IsGripperHolding}
                             />
@@ -153,8 +125,8 @@ export const Dashboard = (props: any) => {
                         <Paper className={classes.smallPaper}>
                             <StateCard
                                 title={'État du robot'}
-                                active={'ACTIF'}
-                                neutral={'EN ATTENTE'}
+                                active={"ACTIF"}
+                                neutral={"EN ATTENTE"}
                                 isActive={state.IsGameStarted}
                                 onClick={send_start_signal}
                             />

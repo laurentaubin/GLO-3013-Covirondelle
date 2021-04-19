@@ -19,10 +19,12 @@ export enum Stage {
     boot = "boot",
     start_cycle = "start_cycle",
     go_to_ohmmeter = "go_to_ohmmeter",
-    find_command_panel = "find_command_panel",
+    read_command_panel = "read_command_panel",
     transport_puck = "transport_puck",
     go_park = "go_park",
-    stop = "stop"
+    stop = "stop",
+    cycle_completed = "cycle_completed",
+
 }
 
 export enum ZoneCorner {
@@ -38,19 +40,18 @@ interface Position {
 }
 
 export interface ApplicationState {
-    Resistance: number | undefined
     PuckColors: PuckColor[]
     CurrentPuck: PuckColor | undefined
     CurrentStage: Stage | undefined
     ZoneCornersOrder: ZoneCorner[]
     RobotPosition: Position | undefined
-    TableImage: string |  undefined
-    BatteryElectricCharge: number | undefined
     RobotConsumption: number
-    BatteryTime: number | undefined
-    IsGripperHolding: boolean
-    IsGameStarted: boolean
     currentPlannedTrajectory: Position[]
+    BatteryTime: number | undefined
+    BatteryElectricCharge: number | undefined
+    IsGripperHolding: boolean
+    Resistance: number | undefined
+    IsGameStarted: boolean
 }
 
 const initialState: ApplicationState = {
@@ -60,7 +61,6 @@ const initialState: ApplicationState = {
     CurrentStage: undefined,
     ZoneCornersOrder: [],
     RobotPosition: undefined,
-    TableImage: undefined,
     BatteryElectricCharge: undefined,
     RobotConsumption: 0,
     BatteryTime: undefined,

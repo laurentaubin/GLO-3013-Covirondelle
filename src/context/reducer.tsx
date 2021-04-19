@@ -15,18 +15,18 @@ export const appReducer = (state: ApplicationState, action: any) => {
             }
         case ActionType.UPDATE_STATE:
             console.log(action)
-            // TODO: add BatteryTime and BatteryElectricCharge
             return {
                 ...state,
                 PuckColors: action.payload._puck_colors,
                 CurrentPuck: action.payload._current_puck,
                 CurrentStage: action.payload._current_stage,
                 ZoneCornersOrder: action.payload._starting_zone_corner_order,
-                RobotPosition: action.payload._robot_pose,
-                TableImage: action.payload._encoded_table_image,
+                RobotPosition: action.payload._robot_position,
                 RobotConsumption: action.payload._battery_consumption,
                 currentPlannedTrajectory: action.payload._current_planned_trajectory,
-                IsGripperHolding: action.payload._prehensor_state === 1,
+                BatteryTime: action.payload._battery_time_left,
+                BatteryElectricCharge: action.payload._battery_percentage,
+                IsGripperHolding: action.payload._gripper_state === 1,
                 Resistance: action.payload._resistance_value
             }
         default:

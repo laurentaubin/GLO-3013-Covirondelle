@@ -11,20 +11,24 @@ export const RobotStages = {
         order: 2,
         description: "Lecture de résistance en cours"
     },
-    find_command_panel: {
+    read_command_panel: {
         order: 3,
         description: "Lecture du panneau de commande en cours"
     },
     transport_puck: {
         order: 4,
-        description: "Transport d'une rondelle"
+        description: "Transport des rondelles"
     },
     go_park: {
         order: 5,
-        description: "Confirmation de la fin du cycle de jeu"
+        description: "Retour à la zone de départ"
     },
     stop: {
         order: 6,
-        description: "STOP"
+        description: "Fin du cycle de jeu"
+    },
+    cycle_completed: {
+        order: 7,
+        description: "Cycle terminé !!"
     }
 }
