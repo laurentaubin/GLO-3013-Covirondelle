@@ -53,6 +53,15 @@ class GameStateDtoAssembler:
         power_consumption_first_wheel = self._get_power_consumption_first_wheel(
             game_state.get_power_consumption_first_wheel()
         )
+        power_consumption_second_wheel = self._get_power_consumption_second_wheel(
+            game_state.get_power_consumption_second_wheel()
+        )
+        power_consumption_third_wheel = self._get_power_consumption_third_wheel(
+            game_state.get_power_consumption_third_wheel()
+        )
+        power_consumption_fourth_wheel = self._get_power_consumption_fourth_wheel(
+            game_state.get_power_consumption_fourth_wheel()
+        )
         return GameStateDto(
             puck_colors,
             current_puck,
@@ -65,6 +74,10 @@ class GameStateDtoAssembler:
             current_planned_trajectory,
             battery_time_left,
             battery_percentage,
+            power_consumption_first_wheel,
+            power_consumption_second_wheel,
+            power_consumption_third_wheel,
+            power_consumption_fourth_wheel,
         )
 
     def _get_puck_colors(self, puck_colors: List[Color]) -> List[str]:
