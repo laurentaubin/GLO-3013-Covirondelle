@@ -14,7 +14,7 @@ class StageHandlerSelector:
         self.handlers = {
             Stage.START_CYCLE: start_game_cycle_handler,
             Stage.GO_TO_OHMMETER: go_to_ohmmeter_handler,
-            Stage.FIND_COMMAND_PANEL: find_command_panel_handler,
+            Stage.READ_COMMAND_PANEL: find_command_panel_handler,
             Stage.TRANSPORT_PUCK: transport_puck_handler,
             Stage.STOP: stop_handler,
         }

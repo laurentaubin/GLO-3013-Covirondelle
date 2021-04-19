@@ -44,7 +44,7 @@ from service.communication.CommunicationService import CommunicationService
 from service.game.StageHandlerSelector import StageHandlerSelector
 from service.game.StageRequestRouter import StageRequestRouter
 from service.game.StageService import StageService
-from service.handler.FindCommandPanelHandler import FindCommandPanelHandler
+from service.handler.ReadCommandPanelHandler import FindCommandPanelHandler
 from service.handler.GoParkHandler import GoParkHandler
 from service.handler.GoToOhmmeterHandler import GoToOhmmeterHandler
 from service.handler.StartCycleHandler import StartCycleHandler

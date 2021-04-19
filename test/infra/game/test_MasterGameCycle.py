@@ -8,7 +8,7 @@ from infra.game.MasterGameCycle import MasterGameCycle
 class TestMasterGameCycle(TestCase):
     START_GAME_CYCLE = Stage.START_CYCLE
     GO_TO_OHMMETER = Stage.GO_TO_OHMMETER
-    FIND_COMMAND_PANEL = Stage.FIND_COMMAND_PANEL
+    FIND_COMMAND_PANEL = Stage.READ_COMMAND_PANEL
     TRANSPORT_PUCKS = Stage.TRANSPORT_PUCK
     STOP_GAME_CYCLE = Stage.STOP
 

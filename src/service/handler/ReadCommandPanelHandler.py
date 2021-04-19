@@ -36,9 +36,9 @@ class FindCommandPanelHandler(IStageHandler):
         self._end_stage()
 
     def _start_stage(self):
-        GameState.get_instance().set_current_stage(Stage.FIND_COMMAND_PANEL)
-        self._send_command_to_robot(Topic.START_STAGE, Stage.FIND_COMMAND_PANEL)
-        self._wait_for_robot_confirmation(Topic.START_STAGE)
+        GameState.get_instance().set_current_stage(Stage.READ_COMMAND_PANEL)
+        self._send_command_to_robot(Topic.START_CYCLE, Stage.READ_COMMAND_PANEL)
+        self._wait_for_robot_confirmation(Topic.START_CYCLE)
 
     def _rotate_robot(self, wanted_orientation: Orientation):
         self._rotation_service.rotate(wanted_orientation)
@@ -66,10 +66,14 @@ class FindCommandPanelHandler(IStageHandler):
     def _analyze_command_panel(self):
         resistance = GameState.get_instance().get_resistance_value()
         self._send_command_to_robot(Topic.ANALYZE_COMMAND_PANEL, resistance)
-        self._wait_for_robot_confirmation(Topic.ANALYZE_COMMAND_PANEL)
+        read_corner = self._wait_for_robot_confirmation(Topic.ANALYZE_COMMAND_PANEL)
 
-        # TODO Do not hard code this
-        corners = [StartingZoneCorner.C, StartingZoneCorner.D, StartingZoneCorner.A]
+        next_corner = StartingZoneCorner.value_of_string(read_corner)
+        corners = [next_corner]
+        for _ in range(2):
+            next_corner = StartingZoneCorner.get_next_corner(next_corner)
+            corners.append(next_corner)
+
         GameState.get_instance().set_starting_zone_corners(corners)
 
     def _send_command_to_robot(self, command: Topic, payload: object):

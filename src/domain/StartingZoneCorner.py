@@ -18,3 +18,9 @@ class StartingZoneCorner(Enum):
             StartingZoneCorner.D: StartingZoneCorner.A,
         }
         return next_corner.get(current_corner)
+
+    @staticmethod
+    def value_of_string(string: str) -> "StartingZoneCorner":
+        for corner in StartingZoneCorner:
+            if corner.name == string:
+                return corner
