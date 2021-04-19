@@ -21,6 +21,7 @@ class GameStateDto:
         power_consumption_second_wheel: float,
         power_consumption_third_wheel: float,
         power_consumption_fourth_wheel: float,
+        resistance_value: int,
     ):
         self._puck_colors: List[str] = puck_colors
         self._current_puck: str = current_puck
@@ -37,6 +38,7 @@ class GameStateDto:
         self._power_consumption_second_wheel = power_consumption_second_wheel
         self._power_consumption_third_wheel = power_consumption_third_wheel
         self._power_consumption_fourth_wheel = power_consumption_fourth_wheel
+        self._resistance_value = resistance_value
 
     def __repr__(self):
         return f"{self._robot_position}"

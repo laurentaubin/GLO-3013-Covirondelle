@@ -12,6 +12,7 @@ from domain.StartingZoneCorner import StartingZoneCorner
 from domain.game.GameState import GameState
 from domain.game.Stage import Stage
 from domain.pathfinding.Path import Path
+from domain.resistance.Resistance import Resistance
 
 
 class GameStateDtoAssembler:
@@ -27,6 +28,7 @@ class GameStateDtoAssembler:
     NO_POWER_CONSUMPTION_SECOND_WHEEL: float = 0.0
     NO_POWER_CONSUMPTION_THIRD_WHEEL: float = 0.0
     NO_POWER_CONSUMPTION_FOURTH_WHEEL: float = 0.0
+    NO_RESISTANCE_VALUE: int = 0
 
     def assemble_from_game_state(self, game_state: GameState):
         puck_colors = self._get_puck_colors(game_state.get_puck_colors())
@@ -62,6 +64,7 @@ class GameStateDtoAssembler:
         power_consumption_fourth_wheel = self._get_power_consumption_fourth_wheel(
             game_state.get_power_consumption_fourth_wheel()
         )
+        resistance_value = self._get_resistance_value(game_state.get_resistance_value())
         return GameStateDto(
             puck_colors,
             current_puck,
@@ -78,6 +81,7 @@ class GameStateDtoAssembler:
             power_consumption_second_wheel,
             power_consumption_third_wheel,
             power_consumption_fourth_wheel,
+            resistance_value,
         )
 
     def _get_puck_colors(self, puck_colors: List[Color]) -> List[str]:
@@ -183,4 +187,11 @@ class GameStateDtoAssembler:
             power_consumption_fourth_wheel
             if power_consumption_fourth_wheel is not None
             else self.NO_POWER_CONSUMPTION_FIRST_WHEEL
+        )
+
+    def _get_resistance_value(self, resistance_value: int) -> int:
+        return (
+            resistance_value
+            if resistance_value is not None
+            else self.NO_RESISTANCE_VALUE
         )
