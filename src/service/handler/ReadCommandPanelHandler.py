@@ -50,7 +50,7 @@ class ReadCommandPanelHandler(IStageHandler):
             and command.get_payload() == Stage.READ_COMMAND_PANEL
         ):
             self._send_confirmation_to_station(
-                Topic.START_CYCLE, Stage.READ_COMMAND_PANEL
+                Topic.START_STAGE, Stage.READ_COMMAND_PANEL
             )
 
         elif topic == Topic.MOVEMENTS:
@@ -115,7 +115,7 @@ class ReadCommandPanelHandler(IStageHandler):
         self._move_to_the_right_until_can_read_all_nine_letters()
 
     def _move_to_the_left(self):
-        self._movement_service.move([Movement(Direction.LEFT, Distance(0.40))])
+        self._movement_service.move([Movement(Direction.LEFT, Distance(0.20))])
 
     def _move_to_the_right_until_can_read_all_nine_letters(self):
         while True:
