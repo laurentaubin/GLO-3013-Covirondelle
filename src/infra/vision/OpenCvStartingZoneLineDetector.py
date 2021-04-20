@@ -38,7 +38,7 @@ class OpenCvStartingZoneLineDetector(IStartingZoneLineDetector):
         return max(contours, key=cv2.contourArea)
 
     def _cut_image(self, image: np.ndarray) -> np.ndarray:
-        return image[320:, :]
+        return image[320:370, :]
 
 
 if __name__ == "__main__":

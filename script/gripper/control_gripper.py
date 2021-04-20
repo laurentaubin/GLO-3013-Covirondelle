@@ -45,10 +45,6 @@ if __name__ == "__main__":
     input("Press Enter to start test")
     gripper_service.close_gripper()
 
-    print("-------------- Open gripper test ----------------")
-    input("Press Enter to start test")
-    gripper_service.open_gripper()
-
     print("-------------- Move gripper up test ----------------")
     input("Press Enter to start test")
     gripper_service.elevate_gripper()
@@ -56,3 +52,7 @@ if __name__ == "__main__":
     print("-------------- Move gripper down test ----------------")
     input("Press Enter to start test")
     gripper_service.lower_gripper()
+
+    print("-------------- Open gripper test ----------------")
+    input("Press Enter to start test")
+    gripper_service.open_gripper()
