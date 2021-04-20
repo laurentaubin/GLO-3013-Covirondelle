@@ -69,7 +69,7 @@ class TransportPuckHandler(IStageHandler):
 
     def _go_to_starting_zone_center(self):
         # TODO Maybe get this out of here to now look clanky at the beginning of the stage
-        self._rotation_service.rotate(CardinalOrientation.WEST.value)
+        self._rotation_service.rotate(CardinalOrientation.EAST.value)
         robot_pose = self._find_robot_pose()
         movements_to_starting_zone = self._find_movements_to_starting_zone(robot_pose)
         self._move_robot(movements_to_starting_zone)
