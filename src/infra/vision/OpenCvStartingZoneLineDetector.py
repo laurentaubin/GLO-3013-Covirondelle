@@ -16,11 +16,8 @@ class OpenCvStartingZoneLineDetector(IStartingZoneLineDetector):
         image = self._cut_image(image)
         hsv_image = self._prepare_mask(image)
         contour = self._find_line_contour(hsv_image)
-        moments = cv2.moments(contour)
-        cx, cy = int(moments["m10"] / moments["m00"]), int(
-            moments["m01"] / moments["m00"]
-        )
-        return Position(int(cx), int(cy) + 320)
+        (x, y), _ = cv2.minEnclosingCircle(contour)
+        return Position(int(x), int(y) + 320)
 
     def _prepare_mask(self, image: np.ndarray):
         hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
