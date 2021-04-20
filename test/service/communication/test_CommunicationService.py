@@ -17,6 +17,9 @@ A_POWER_CONSUMPTION_SECOND_WHEEL = 5.0
 A_POWER_CONSUMPTION_THIRD_WHEEL = 5.0
 A_POWER_CONSUMPTION_FOURTH_WHEEL = 5.0
 
+A_BATTERY_TIME_LEFT = 9999.444
+A_BATTERY_PERCENTAGE = 99.9959595
+
 
 class TestCommunicationService(TestCase):
     A_MESSAGE = Message(Topic.READ_RESISTANCE, False)
@@ -65,7 +68,7 @@ class TestCommunicationService(TestCase):
     ):
         self.robot_information.get_current_consumption.return_value = A_CURRENT_VALUE
         self.communication_service.send_current_consumption()
-        self.pub_sub_connector.publish_current_consumption.assert_called_with(
+        self.pub_sub_connector.publish_battery_consumption.assert_called_with(
             A_CURRENT_VALUE
         )
 
@@ -130,4 +133,24 @@ class TestCommunicationService(TestCase):
 
         self.pub_sub_connector.publish_power_consumption_fourth_wheel.assert_called_with(
             A_POWER_CONSUMPTION_FOURTH_WHEEL
+        )
+
+    def test_givenBatteryTimeLeftReturnedByRobotInformation_whenSendBatteryTimeLeft_thenPublishBatteryTimeLeft(
+        self,
+    ):
+        self.robot_information.get_battery_time_left.return_value = A_BATTERY_TIME_LEFT
+        self.communication_service.send_battery_time_left()
+        self.pub_sub_connector.publish_battery_time_left.assert_called_with(
+            A_BATTERY_TIME_LEFT
+        )
+
+    def test_givenBatteryPercentageReturnedByRobotInformation_whenSendBatteryPercentage_thenPublishBatteryBatteryPercentage(
+        self,
+    ):
+        self.robot_information.get_battery_percentage.return_value = (
+            A_BATTERY_PERCENTAGE
+        )
+        self.communication_service.send_battery_percentage()
+        self.pub_sub_connector.publish_battery_percentage.assert_called_with(
+            A_BATTERY_PERCENTAGE
         )

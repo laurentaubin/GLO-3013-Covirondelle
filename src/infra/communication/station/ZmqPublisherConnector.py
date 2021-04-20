@@ -35,25 +35,33 @@ class ZmqPublisherConnector(IPublisherConnector):
         self._ping_socket.send_string("%s %s" % (topic, str(battery_consumption)))
 
     def publish_power_consumption_first_wheel(self, power_consumption_first_wheel):
-        topic = "power_consumption_first_wheel"
+        topic = "first_wheel_power_consumption"
         self._ping_socket.send_string(
             "%s %s" % (topic, str(power_consumption_first_wheel))
         )
 
     def publish_power_consumption_second_wheel(self, power_consumption_second_wheel):
-        topic = "power_consumption_second_wheel"
+        topic = "second_wheel_power_consumption"
         self._ping_socket.send_string(
             "%s %s" % (topic, str(power_consumption_second_wheel))
         )
 
     def publish_power_consumption_third_wheel(self, power_consumption_third_wheel):
-        topic = "power_consumption_third_wheel"
+        topic = "third_wheel_power_consumption"
         self._ping_socket.send_string(
             "%s %s" % (topic, str(power_consumption_third_wheel))
         )
 
     def publish_power_consumption_fourth_wheel(self, power_consumption_fourth_wheel):
-        topic = "power_consumption_fourth_wheel"
+        topic = "fourth_wheel_power_consumption"
         self._ping_socket.send_string(
             "%s %s" % (topic, str(power_consumption_fourth_wheel))
         )
+
+    def publish_battery_time_left(self, battery_time_left):
+        topic = "battery_time_left"
+        self._ping_socket.send_string("%s %s" % (topic, str(battery_time_left)))
+
+    def publish_battery_percentage(self, battery_percentage):
+        topic = "battery_percentage"
+        self._ping_socket.send_string("%s %s" % (topic, str(battery_percentage)))
