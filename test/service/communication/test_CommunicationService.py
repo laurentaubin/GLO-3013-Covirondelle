@@ -56,7 +56,7 @@ class TestCommunicationService(TestCase):
     def test_givenGripperStatusSentByRobot_whenReceiveGripperStatus_thenGripperStatusIsReturned(
         self,
     ):
-        expected_gripper_status = "GripperStatus.HAS_PUCK"
+        expected_gripper_status = 1
         self.robot_update_connector.read_topic.return_value = expected_gripper_status
 
         actual_gripper_status = self.communication_service.receive_gripper_status()
@@ -136,7 +136,7 @@ class TestCommunicationService(TestCase):
         self.communication_service.receive_power_consumption_first_wheel()
 
         self.robot_update_connector.read_topic.assert_called_with(
-            "power_consumption_first_wheel"
+            "first_wheel_power_consumption"
         )
 
     def test_givenPowerConsumptionFirstWheelSentByRobot_whenReceivePowerConsumptionFirstWheel_thenPowerConsumptionFirstWheelIsReturned(
@@ -160,7 +160,7 @@ class TestCommunicationService(TestCase):
         self.communication_service.receive_power_consumption_second_wheel()
 
         self.robot_update_connector.read_topic.assert_called_with(
-            "power_consumption_second_wheel"
+            "second_wheel_power_consumption"
         )
 
     def test_givenPowerConsumptionSecondWheelSentByRobot_whenReceivePowerConsumptionSecondWheel_thenPowerConsumptionSecondWheelIsReturned(
@@ -185,7 +185,7 @@ class TestCommunicationService(TestCase):
         self.communication_service.receive_power_consumption_third_wheel()
 
         self.robot_update_connector.read_topic.assert_called_with(
-            "power_consumption_third_wheel"
+            "third_wheel_power_consumption"
         )
 
     def test_givenPowerConsumptionThirdWheelSentByRobot_whenReceivePowerConsumptionThirdWheel_thenPowerConsumptionThirdWheelIsReturned(
@@ -209,7 +209,7 @@ class TestCommunicationService(TestCase):
         self.communication_service.receive_power_consumption_fourth_wheel()
 
         self.robot_update_connector.read_topic.assert_called_with(
-            "power_consumption_fourth_wheel"
+            "fourth_wheel_power_consumption"
         )
 
     def test_givenPowerConsumptionFourthWheelSentByRobot_whenReceivePowerConsumptionFourthWheel_thenPowerConsumptionFourthWheelIsReturned(

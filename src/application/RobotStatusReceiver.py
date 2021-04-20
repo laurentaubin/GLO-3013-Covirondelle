@@ -1,3 +1,5 @@
+import time
+
 from domain.game.GameState import GameState
 from service.communication.CommunicationService import CommunicationService
 
@@ -10,9 +12,6 @@ class RobotStatusReceiver:
         while True:
             gripper_state = self.communication_service.receive_gripper_status()
             GameState.get_instance().set_gripper_state(gripper_state)
-            battery_consumption = (
-                self.communication_service.receive_battery_consumption()
-            )
             battery_time_left = self.communication_service.receive_battery_time_left()
             battery_percentage = self.communication_service.receive_battery_percentage()
             power_consumption_first_wheel = (
@@ -27,9 +26,8 @@ class RobotStatusReceiver:
             power_consumption_fourth_wheel = (
                 self.communication_service.receive_power_consumption_fourth_wheel()
             )
-            GameState.get_instance().set_battery_consumption(battery_consumption)
             power_consumption = self.communication_service.receive_power_consumption()
-            GameState.get_instance().set_power_consumption(power_consumption)
+            GameState.get_instance().set_battery_consumption(power_consumption)
             GameState.get_instance().set_battery_time_left(battery_time_left)
             GameState.get_instance().set_battery_percentage(battery_percentage)
             GameState.get_instance().set_power_consumption_first_wheel(
@@ -44,3 +42,4 @@ class RobotStatusReceiver:
             GameState.get_instance().set_power_consumption_fourth_wheel(
                 power_consumption_fourth_wheel
             )
+            time.sleep(1)

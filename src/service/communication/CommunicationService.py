@@ -30,7 +30,10 @@ class CommunicationService:
         return self._game_cycle_connector.receive_object()
 
     def receive_gripper_status(self) -> GripperStatus:
-        return self._robot_status_update_connector.read_topic("gripper_status")
+        gripper_status = self._robot_status_update_connector.read_topic(
+            "gripper_status"
+        )
+        return GripperStatus.valueOf(gripper_status)
 
     def receive_power_consumption(self) -> float:
         return self._robot_status_update_connector.read_topic("power_consumption")
@@ -46,20 +49,20 @@ class CommunicationService:
 
     def receive_power_consumption_first_wheel(self) -> float:
         return self._robot_status_update_connector.read_topic(
-            "power_consumption_first_wheel"
+            "first_wheel_power_consumption"
         )
 
     def receive_power_consumption_second_wheel(self) -> float:
         return self._robot_status_update_connector.read_topic(
-            "power_consumption_second_wheel"
+            "second_wheel_power_consumption"
         )
 
     def receive_power_consumption_third_wheel(self) -> float:
         return self._robot_status_update_connector.read_topic(
-            "power_consumption_third_wheel"
+            "third_wheel_power_consumption"
         )
 
     def receive_power_consumption_fourth_wheel(self) -> float:
         return self._robot_status_update_connector.read_topic(
-            "power_consumption_fourth_wheel"
+            "fourth_wheel_power_consumption"
         )
