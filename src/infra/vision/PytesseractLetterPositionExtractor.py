@@ -18,7 +18,7 @@ class PytesseractLetterPositionExtractor(ILetterPositionExtractor):
         pytesseract.pytesseract.tesseract_cmd = TESSERACT_LOCATION
         custom_config = "--oem 3 --psm 11 -c tessedit_char_whitelist=ABCD"
 
-        img = cv2.resize(command_panel_image, None, fx=0.7, fy=0.7)
+        img = cv2.resize(command_panel_image, None, fx=0.5, fy=0.5)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         adaptive_threshold = cv2.adaptiveThreshold(
             gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 91, 11

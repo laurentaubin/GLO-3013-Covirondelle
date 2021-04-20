@@ -13,7 +13,7 @@ class Color(Enum):
     GREY = 8, ([20, 4, 0], [47, 141, 133])
     WHITE = 9, ([0, 0, 157], [172, 111, 255])
     NONE = 10, ([0, 0, 0], [0, 0, 0])
-    STARTING_ZONE = 11, ([58, 110, 5], [86, 255, 255])
+    STARTING_ZONE = 11, ([30, 0, 0], [80, 240, 114])
     INTERIOR_BLUE = 12, ([77, 0, 124], [94, 255, 255])
 
     def __init__(self, resistance_digit: int, *hsv_bounds):

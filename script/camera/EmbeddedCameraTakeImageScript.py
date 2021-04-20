@@ -1,5 +1,7 @@
 import cv2
 
+from infra.vision.OpenCvStartingZoneLineDetector import OpenCvStartingZoneLineDetector
+
 CAMERA_INDEX = 1
 EMBEDDED_CAMERA_IMAGE_SIZE = (640, 480)
 
@@ -31,13 +33,27 @@ class OpenCvEmbeddedCamera:
 
 
 if __name__ == "__main__":
-    camera = OpenCvEmbeddedCamera(CAMERA_INDEX)
+    camera = OpenCvEmbeddedCamera(0)
+    line_detector = OpenCvStartingZoneLineDetector()
     should_continue = True
     images = []
 
     while should_continue:
         image = camera.take_image()
+        position = line_detector.detect(image)
+        cv2.circle(
+            image,
+            (
+                int(position.get_x_coordinate()),
+                int(position.get_y_coordinate()),
+            ),
+            20,
+            (0, 255, 0),
+            2,
+        )
+        print(position)
         cv2.imshow("image", image)
+
         k = cv2.waitKey(33)
         if k == 27:  # Esc key to stop
             break
