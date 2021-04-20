@@ -68,7 +68,7 @@ class TestCommunicationService(TestCase):
     ):
         self.robot_information.get_current_consumption.return_value = A_CURRENT_VALUE
         self.communication_service.send_current_consumption()
-        self.pub_sub_connector.publish_current_consumption.assert_called_with(
+        self.pub_sub_connector.publish_battery_consumption.assert_called_with(
             A_CURRENT_VALUE
         )
 

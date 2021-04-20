@@ -1,3 +1,5 @@
+from unittest.mock import MagicMock
+
 from application.ApplicationServer import ApplicationServer
 from application.CommunicationRunner import CommunicationRunner
 from config.config import (
@@ -100,6 +102,8 @@ class RobotContext:
 
         if not self._local_flag:
             self._serial = ThreadSafeSerial(STM_PORT_NAME, STM_BAUD_RATE)
+        else:
+            self._serial = MagicMock()
 
         movement_command_factory = MovementCommandFactory(
             Speed(ROBOT_MAXIMUM_SPEED),

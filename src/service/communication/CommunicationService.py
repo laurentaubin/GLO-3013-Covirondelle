@@ -37,7 +37,7 @@ class CommunicationService:
 
     def send_current_consumption(self):
         current_consumption = self._robot_information.get_current_consumption()
-        self._robot_status_publisher.publish_current_consumption(current_consumption)
+        self._robot_status_publisher.publish_battery_consumption(current_consumption)
 
     def send_power_consumption(self):
         power_consumption = self._robot_information.get_power_consumption()
