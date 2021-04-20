@@ -90,9 +90,7 @@ class TestVisionService(TestCase):
 
         self.vision_service.create_game_table()
 
-        self.maze_factory.create_from_shape_and_obstacles.assert_called_with(
-            self.AN_IMAGE_SHAPE, self.A_POSITION_LIST
-        )
+        self.maze_factory.create_from_shape_and_obstacles_and_pucks_as_obstacles.assert_called()
 
     def test_whenGetVisionState_thenTableImageIsTaken(self):
         self.vision_service.get_vision_state()

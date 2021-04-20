@@ -52,55 +52,55 @@ if __name__ == "__main__":
 
     while should_continue:
         image = camera.take_world_image()
-        # try:
-        #     robot_position: RobotPose = robot_detector.detect(image)
-        #     cv2.circle(
-        #         image,
-        #         robot_position.get_position().to_tuple(),
-        #         15,
-        #         (0, 255, 0),
-        #         10,
-        #     )
-        # except RobotNotFoundException:
-        #     pass
-        # try:
-        #     obstacle_positions: List[Position] = obstacle_detector.detect(image)
-        #     for obstacle_position in obstacle_positions:
-        #         print(obstacle_position)
-        #         cv2.circle(
-        #             image,
-        #             obstacle_position.to_tuple(),
-        #             15,
-        #             (0, 0, 255),
-        #             10,
-        #         )
-        # except ObstacleNotFoundException:
-        #     print("Robot not found")
-        #     pass
-
-        for color in Color:
-            if color is Color.NONE:
-                continue
-            position = detector.detect(image, color)
+        try:
+            robot_position: RobotPose = robot_detector.detect(image)
             cv2.circle(
                 image,
-                position.to_tuple(),
-                22,
+                robot_position.get_position().to_tuple(),
+                15,
                 (0, 255, 0),
-                1,
-            )
-            text_position = (
-                position.get_x_coordinate() - 15,
-                position.get_y_coordinate() - 40,
-            )
-            cv2.putText(
-                image,
-                color.name,
-                text_position,
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.3,
                 10,
             )
+        except RobotNotFoundException:
+            pass
+        try:
+            obstacle_positions: List[Position] = obstacle_detector.detect(image)
+            for obstacle_position in obstacle_positions:
+                print(obstacle_position)
+                cv2.circle(
+                    image,
+                    obstacle_position.to_tuple(),
+                    40,
+                    (0, 0, 255),
+                    10,
+                )
+        except ObstacleNotFoundException:
+            print("Robot not found")
+            pass
+
+        # for color in Color:
+        #     if color is Color.NONE:
+        #         continue
+        #     position = detector.detect(image, color)
+        #     cv2.circle(
+        #         image,
+        #         position.to_tuple(),
+        #         22,
+        #         (0, 255, 0),
+        #         1,
+        #     )
+        #     text_position = (
+        #         position.get_x_coordinate() - 15,
+        #         position.get_y_coordinate() - 40,
+        #     )
+        #     cv2.putText(
+        #         image,
+        #         color.name,
+        #         text_position,
+        #         cv2.FONT_HERSHEY_SIMPLEX,
+        #         0.3,
+        #         10,
+        #     )
 
         cv2.imshow("image", image)
         k = cv2.waitKey(1)

@@ -5,6 +5,9 @@ class Resistance:
     def __init__(self, resistance_value: int) -> None:
         self._resistance_value = resistance_value
 
+    def get_value(self) -> int:
+        return self._resistance_value
+
     def get_colors(self) -> {Color, Color, Color}:
 
         first_digit = self._find_nth_digit(0)

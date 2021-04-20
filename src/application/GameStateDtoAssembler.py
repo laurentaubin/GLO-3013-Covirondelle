@@ -86,13 +86,13 @@ class GameStateDtoAssembler:
 
     def _get_puck_colors(self, puck_colors: List[Color]) -> List[str]:
         return (
-            [puck_color.value for puck_color in puck_colors]
+            [puck_color.name for puck_color in puck_colors]
             if puck_colors is not None
             else self.EMPTY_ARRAY
         )
 
     def _get_current_colors(self, current_puck: Color) -> str:
-        return current_puck.value if current_puck is not None else self.EMPTY_ARRAY
+        return current_puck.name if current_puck is not None else self.EMPTY_ARRAY
 
     def _get_current_stage(self, current_stage: Stage) -> str:
         return (
@@ -189,9 +189,9 @@ class GameStateDtoAssembler:
             else self.NO_POWER_CONSUMPTION_FIRST_WHEEL
         )
 
-    def _get_resistance_value(self, resistance_value: int) -> int:
+    def _get_resistance_value(self, resistance_value: Resistance) -> int:
         return (
-            resistance_value
+            resistance_value.get_value()
             if resistance_value is not None
             else self.NO_RESISTANCE_VALUE
         )

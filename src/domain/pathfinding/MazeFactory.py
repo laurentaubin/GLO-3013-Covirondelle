@@ -3,6 +3,7 @@ from typing import Tuple, List
 import numpy as np
 
 from domain.Position import Position
+from domain.Puck import Puck
 from domain.pathfinding.Maze import Maze
 
 
@@ -28,4 +29,17 @@ class MazeFactory:
         for obstacle in obstacles:
             maze.add_obstacle(obstacle, self._robot_radius, self._obstacle_radius)
 
+        return maze
+
+    def create_from_shape_and_obstacles_and_pucks_as_obstacles(
+        self,
+        shape: Tuple[int, int, int],
+        obstacles: List[Position],
+        pucks: List[Puck],
+    ):
+        maze = self.create_from_shape(shape)
+        for obstacle in obstacles:
+            maze.add_obstacle(obstacle, self._robot_radius, self._obstacle_radius)
+        for puck in pucks:
+            maze.add_puck_as_obstacle(puck.get_position())
         return maze

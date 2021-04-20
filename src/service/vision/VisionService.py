@@ -46,8 +46,8 @@ class VisionService:
         table_image = self._world_camera.take_world_image()
 
         starting_zone = self._find_starting_zone(table_image)
-        maze = self._create_maze()
         pucks = self._detect_pucks(table_image)
+        maze = self._create_maze(pucks)
 
         return GameTable(starting_zone, maze, self._puck_zone_center, pucks)
 
@@ -64,7 +64,7 @@ class VisionService:
     def _find_starting_zone(self, table_image) -> StartingZone:
         return self._starting_zone_corner_detector.detect(table_image)
 
-    def _create_maze(self) -> Maze:
+    def _create_maze(self, pucks: List[Puck]) -> Maze:
         obstacles_on_table = []
         while True:
             try:
@@ -73,8 +73,10 @@ class VisionService:
                 break
             except ObstacleNotFoundException:
                 pass
-        return self._maze_factory.create_from_shape_and_obstacles(
-            image.shape, obstacles_on_table
+        return (
+            self._maze_factory.create_from_shape_and_obstacles_and_pucks_as_obstacles(
+                image.shape, obstacles_on_table, pucks
+            )
         )
 
     def _find_robot_position(self, image) -> RobotPose:

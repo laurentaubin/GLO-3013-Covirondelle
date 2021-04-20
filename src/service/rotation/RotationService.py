@@ -5,6 +5,7 @@ from domain.Position import Position
 from domain.RobotPose import RobotPose
 from domain.communication.Message import Message
 from domain.game.Topic import Topic
+from domain.vision.exception.RobotNotFoundException import RobotNotFoundException
 from infra.utils.GeometryUtils import GeometryUtils
 from service.communication.CommunicationService import CommunicationService
 from service.vision.VisionService import VisionService
@@ -20,7 +21,11 @@ class RotationService:
     def rotate(self, desired_orientation: Orientation):
         while True:
             time.sleep(0.5)
-            _, robot_pose = self._vision_service.get_vision_state()
+            robot_pose = None
+            try:
+                _, robot_pose = self._vision_service.get_vision_state()
+            except RobotNotFoundException:
+                continue
             orientation_to_send = (
                 robot_pose.get_orientation_in_degree() - desired_orientation
             )

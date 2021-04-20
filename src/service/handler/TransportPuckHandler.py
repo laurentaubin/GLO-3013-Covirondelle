@@ -69,7 +69,7 @@ class TransportPuckHandler(IStageHandler):
 
     def _go_to_starting_zone_center(self):
         # TODO Maybe get this out of here to now look clanky at the beginning of the stage
-        self._rotation_service.rotate(CardinalOrientation.EAST.value)
+        self._rotation_service.rotate(CardinalOrientation.WEST.value)
         robot_pose = self._find_robot_pose()
         movements_to_starting_zone = self._find_movements_to_starting_zone(robot_pose)
         self._move_robot(movements_to_starting_zone)
@@ -82,12 +82,6 @@ class TransportPuckHandler(IStageHandler):
 
     def _grab_puck(self, puck):
         puck_position = puck.get_position()
-        if puck.get_color() == Color.RED:
-            puck_position = Position(573, 198)
-        # elif puck.get_color() == Color.PURPLE:
-        #     puck_position = Position(571, 271)
-        # elif puck.get_color() == Color.YELLOW:
-        #     puck_position = Position(410, 350)
         robot_pose = self._find_robot_pose()
         orientation_to_puck = self._find_orientation_to_puck(puck_position, robot_pose)
         self._rotation_service.rotate(orientation_to_puck)
@@ -205,7 +199,7 @@ class TransportPuckHandler(IStageHandler):
     def _go_forward_a_bit(self):
         movements = [
             Movement(
-                Direction.FORWARD, Distance(0.2, unit_of_measure=UnitOfMeasure.METER)
+                Direction.FORWARD, Distance(0.25, unit_of_measure=UnitOfMeasure.METER)
             )
         ]
         self._move_robot(movements)

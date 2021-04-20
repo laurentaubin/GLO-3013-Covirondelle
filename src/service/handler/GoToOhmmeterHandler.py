@@ -114,12 +114,14 @@ class GoToOhmmeterHandler(IStageHandler):
 
     def _return_to_starting_zone_from_resistance(self):
         # TODO Maybe get this out of here to now look clanky at the beginning of the stage
-        movements_to_starting_zone = [
-            Movement(
-                Direction.FORWARD, Distance(0.45, unit_of_measure=UnitOfMeasure.METER)
-            ),
-            Movement(
-                Direction.RIGHT, Distance(0.35, unit_of_measure=UnitOfMeasure.METER)
-            ),
-        ]
-        self._move_robot(movements_to_starting_zone)
+
+        robot_pose = GameState.get_instance().get_robot_pose()
+        path = self._path_service.find_path_to_starting_zone_center(
+            robot_pose.get_position()
+        )
+
+        GameState.get_instance().set_current_planned_trajectory(path)
+        movements = self._movement_factory.create_movements(
+            path, robot_pose.get_orientation_in_degree()
+        )
+        self._move_robot(movements)

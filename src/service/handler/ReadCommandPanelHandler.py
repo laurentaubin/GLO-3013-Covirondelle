@@ -32,13 +32,14 @@ class FindCommandPanelHandler(IStageHandler):
     def execute(self):
         self._start_stage()
         self._go_to_puck_zone()
+        self._go_to_puck_zone()
         self._analyze_command_panel()
         self._end_stage()
 
     def _start_stage(self):
         GameState.get_instance().set_current_stage(Stage.READ_COMMAND_PANEL)
-        self._send_command_to_robot(Topic.START_CYCLE, Stage.READ_COMMAND_PANEL)
-        self._wait_for_robot_confirmation(Topic.START_CYCLE)
+        self._send_command_to_robot(Topic.START_STAGE, Stage.READ_COMMAND_PANEL)
+        self._wait_for_robot_confirmation(Topic.START_STAGE)
 
     def _rotate_robot(self, wanted_orientation: Orientation):
         self._rotation_service.rotate(wanted_orientation)
