@@ -87,7 +87,7 @@ class TransportPuckHandler(IStageHandler):
         time.sleep(0.2)
         self._open_gripper()
         self._align_with_puck(puck_color)
-
+        print("Closing gripper")
         self._gripper_service.close_gripper()
         time.sleep(1)
         self._gripper_service.elevate_gripper()
@@ -170,6 +170,7 @@ class TransportPuckHandler(IStageHandler):
                     )
                 )
                 if vertical_movement_command.get_direction() == Direction.STOP:
+                    time.sleep(1.5)
                     self._movement_service.execute_movement_command(
                         vertical_movement_command
                     )

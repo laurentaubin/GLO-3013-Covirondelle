@@ -52,7 +52,6 @@ from domain.movement.CommandDuration import CommandDuration
 from domain.movement.MovementCommandFactory import MovementCommandFactory
 from domain.movement.Speed import Speed
 from domain.resistance.IOhmmeter import IOhmmeter
-from domain.vision.IPuckDetector import IPuckDetector
 from domain.vision.IStartingZoneLineDetector import IStartingZoneLineDetector
 from infra.IServoController import IServoController
 from infra.MaestroController import MaestroController
@@ -80,6 +79,7 @@ from infra.vision.OpenCvStartingZoneLineDetector import OpenCvStartingZoneLineDe
 from infra.vision.PytesseractLetterPositionExtractor import (
     PytesseractLetterPositionExtractor,
 )
+from infra.vision.TemplateMatchingPuckDetector import TemplateMatchingPuckDetector
 from service.communication.CommunicationService import CommunicationService
 from service.game.StageHandlerSelector import StageHandlerSelector
 from service.game.StageService import StageService
@@ -231,9 +231,7 @@ class RobotContext:
         starting_zone_corner_corrector = CornerAlignmentCorrector(
             OpenCvCornerDetector(), starting_zone_corner_position
         )
-        puck_alignment_corrector = self._create_puck_alignment_corrector(
-            OpenCvPuckDetector()
-        )
+        puck_alignment_corrector = self._create_puck_alignment_corrector()
         transport_puck_handler = TransportPuckHandler(
             self._communication_service,
             self._vision_service,
@@ -311,7 +309,7 @@ class RobotContext:
         maestro.setAccel(channel_id, SERVO_ACCELERATION)
 
     def _create_puck_alignment_corrector(
-        self, puck_detector: IPuckDetector
+        self,
     ) -> PuckAlignmentCorrector:
         puck_correctly_placed_position = Position(
             PUCK_ALIGNMENT_X_CENTER_POSITION, PUCK_ALIGNMENT_Y_CENTER_POSITION
@@ -320,7 +318,8 @@ class RobotContext:
             puck_correctly_placed_position,
             PUCK_ALIGNMENT_HORIZONTAL_THRESHOLD,
             PUCK_ALIGNMENT_UP_THRESHOLD,
-            puck_detector,
+            OpenCvPuckDetector(),
+            TemplateMatchingPuckDetector(),
         )
 
     def _create_ohmmeter_alignment_corrector(

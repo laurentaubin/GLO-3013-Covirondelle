@@ -17,7 +17,7 @@ class TestOpenCvPuckDetector(TestCase):
     def test_givenAnImage_whenDetectBluePuck_thenReturnTheCenterPositionOfTheBluePuck(
         self,
     ):
-        expected_position = Position(115, 277)
+        expected_position = Position(114, 277)
 
         actual_position = self.puck_detector.detect(
             self.AN_IMAGE_WITH_BLUE_PUCK, Color.BLUE

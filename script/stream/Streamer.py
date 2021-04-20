@@ -6,8 +6,6 @@ from unittest.mock import MagicMock
 import cv2
 import imagezmq
 
-from config.config import CAMERA_INDEX
-from domain.vision.exception.PuckNotFoundException import PuckNotFoundException
 from infra.camera.OpenCvEmbeddedCamera import OpenCvEmbeddedCamera
 from infra.vision.OpenCvCornerDetector import OpenCvCornerDetector
 from infra.vision.OpenCvPuckDetector import OpenCvPuckDetector
@@ -29,22 +27,16 @@ if __name__ == "__main__":
     corner_detector = OpenCvCornerDetector()
     line_detector = OpenCvStartingZoneLineDetector()
     camera = OpenCvEmbeddedCamera(
-        CAMERA_INDEX,
-        MagicMock(),
-        MagicMock(),
-        MagicMock(),
-        MagicMock(),
-        MagicMock(),
+        0, MagicMock(), MagicMock(), MagicMock(), MagicMock(), MagicMock()
     )
-
     rpi_name = socket.gethostname()
+
     while True:
         image = camera.take_image()
         try:
             # letters = command_panel_letters_extractor.extract_letters_from_image(
             #     image
             # )
-            # position = corner_detector.detect_inferior_corner(image)
             position = line_detector.detect(image)
             cv2.circle(
                 image,
@@ -52,13 +44,13 @@ if __name__ == "__main__":
                     int(position.get_x_coordinate()),
                     int(position.get_y_coordinate()),
                 ),
-                50,
+                20,
                 (0, 255, 0),
                 2,
             )
             print(position)
-        except PuckNotFoundException:
-            print("puck not found")
+        except Exception:
+            print("not found")
             pass
         print("sending")
         sender.send_image(rpi_name, image)

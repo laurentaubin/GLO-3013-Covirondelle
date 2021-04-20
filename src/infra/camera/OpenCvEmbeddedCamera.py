@@ -47,10 +47,10 @@ class OpenCvEmbeddedCamera(IEmbeddedCamera):
 
     def _open_capture(self):
         capture = cv2.VideoCapture(self._camera_index)
-        capture.set(cv2.CAP_PROP_BRIGHTNESS, 100)
-        capture.set(cv2.CAP_PROP_CONTRAST, 20)
-        capture.set(cv2.CAP_PROP_SATURATION, 30)
         capture.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+        capture.set(cv2.CAP_PROP_BRIGHTNESS, 100)
+        capture.set(cv2.CAP_PROP_SATURATION, 30)
+        capture.set(cv2.CAP_PROP_CONTRAST, 20)
         capture.set(cv2.CAP_PROP_FRAME_WIDTH, EMBEDDED_CAMERA_IMAGE_SIZE[0])
         capture.set(cv2.CAP_PROP_FRAME_HEIGHT, EMBEDDED_CAMERA_IMAGE_SIZE[1])
         return capture
