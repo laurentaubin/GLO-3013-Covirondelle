@@ -35,7 +35,7 @@ class StopHandler(IStageHandler):
         topic = command.get_topic()
 
         if topic == Topic.START_STAGE:
-            self._send_confirmation_to_station(Topic.START_STAGE, Stage.TRANSPORT_PUCK)
+            self._send_confirmation_to_station(Topic.START_STAGE, Stage.STOP)
 
         elif topic == Topic.MOVEMENTS:
             self._move(command.get_payload())
@@ -50,9 +50,7 @@ class StopHandler(IStageHandler):
             self._send_confirmation_to_station(Topic.TURN_LED_ON, Stage.STAGE_COMPLETED)
 
         elif topic == Topic.STAGE_COMPLETED:
-            self._send_confirmation_to_station(
-                Topic.STAGE_COMPLETED, Stage.TRANSPORT_PUCK
-            )
+            self._send_confirmation_to_station(Topic.STAGE_COMPLETED, Stage.STOP)
             raise StageComplete
 
     def _send_confirmation_to_station(self, command: Topic, payload: Any):
