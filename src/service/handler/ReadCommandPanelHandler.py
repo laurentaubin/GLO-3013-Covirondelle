@@ -88,6 +88,7 @@ class ReadCommandPanelHandler(IStageHandler):
     def _read_command_panel(self, resistance: Resistance):
         self._vision_service.make_camera_look_up()
         self._align_horizontally_with_command_panel()
+        self._vision_service.take_image()
         current_image = self._vision_service.take_image()
         command_panel_letters = (
             self._command_panel_letters_extractor.extract_letters_from_image(
