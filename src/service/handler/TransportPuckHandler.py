@@ -1,6 +1,4 @@
-from config.config import ROBOT_RADIUS
 from domain.CardinalOrientation import CardinalOrientation
-from domain.Color import Color
 from domain.Orientation import Orientation
 from domain.Position import Position
 from domain.Puck import Puck
@@ -60,7 +58,7 @@ class TransportPuckHandler(IStageHandler):
             self._go_to_starting_zone_center()
             self._rotate_robot_towards_corner(starting_zone_corner_index)
             self._go_forward_a_bit()
-            self._drop_puck_on_corner(starting_zone_corner_index)
+            self._drop_puck_on_corner()
             self._add_puck_as_obstacle(starting_zone_corner_index, puck)
             self._go_back_a_bit()
             self._go_to_starting_zone_center()
@@ -81,8 +79,11 @@ class TransportPuckHandler(IStageHandler):
         movements_to_puck_zone = self._find_movements_to_puck_zone(robot_pose)
         self._move_robot(movements_to_puck_zone)
 
-    def _grab_puck(self, puck):
+    def _grab_puck(self, puck: Puck):
         puck_position = puck.get_position()
+        if self._puck_is_close_to_center_middle(puck):
+            self._move_robot([Movement(Direction.BACKWARDS, Distance(0.2))])
+
         robot_pose = self._find_robot_pose()
         orientation_to_puck = self._find_orientation_to_puck(puck_position, robot_pose)
         self._rotation_service.rotate(orientation_to_puck)
@@ -115,7 +116,7 @@ class TransportPuckHandler(IStageHandler):
         ]
         self._move_robot(movements_back_to_puck_zone)
 
-    def _drop_puck_on_corner(self, starting_zone_corner_index):
+    def _drop_puck_on_corner(self):
         self._send_command_to_robot(Topic.DROP_PUCK, None)
         self._wait_for_robot_confirmation(Topic.DROP_PUCK)
 
@@ -212,6 +213,9 @@ class TransportPuckHandler(IStageHandler):
             )
         ]
         self._move_robot(movements)
+
+    def _puck_is_close_to_center_middle(self, puck: Puck):
+        return puck.get_position().get_x_coordinate() < 920
 
     def _add_puck_as_obstacle(self, starting_zone_corner_index: int, puck: Puck):
         maze = GameState.get_instance().get_game_table().get_maze()
