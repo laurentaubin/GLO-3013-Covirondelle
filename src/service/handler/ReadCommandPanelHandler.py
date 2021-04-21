@@ -31,8 +31,8 @@ class FindCommandPanelHandler(IStageHandler):
 
     def execute(self):
         self._start_stage()
-        self._go_to_puck_zone()
-        self._go_to_puck_zone()
+        self._go_to_command_panel_zone()
+        self._go_to_command_panel_zone()
         self._analyze_command_panel()
         self._end_stage()
 
@@ -44,14 +44,14 @@ class FindCommandPanelHandler(IStageHandler):
     def _rotate_robot(self, wanted_orientation: Orientation):
         self._rotation_service.rotate(wanted_orientation)
 
-    def _go_to_puck_zone(self):
+    def _go_to_command_panel_zone(self):
         self._rotation_service.rotate(CardinalOrientation.WEST.value)
         robot_pose = GameState.get_instance().get_robot_pose()
-        movements_to_puck_zone = self._find_movements_to_puck_zone(robot_pose)
+        movements_to_puck_zone = self._find_movements_to_command_panel_zone(robot_pose)
         self._move_robot(movements_to_puck_zone)
 
-    def _find_movements_to_puck_zone(self, robot_pose: RobotPose):
-        path = self._path_service.find_path_to_puck_zone_center(
+    def _find_movements_to_command_panel_zone(self, robot_pose: RobotPose):
+        path = self._path_service.find_path_to_command_panel_zone(
             robot_pose.get_position()
         )
         GameState.get_instance().set_current_planned_trajectory(path)
