@@ -23,10 +23,13 @@ class StmRobotInformation(IRobotInformation):
         self.current_consumption_total = current_consumption_total
 
     def get_gripper_status(self) -> GripperStatus:
+        consumptions = list()
         command = bytes([StmCommand.ASK_CURRENT]) + bytes([StmPeripherals.GRIPPER])
-        response = self._serial.write_and_readline(command)
-        current_consumption = response[1:].decode("utf-8")
-        if float(current_consumption) > CURRENT_CONSUMPTION_THRESHOLD:
+        for i in range(10):
+            response = self._serial.write_and_readline(command)
+            consumptions.append(float(response[1:].decode("utf-8")))
+        current_consumption = sum(consumptions) / len(consumptions)
+        if current_consumption > CURRENT_CONSUMPTION_THRESHOLD:
             return GripperStatus.HAS_PUCK
         return GripperStatus.DOESNT_HAVE_PUCK
 
