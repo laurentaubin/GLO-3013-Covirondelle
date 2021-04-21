@@ -3,17 +3,20 @@ import time
 from domain.game.GameState import GameState
 from domain.game.IGameCycle import IGameCycle
 from domain.game.Stage import Stage
+from domain.game.Topic import Topic
+from service.communication.CommunicationService import CommunicationService
 from service.game.StageService import StageService
 
 
 class MasterGameCycle(IGameCycle):
     def __init__(
-        self,
-        stage_service: StageService,
+        self, stage_service: StageService, communication_service: CommunicationService
     ):
         self.stage_service = stage_service
+        self._communication_service = communication_service
 
     def run(self):
+        self._wait_for_robot_boot()
         self._wait_for_input()
 
         print("Start cycle")
@@ -39,3 +42,8 @@ class MasterGameCycle(IGameCycle):
             if game_state.is_game_cycle_started():
                 break
             time.sleep(0.5)
+
+    def _wait_for_robot_boot(self):
+        message = self._communication_service.receive_object()
+        if message.get_topic() == Topic.BOOT:
+            GameState.get_instance().set_robot_booted(True)

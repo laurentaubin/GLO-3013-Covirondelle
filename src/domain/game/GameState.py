@@ -21,6 +21,7 @@ class GameState:
             GameState.__instance__ = self
         else:
             raise Exception("You cannot create another GameState class")
+        self._is_robot_booted: bool = False
         self._is_started: bool = False
         self._puck_colors: List[Color] = None
         self._current_puck: Color = None
@@ -129,6 +130,12 @@ class GameState:
 
     def set_power_consumption(self, power_consumption) -> None:
         self._power_consumption = power_consumption
+
+    def is_robot_booted(self) -> bool:
+        return self._is_robot_booted
+
+    def set_robot_booted(self, booted: bool) -> None:
+        self._is_robot_booted = booted
 
     def get_battery_time_left(self):
         return self._battery_time_left

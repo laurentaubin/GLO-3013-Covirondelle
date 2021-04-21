@@ -14,6 +14,7 @@ class GameStateDto:
         robot_position: dict,
         battery_consumption: float,
         is_game_started: bool,
+        is_robot_booted: bool,
         current_planned_trajectory: List[Position],
         battery_time_left: float,
         battery_percentage: float,
@@ -31,6 +32,7 @@ class GameStateDto:
         self._robot_position: dict = robot_position
         self._battery_consumption: float = battery_consumption
         self._is_game_started: bool = is_game_started
+        self._is_robot_booted: bool = is_robot_booted
         self._current_planned_trajectory: List[Position] = current_planned_trajectory
         self._battery_time_left = battery_time_left
         self._battery_percentage = battery_percentage

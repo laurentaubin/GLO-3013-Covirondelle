@@ -2,6 +2,7 @@ from enum import Enum
 
 
 class Topic(Enum):
+    BOOT = "boot"
     START_CYCLE = "start cycle"
     CYCLE_COMPLETED = "cycle completed"
     START_STAGE = "start stage"

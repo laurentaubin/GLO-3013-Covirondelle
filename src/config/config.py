@@ -6,10 +6,13 @@ import numpy as np
 CONFIG_FILE_PATH = os.path.dirname(os.path.abspath(__file__)) + "/"
 
 # Communication
+SOCKET_ANY_ADDRESS = "tcp://*:"
+SOCKET_LOCAL_BASE_ADDRESS = "tcp://localhost:"
 SOCKET_DOCKER_ADDRESS = "tcp://0.0.0.0:"
 PING_PORT = "5555"
 
-SOCKET_ANY_ADDRESS = "tcp://*:"
+
+SOCKET_ROBOT_ADDRESS = "tcp://10.240.117.233:"
 GAME_CYCLE_PORT = "5556"
 STREAM_PI_FEED_PORT = "5557"
 

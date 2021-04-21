@@ -8,7 +8,6 @@ from application.WebServer import WebServer
 from config.config import (
     SOCKET_DOCKER_ADDRESS,
     PING_PORT,
-    SOCKET_ANY_ADDRESS,
     GAME_CYCLE_PORT,
     CALIBRATION_FILE_PATH,
     ROBOT_ARUCO_MARKER_ID,
@@ -24,6 +23,8 @@ from config.config import (
     ROBOT_ARUCO_MARKER_SIZE,
     ROBOT_HEIGHT,
     DEFAULT_PUCK_ZONE_POSITION,
+    SOCKET_ROBOT_ADDRESS,
+    SOCKET_ANY_ADDRESS,
 )
 from domain.Position import Position
 from domain.movement.MovementFactory import MovementFactory
@@ -77,7 +78,9 @@ class StationContext:
 
         self._stage_service = self._create_stage_service()
 
-        self._game_cycle = MasterGameCycle(self._stage_service)
+        self._game_cycle = MasterGameCycle(
+            self._stage_service, self._communication_service
+        )
         self._robot_status_receiver = RobotStatusReceiver(self._communication_service)
         self._vision_worker = VisionWorker(self._vision_service)
         game_state_dto_assembler = GameStateDtoAssembler()
@@ -103,7 +106,9 @@ class StationContext:
             )
             return game_cycle_connector, pub_sub_connector
 
-        game_cycle_connector = ZmqReqRepConnector(SOCKET_ANY_ADDRESS + GAME_CYCLE_PORT)
+        game_cycle_connector = ZmqReqRepConnector(
+            SOCKET_ROBOT_ADDRESS + GAME_CYCLE_PORT
+        )
         pub_sub_connector = ZmqSubscriberConnector(SOCKET_ANY_ADDRESS + PING_PORT)
         return game_cycle_connector, pub_sub_connector
 

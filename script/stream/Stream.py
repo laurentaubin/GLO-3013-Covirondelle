@@ -3,9 +3,9 @@
 import cv2
 import imagezmq
 
-from config.config import SOCKET_ANY_ADDRESS, STREAM_PI_FEED_PORT
+from config.config import SOCKET_ROBOT_ADDRESS, STREAM_PI_FEED_PORT
 
-image_hub = imagezmq.ImageHub(open_port=SOCKET_ANY_ADDRESS + STREAM_PI_FEED_PORT)
+image_hub = imagezmq.ImageHub(open_port=SOCKET_ROBOT_ADDRESS + STREAM_PI_FEED_PORT)
 
 if __name__ == "__main__":
     while True:

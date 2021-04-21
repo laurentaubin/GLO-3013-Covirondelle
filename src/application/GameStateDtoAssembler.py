@@ -46,6 +46,8 @@ class GameStateDtoAssembler:
         current_planned_trajectory = self._get_current_planned_trajectory(
             game_state.get_current_planned_trajectory()
         )
+        is_robot_booted = game_state.is_robot_booted()
+
         battery_time_left = self._get_power_consumption_first_wheel(
             game_state.get_battery_time_left()
         )
@@ -74,6 +76,7 @@ class GameStateDtoAssembler:
             robot_position,
             battery_consumption,
             is_game_started,
+            is_robot_booted,
             current_planned_trajectory,
             battery_time_left,
             battery_percentage,
