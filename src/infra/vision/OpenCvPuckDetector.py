@@ -68,17 +68,20 @@ class OpenCvPuckDetector(IPuckDetector):
             minRadius=50,
             maxRadius=85,
         )
-        for i in circles[0, :]:
-            i[2] = i[2] - 5
-            cv2.circle(
-                mask,
-                (int(i[0]), int(i[1])),
-                int(i[2]),
-                (255, 255, 255),
-                thickness=-1,
-            )
-        masked_data = cv2.bitwise_and(image_copy, image_copy, mask=mask)
-        return self._new_prepared_image(masked_data, color)
+        try:
+            for i in circles[0, :]:
+                i[2] = i[2] - 5
+                cv2.circle(
+                    mask,
+                    (int(i[0]), int(i[1])),
+                    int(i[2]),
+                    (255, 255, 255),
+                    thickness=-1,
+                )
+            masked_data = cv2.bitwise_and(image_copy, image_copy, mask=mask)
+            return self._new_prepared_image(masked_data, color)
+        except TypeError:
+            raise PuckNotFoundException()
 
     def _new_prepared_image(self, image: np.ndarray, puck_color: Color) -> np.ndarray:
         hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
