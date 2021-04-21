@@ -1,4 +1,4 @@
-import React, {createContext, useReducer} from 'react';
+import React, {createContext, useReducer} from "react";
 import {appReducer} from "./reducer";
 
 export enum PuckColor {
@@ -12,7 +12,7 @@ export enum PuckColor {
     BLUE = "BLUE",
     PURPLE = "PURPLE",
     GREY = "GREY",
-    WHITE = "WHITE"
+    WHITE = "WHITE",
 }
 
 export enum Stage {
@@ -24,14 +24,13 @@ export enum Stage {
     go_park = "go_park",
     stop = "stop",
     cycle_completed = "cycle_completed",
-
 }
 
 export enum ZoneCorner {
     A = "A",
     B = "B",
     C = "C",
-    D = "D"
+    D = "D",
 }
 
 interface Position {
@@ -40,18 +39,19 @@ interface Position {
 }
 
 export interface ApplicationState {
-    PuckColors: PuckColor[]
-    CurrentPuck: PuckColor | undefined
-    CurrentStage: Stage | undefined
-    ZoneCornersOrder: ZoneCorner[]
-    RobotPosition: Position | undefined
-    RobotConsumption: number
-    currentPlannedTrajectory: Position[]
-    BatteryTime: number | undefined
-    BatteryElectricCharge: number | undefined
-    IsGripperHolding: boolean
-    Resistance: number | undefined
-    IsGameStarted: boolean
+    PuckColors: PuckColor[];
+    CurrentPuck: PuckColor | undefined;
+    CurrentStage: Stage | undefined;
+    ZoneCornersOrder: ZoneCorner[];
+    RobotPosition: Position | undefined;
+    RobotConsumption: number;
+    currentPlannedTrajectory: Position[];
+    BatteryTime: number | undefined;
+    BatteryElectricCharge: number | undefined;
+    IsGripperHolding: boolean;
+    Resistance: number | undefined;
+    IsGameStarted: boolean;
+    IsRobotBooted: boolean;
 }
 
 const initialState: ApplicationState = {
@@ -66,25 +66,22 @@ const initialState: ApplicationState = {
     BatteryTime: undefined,
     IsGripperHolding: false,
     IsGameStarted: false,
-    currentPlannedTrajectory: []
-}
+    IsRobotBooted: false,
+    currentPlannedTrajectory: [],
+};
 
 const AppContext = createContext<{
     state: ApplicationState;
     dispatch: React.Dispatch<any>;
 }>({
     state: initialState,
-    dispatch: () => null
+    dispatch: () => null,
 });
 
 const AppProvider: React.FC = ({children}: any) => {
     const [state, dispatch] = useReducer(appReducer, initialState);
 
-    return (
-        <AppContext.Provider value={{state, dispatch}}>
-            {children}
-        </AppContext.Provider>
-    )
-}
+    return <AppContext.Provider value={{state, dispatch}}>{children}</AppContext.Provider>;
+};
 
 export {AppContext, AppProvider};
