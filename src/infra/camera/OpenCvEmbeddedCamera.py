@@ -1,3 +1,4 @@
+import time
 from typing import Tuple
 
 import cv2
@@ -34,6 +35,7 @@ class OpenCvEmbeddedCamera(IEmbeddedCamera):
 
     def rotate_vertically(self, target: int) -> None:
         self._maestro_controller.setTarget(self._vertical_servo_id, target)
+        time.sleep(1)
 
     def take_image(self):
         self._clear_buffer()

@@ -1,6 +1,7 @@
 import time
 from typing import Any, List
 
+from config.config import ROBOT_ALIGNMENT_SPEED
 from domain.Orientation import Orientation
 from domain.alignment.CornerAlignmentCorrector import CornerAlignmentCorrector
 from domain.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
@@ -8,10 +9,12 @@ from domain.communication.Message import Message
 from domain.game.IStageHandler import IStageHandler
 from domain.game.Stage import Stage
 from domain.game.Topic import Topic
+from domain.movement.CommandDuration import CommandDuration
 from domain.movement.Direction import Direction
 from domain.movement.Movement import Movement
 from domain.movement.MovementCommand import MovementCommand
 from domain.Color import Color
+from domain.movement.Speed import Speed
 from domain.vision.exception.PuckNotFoundException import PuckNotFoundException
 from service.communication.CommunicationService import CommunicationService
 from service.exception.StageComplete import StageComplete
@@ -191,6 +194,14 @@ class TransportPuckHandler(IStageHandler):
     def _align_with_starting_zone_corner(self) -> None:
         self._correct_horizontal_alignment_with_corner()
         self._correct_vertical_alignment_with_corner()
+        self._movement_service.execute_movement_command(
+            MovementCommand(
+                Direction.FORWARD, Speed(ROBOT_ALIGNMENT_SPEED), CommandDuration(1.2)
+            )
+        )
+        self._movement_service.execute_movement_command(
+            MovementCommand(Direction.STOP, Speed(0), CommandDuration(0))
+        )
 
     def _correct_horizontal_alignment_with_corner(self) -> None:
         current_image = self._vision_service.take_image()
