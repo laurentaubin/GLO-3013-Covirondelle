@@ -40,6 +40,7 @@ class StmRobotInformation(IRobotInformation):
         command = bytes([StmCommand.ASK_POWER]) + bytes([StmPeripherals.BATTERY])
         response = self._serial.write_and_readline(command)
         power_consumption = response[2:].decode("utf-8")
+        print(float(power_consumption) / 1000)
         return float(power_consumption) / 1000
 
     def get_power_consumption_first_wheel(self):
