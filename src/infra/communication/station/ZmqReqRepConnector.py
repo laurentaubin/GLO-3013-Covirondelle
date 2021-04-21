@@ -8,8 +8,8 @@ from domain.communication.station.IReqRepConnector import IReqRepConnector
 class ZmqReqRepConnector(IReqRepConnector):
     def __init__(self, socket_address):
         context = zmq.Context()
-        self._socket = context.socket(zmq.REP)
-        self._socket.connect(socket_address)
+        self._socket = context.socket(zmq.REQ)
+        self._socket.bind(socket_address)
 
     def receive_message(self) -> str:
         return self._socket.recv_string()

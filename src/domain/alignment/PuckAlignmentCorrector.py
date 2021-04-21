@@ -22,22 +22,49 @@ class PuckAlignmentCorrector:
         correctly_placed_position: Position,
         horizontal_threshold: int,
         up_threshold: int,
-        horizontal_puck_detector: IPuckDetector,
-        vertical_puck_detector: IPuckDetector,
+        hsv_puck_detector: IPuckDetector,
+        template_matching_puck_detector: IPuckDetector,
     ):
         self.correctly_placed_position = correctly_placed_position
         self._horizontal_threshold = horizontal_threshold
         self._up_threshold = up_threshold
-        self._horizontal_puck_detector = horizontal_puck_detector
-        self._vertical_puck_detector = vertical_puck_detector
+        self._hsv_puck_detector = hsv_puck_detector
+        self._template_matching_puck_detector = template_matching_puck_detector
+
+    def move_forward_until_puck_is_detected(self, image: np.ndarray, puck_color: Color):
+        try:
+            self._hsv_puck_detector.detect(image, puck_color)
+            return self.STOP_MOVEMENT_COMMAND
+        except PuckNotFoundException:
+            return MovementCommand(
+                Direction.FORWARD,
+                Speed(ROBOT_ALIGNMENT_SPEED),
+                self.CONTINUOUS_COMMAND_DURATION,
+            )
 
     def calculate_horizontal_correction(
         self, image: np.ndarray, puck_color: Color
     ) -> MovementCommand:
+        puck_position: Position = self._template_matching_puck_detector.detect(
+            image, puck_color
+        )
+        horizontal_distance_from_center: int = (
+            puck_position.get_x_coordinate()
+            - self.correctly_placed_position.get_x_coordinate()
+        )
+        if self._is_puck_position_within_horizontal_threshold(
+            horizontal_distance_from_center
+        ):
+            return self.STOP_MOVEMENT_COMMAND
+        return self._calculate_horizontal_movement_command(
+            horizontal_distance_from_center
+        )
+
+    def calculate_horizontal_correction_using_hsv(
+        self, image: np.ndarray, puck_color: Color
+    ) -> MovementCommand:
         try:
-            puck_position: Position = self._horizontal_puck_detector.detect(
-                image, puck_color
-            )
+            puck_position: Position = self._hsv_puck_detector.detect(image, puck_color)
             horizontal_distance_from_center: int = (
                 puck_position.get_x_coordinate()
                 - self.correctly_placed_position.get_x_coordinate()
@@ -59,7 +86,9 @@ class PuckAlignmentCorrector:
     def calculate_vertical_correction(
         self, image: np.ndarray, puck_color: Color
     ) -> MovementCommand:
-        puck_position: Position = self._vertical_puck_detector.detect(image, puck_color)
+        puck_position: Position = self._template_matching_puck_detector.detect(
+            image, puck_color
+        )
 
         if (
             puck_position.get_y_coordinate()

@@ -10,6 +10,8 @@ from domain.vision.exception.PuckNotFoundException import PuckNotFoundException
 
 
 class OpenCvPuckDetector(IPuckDetector):
+    VERTICAL_CROP = (150, 430)
+
     def detect(self, image: np.ndarray, puck_color: Color) -> Position:
         cropped_image = self._cut_image(image)
         return self._new_find_puck(cropped_image, puck_color)
@@ -31,7 +33,7 @@ class OpenCvPuckDetector(IPuckDetector):
             prepared_image = self._new_prepared_image(image, puck_color)
         contour = self._new_find_puck_contour(prepared_image)
         (x, y), _ = cv2.minEnclosingCircle(contour)
-        return Position(int(x), int(y))
+        return Position(int(x), int(y) + self.VERTICAL_CROP[0])
 
     def _new_find_puck_contour(self, prepared_image: np.ndarray) -> np.ndarray:
         contours, *_ = cv2.findContours(
@@ -81,7 +83,6 @@ class OpenCvPuckDetector(IPuckDetector):
     def _new_prepared_image(self, image: np.ndarray, puck_color: Color) -> np.ndarray:
         hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
         hsv_bounds = puck_color.get_hsv_bounds()
-        print(hsv_bounds)
         return cv2.inRange(
             hsv_image, np.array(hsv_bounds[0][0]), np.array(hsv_bounds[0][1])
         )
@@ -114,7 +115,7 @@ class OpenCvPuckDetector(IPuckDetector):
         return max(contours, key=cv2.contourArea)
 
     def _cut_image(self, image: np.ndarray) -> np.ndarray:
-        return image[:430, :]
+        return image[self.VERTICAL_CROP[0] : self.VERTICAL_CROP[1], :]
 
 
 # 14 avril: On peut  le laisser pour tester rapidement en cas de problème, le code ne fonctionne pas encore parfaitement
@@ -128,7 +129,7 @@ if __name__ == "__main__":
         image = cv2.imread(image_filename)
         detector = OpenCvPuckDetector()
         try:
-            position = detector.detect(image, Color.RED)
+            position = detector.detect(image, Color.BLUE)
             cv2.circle(
                 image,
                 (int(position.get_x_coordinate()), int(position.get_y_coordinate())),

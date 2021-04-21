@@ -81,7 +81,7 @@ class TestStmRobotInformation(TestCase):
     def test_givenAPowerConsumptionValue_whenGetPowerConsumption_thenTheRightValueIsReturned(
         self,
     ):
-        expected_power_consumption_value = 10.0
+        expected_power_consumption_value = 0.01
         expected_serial_response = bytes("0A", encoding="utf-8") + bytes(
             "10", encoding="utf-8"
         )
@@ -194,18 +194,20 @@ class TestStmRobotInformation(TestCase):
     def test_givenAReadCurrentCommand_whenGetBatteryTimeLeft_thenTheRightCommandIsSent(
         self,
     ):
-        expected_command = b"\x08\x00"
+        expected_command_first_call = b"\x08\x00"
+        expected_command_second_call = b"\t\x00"
 
         self.robot_information.get_battery_time_left()
 
-        self.serial.write.assert_called_with(expected_command)
+        self.serial.write.assert_any_call(expected_command_first_call)
+        self.serial.write.assert_any_call(expected_command_second_call)
 
     def test_givenAReadLineCurrentValue_whenGetBatteryTimeLeft_thenTheRightValueIsReturned(
         self,
     ):
-        expected_time_left = 2159999.0
+        expected_time_left = 905.5249999999996
         expected_serial_response = bytes("8", encoding="utf-8") + bytes(
-            "10", encoding="utf-8"
+            "16000", encoding="utf-8"
         )
         self.serial.readline.return_value = expected_serial_response
 
@@ -216,13 +218,13 @@ class TestStmRobotInformation(TestCase):
     def test_givenASecondCurrentConsumptionCall_whenGetBatteryPercentage_thenValueIsLowerThan100(
         self,
     ):
-        expected_serial_response = bytes("8", encoding="utf-8") + bytes(
-            "10", encoding="utf-8"
+        expected_serial_response = bytes("9", encoding="utf-8") + bytes(
+            "16000", encoding="utf-8"
         )
         self.serial.readline.return_value = expected_serial_response
-
+        self.robot_information.get_battery_percentage()
         self.robot_information.get_battery_time_left()
-        expected_battery_percentage = 99.99995370370371
+        expected_battery_percentage = 67.14999999999998
 
         actual_battery_percentage = self.robot_information.get_battery_percentage()
 

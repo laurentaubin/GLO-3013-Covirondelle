@@ -9,6 +9,7 @@ from domain.movement.MovementCommand import MovementCommand
 from domain.movement.Speed import Speed
 from domain.Color import Color
 from domain.alignment.PuckAlignmentCorrector import PuckAlignmentCorrector
+from domain.vision.exception.PuckNotFoundException import PuckNotFoundException
 
 
 class TestPuckAlignmentCorrector(TestCase):
@@ -34,33 +35,33 @@ class TestPuckAlignmentCorrector(TestCase):
     CONTINUOUS_COMMAND_DURATION = CommandDuration(0)
 
     def setUp(self) -> None:
-        self.puck_detector_horizontal = MagicMock()
-        self.puck_detector_vertical = MagicMock()
+        self.hsv_puck_detector = MagicMock()
+        self.template_matching_puck_detector = MagicMock()
         self.alignment_corrector = PuckAlignmentCorrector(
             self.CORRECTLY_PLACED_POSITION,
             self.HORIZONTAL_THRESHOLD,
             self.UP_THRESHOLD,
-            self.puck_detector_horizontal,
-            self.puck_detector_vertical,
+            self.hsv_puck_detector,
+            self.template_matching_puck_detector,
         )
 
     def test_givenAnImage_whenCalculateHorizontalCorrection_thenPuckPositionIsDetected(
         self,
     ):
-        self.puck_detector_horizontal.detect.return_value = self.ANY_POSITION
+        self.template_matching_puck_detector.detect.return_value = self.ANY_POSITION
 
         self.alignment_corrector.calculate_horizontal_correction(
             self.AN_IMAGE, self.A_PUCK_COLOR
         )
 
-        self.puck_detector_horizontal.detect.assert_called_with(
+        self.template_matching_puck_detector.detect.assert_called_with(
             self.AN_IMAGE, self.A_PUCK_COLOR
         )
 
     def test_givenAnImageWithPuckOnTheRight_whenCalculateHorizontalCorrection_thenReturnMovementToBeHorizontallyAlign(
         self,
     ):
-        self.puck_detector_horizontal.detect.return_value = (
+        self.template_matching_puck_detector.detect.return_value = (
             self.POSITION_TOO_FAR_TO_THE_RIGHT
         )
         expected_movement_command = MovementCommand(
@@ -78,7 +79,7 @@ class TestPuckAlignmentCorrector(TestCase):
     def test_givenAnImageWithPuckOnTheLeft_whenCalculateHorizontalCorrection_thenLeftMovementToBeHorizontallyAlign(
         self,
     ):
-        self.puck_detector_horizontal.detect.return_value = (
+        self.template_matching_puck_detector.detect.return_value = (
             self.POSITION_TOO_FAR_TO_THE_LEFT
         )
         expected_movement_command = MovementCommand(
@@ -96,7 +97,7 @@ class TestPuckAlignmentCorrector(TestCase):
     def test_givenAnImageWithPuckWithinHorizontalThreshold_whenCalculateHorizontalCorrection_thenReturnStopMovement(
         self,
     ):
-        self.puck_detector_horizontal.detect.return_value = (
+        self.template_matching_puck_detector.detect.return_value = (
             self.POSITION_WITHIN_HORIZONTAL_THRESHOLD
         )
 
@@ -111,7 +112,9 @@ class TestPuckAlignmentCorrector(TestCase):
     def test_givenAnImageWithPuckTooFarForward_whenCalculateVerticalCorrection_thenMoveForwardToGetCloser(
         self,
     ):
-        self.puck_detector_vertical.detect.return_value = self.POSITION_TOO_FAR_FORWARD
+        self.template_matching_puck_detector.detect.return_value = (
+            self.POSITION_TOO_FAR_FORWARD
+        )
         expected_movement_command = MovementCommand(
             Direction.FORWARD, self.ALIGNMENT_SPEED, self.CONTINUOUS_COMMAND_DURATION
         )
@@ -124,10 +127,38 @@ class TestPuckAlignmentCorrector(TestCase):
     def test_givenAnImageWithPuckTooClose_whenCalculateVerticalCorrection_thenReturnStopMovementCommand(
         self,
     ):
-        self.puck_detector_vertical.detect.return_value = self.POSITION_TOO_CLOSE
+        self.template_matching_puck_detector.detect.return_value = (
+            self.POSITION_TOO_CLOSE
+        )
 
         actual_movement_command = (
             self.alignment_corrector.calculate_vertical_correction(
+                self.AN_IMAGE, self.A_PUCK_COLOR
+            )
+        )
+
+        self.assertEqual(actual_movement_command, self.STOP_MOVEMENT_COMMAND)
+
+    def test_givenPuckNotFound_whenMoveForwardUntilPuckIsDetected_thenReturnForwardMovementCommand(
+        self,
+    ):
+        self.hsv_puck_detector.detect.side_effect = PuckNotFoundException()
+
+        actual_movement_command = (
+            self.alignment_corrector.move_forward_until_puck_is_detected(
+                self.AN_IMAGE, self.A_PUCK_COLOR
+            )
+        )
+
+        self.assertEqual(actual_movement_command, self.FORWARD_MOVEMENT_COMMAND)
+
+    def test_givenPuckFound_whenMoveForwardUntilPuckIsDetected_thenReturnStopMovementCommand(
+        self,
+    ):
+        self.hsv_puck_detector.detect.return_value = self.ANY_POSITION
+
+        actual_movement_command = (
+            self.alignment_corrector.move_forward_until_puck_is_detected(
                 self.AN_IMAGE, self.A_PUCK_COLOR
             )
         )

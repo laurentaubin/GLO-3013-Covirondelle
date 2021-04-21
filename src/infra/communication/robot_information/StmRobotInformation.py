@@ -5,6 +5,8 @@ from config.config import (
     POWER_SENT_TO_WHEELS,
     TOTAL_CHARGE,
     TIME_BETWEEN_COMMAND,
+    MOLSON_A,
+    MOLSON_B,
 )
 from domain.communication.IRobotInformation import IRobotInformation
 from domain.communication.StmCommand import StmCommand
@@ -13,13 +15,12 @@ from domain.gripper.GripperStatus import GripperStatus
 
 
 class StmRobotInformation(IRobotInformation):
-
-    TOTAL_TIME = 0
-    CURRENT_CONSUMPTION_TOTAL = 0
-
-    def __init__(self, serial: ThreadSafeSerial):
-
+    def __init__(
+        self, serial: ThreadSafeSerial, total_time=0, current_consumption_total=0
+    ):
         self._serial = serial
+        self.total_time = total_time
+        self.current_consumption_total = current_consumption_total
 
     def get_gripper_status(self) -> GripperStatus:
         command = bytes([StmCommand.ASK_CURRENT]) + bytes([StmPeripherals.GRIPPER])
@@ -39,7 +40,7 @@ class StmRobotInformation(IRobotInformation):
         command = bytes([StmCommand.ASK_POWER]) + bytes([StmPeripherals.BATTERY])
         response = self._serial.write_and_readline(command)
         power_consumption = response[2:].decode("utf-8")
-        return float(power_consumption)
+        return float(power_consumption) / 1000
 
     def get_power_consumption_first_wheel(self):
         command = bytes([StmCommand.ASK_CURRENT]) + bytes([StmPeripherals.MOTOR_1])
@@ -78,30 +79,33 @@ class StmRobotInformation(IRobotInformation):
         return power_consumption_fourth_wheel
 
     def get_battery_time_left(self):
-        self.TOTAL_TIME += 1
+        self.total_time += 1
         command = bytes([StmCommand.ASK_CURRENT]) + bytes([StmPeripherals.BATTERY])
         self._serial.write(command)
         current_consumption = float(self._serial.readline()[1:].decode("utf-8"))
+        battery_percentage = self.get_battery_percentage()
 
-        self.CURRENT_CONSUMPTION_TOTAL += current_consumption
+        self.current_consumption_total += current_consumption
         current_consumption_average = (
-            self.CURRENT_CONSUMPTION_TOTAL / self.TOTAL_TIME * TIME_BETWEEN_COMMAND
+            self.current_consumption_total / self.total_time * TIME_BETWEEN_COMMAND
         )
 
-        actual_charge = TOTAL_CHARGE - current_consumption_average * self.TOTAL_TIME
+        actual_charge = (
+            TOTAL_CHARGE * battery_percentage
+        ) / 100 - current_consumption_average * self.total_time
         battery_time_left = actual_charge / current_consumption_average
-
         return battery_time_left
 
     def get_battery_percentage(self):
-        current_consumption_average = (
-            self.CURRENT_CONSUMPTION_TOTAL * TIME_BETWEEN_COMMAND
-        )
-        battery_percent = (
-            (TOTAL_CHARGE - current_consumption_average) / TOTAL_CHARGE
-        ) * 100
+        command = bytes([StmCommand.ASK_VOLTAGE]) + bytes([StmPeripherals.BATTERY])
+        self._serial.write(command)
 
-        return battery_percent
+        battery_voltage = float(self._serial.readline()[1:].decode("utf-8"))
+
+        battery_percentage = MOLSON_A * battery_voltage + MOLSON_B
+        if battery_percentage > 100:
+            battery_percentage = 100.0
+        return battery_percentage
 
     def _calculate_wheel_power_consumption(self, wheel_current):
         return (wheel_current / 1000) * POWER_SENT_TO_WHEELS
