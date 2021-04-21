@@ -73,8 +73,9 @@ class TransportPuckHandler(IStageHandler):
         movements_to_starting_zone = self._find_movements_to_starting_zone(robot_pose)
         self._move_robot(movements_to_starting_zone)
 
-    def _go_to_puck_zone(self):
-        self._rotation_service.rotate(CardinalOrientation.WEST.value)
+    def _go_to_puck_zone(self, rotate_west=True):
+        if rotate_west:
+            self._rotation_service.rotate(CardinalOrientation.WEST.value)
         robot_pose = self._find_robot_pose()
         movements_to_puck_zone = self._find_movements_to_puck_zone(robot_pose)
         self._move_robot(movements_to_puck_zone)
@@ -111,10 +112,12 @@ class TransportPuckHandler(IStageHandler):
         robot_pose = self._find_robot_pose()
         movements_back_to_puck_zone = [
             Movement(
-                Direction.BACKWARDS, Distance(0.15, unit_of_measure=UnitOfMeasure.METER)
+                Direction.BACKWARDS, Distance(0.3, unit_of_measure=UnitOfMeasure.METER)
             )
         ]
         self._move_robot(movements_back_to_puck_zone)
+        self._rotate_robot(CardinalOrientation.EAST.value)
+        self._go_to_puck_zone(rotate_west=False)
 
     def _drop_puck_on_corner(self):
         self._send_command_to_robot(Topic.DROP_PUCK, None)
