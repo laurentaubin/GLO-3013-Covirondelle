@@ -98,11 +98,15 @@ class AStarShortestPathAlgorithm(IShortestPathAlgorithm):
             for next_node in neighbours:
                 if next_node[0] > self._size_x or next_node[1] > self._size_y:
                     continue
-                new_cost = (
-                    cost_so_far[current]
-                    + self._maze[current_x, current_y] * infinity
-                    + cost_of_visiting_one_node
-                )
+                try:
+                    new_cost = (
+                        cost_so_far[current]
+                        + self._maze[current_x, current_y] * infinity
+                        + cost_of_visiting_one_node
+                    )
+                except IndexError:
+                    continue
+
                 if next_node not in cost_so_far or new_cost < cost_so_far[next_node]:
                     cost_so_far[next_node] = new_cost
                     priority = new_cost + self._heuristic(next_node, goal)

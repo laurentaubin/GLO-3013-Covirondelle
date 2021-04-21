@@ -1,33 +1,39 @@
 import cv2
 import numpy as np
 
+import GrabPuckIT
+from config.config import ROBOT_RADIUS, OBSTACLE_RADIUS, STARTING_ZONE_CENTER_POSITION
+from context.StationContext import StationContext
+from domain.Color import Color
 from domain.Position import Position
+from domain.Puck import Puck
+from domain.StartingZoneCorner import StartingZoneCorner
 from domain.pathfinding.AStarShortestPathAlgorithm import AStarShortestPathAlgorithm
-from domain.pathfinding.Maze import Maze
-from infra.camera.OpenCvCalibrator import OpenCvCalibrator
-from infra.vision.OpenCvTableDetector import OpenCvTableDetector
+from domain.pathfinding.MazeFactory import MazeFactory
+from infra.vision.TemplateMatchingPuckDetector import TemplateMatchingPuckDetector
 
 if __name__ == "__main__":
-    table_image = cv2.imread("../../resources/obstacle3.jpg")
-    calibrated_image = OpenCvCalibrator("../../src/config/numpy-640x480.npz").calibrate(
-        table_image
-    )
-    cropped_image = OpenCvTableDetector().crop_table(calibrated_image)
-    cv2.imshow("original image", cropped_image)
-    cv2.waitKey(0)
+    context = StationContext(True)
+    vision_service = context._vision_service
+    table_image, _ = vision_service.get_vision_state()
+    second_table_image, _ = vision_service.get_vision_state()
+    detector = TemplateMatchingPuckDetector()
 
-    image_width, image_height, _ = cropped_image.shape
-    maze = Maze(width=image_width, height=image_height)
-
+    image_width, image_height, _ = table_image.shape
     first_obstacle_position = Position(280, 125)
     second_obstacle_position = Position(402, 184)
 
-    maze.add_obstacle(first_obstacle_position)
-    maze.add_obstacle(second_obstacle_position)
+    pucks = [
+        Puck(color, detector.detect(table_image, color))
+        for color in Color
+        if color is not Color.NONE
+    ]
 
-    pathfinding = AStarShortestPathAlgorithm()
-    pathfinding.set_maze(maze)
-    path = pathfinding.find_shortest_path(Position(250, 50), Position(117, 570))
+    maze = MazeFactory(
+        ROBOT_RADIUS, OBSTACLE_RADIUS
+    ).create_from_shape_and_obstacles_and_pucks_as_obstacles(
+        table_image.shape, [first_obstacle_position, second_obstacle_position], pucks
+    )
 
     maze_array = maze._array
     img_to_show = np.zeros((image_width, image_height, 3))
@@ -35,14 +41,28 @@ if __name__ == "__main__":
     for i, column in enumerate(maze_array):
         for j, row in enumerate(column):
             if maze_array[i][j] == 1:
-                cropped_image[i][j] = [255, 0, 255]
+                table_image[i][j] = [255, 0, 255]
 
-    for element in path:
-        cropped_image[element.get_x_coordinate()][element.get_y_coordinate()] = [
-            0,
-            255,
-            0,
-        ]
+    cv2.imshow("astar pathfinding algorithm", table_image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
-    cv2.imshow("astar pathfinding algorithm", cropped_image)
+    corner_pos = (
+        vision_service.create_game_table()
+        .get_starting_zone()
+        .find_corner_position_from_letter(StartingZoneCorner.C)
+    )
+    maze.add_puck_as_obstacle(corner_pos)
+    maze.remove_puck_as_obstacle(pucks[0].get_position())
+    print(pucks[0].get_position())
+
+    maze_array = maze._array
+    img_to_show = np.zeros((image_width, image_height, 3))
+
+    for i, column in enumerate(maze_array):
+        for j, row in enumerate(column):
+            if maze_array[i][j] == 1:
+                second_table_image[i][j] = [255, 0, 255]
+
+    cv2.imshow("astar pathfinding algorithm", second_table_image)
     cv2.waitKey(0)

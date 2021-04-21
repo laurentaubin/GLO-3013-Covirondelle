@@ -29,7 +29,7 @@ class RotationService:
             orientation_to_send = (
                 robot_pose.get_orientation_in_degree() - desired_orientation
             )
-            if abs(orientation_to_send.get_orientation_in_degree()) <= 2:
+            if abs(orientation_to_send.get_orientation_in_degree()) <= 1:
                 break
             orientation_to_send = self._find_smallest_orientation_to_send(
                 orientation_to_send

@@ -25,7 +25,7 @@ class Maze:
                         continue
 
     def add_puck_as_obstacle(
-        self, obstacle_position: Position, robot_radius=0, obstacle_radius=40
+        self, obstacle_position: Position, robot_radius=0, obstacle_radius=80
     ) -> None:
         x_coordinate, y_coordinate = obstacle_position.to_tuple()
         total_obstacle_radius = robot_radius + obstacle_radius
@@ -35,6 +35,20 @@ class Maze:
                 if i + j <= total_obstacle_radius * 2:
                     try:
                         self._array[y_coordinate + i][x_coordinate + j] = 1
+                    except IndexError:
+                        continue
+
+    def remove_puck_as_obstacle(
+        self, obstacle_position: Position, robot_radius=0, obstacle_radius=80
+    ):
+        x_coordinate, y_coordinate = obstacle_position.to_tuple()
+        total_obstacle_radius = robot_radius + obstacle_radius
+
+        for i in range(-total_obstacle_radius, total_obstacle_radius + 1):
+            for j in range(-total_obstacle_radius, total_obstacle_radius + 1):
+                if i + j <= total_obstacle_radius * 2:
+                    try:
+                        self._array[y_coordinate + i][x_coordinate + j] = 0
                     except IndexError:
                         continue
 

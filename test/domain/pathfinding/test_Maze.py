@@ -103,3 +103,24 @@ class TestMaze(TestCase):
         )
 
         self.assertEqual(expected_maze, actual_maze)
+
+    def test_givenPuckObstacle_whenRemovePuckAsObstacle_thenObstacleIsRemove(self):
+        expected_maze = self.maze_factory.create_from_shape((8, 10, 0))
+        actual_maze = Maze(
+            np.array(
+                [
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 1, 1, 1, 0, 0, 0, 1],
+                    [1, 0, 0, 1, 1, 1, 0, 0, 0, 1],
+                    [1, 0, 0, 1, 1, 1, 0, 0, 0, 1],
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                ]
+            )
+        )
+
+        actual_maze.remove_puck_as_obstacle(Position(5, 4), obstacle_radius=2)
+
+        self.assertEqual(actual_maze, expected_maze)

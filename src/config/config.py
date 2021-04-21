@@ -47,9 +47,7 @@ WORLD_CAMERA_IMAGE_SIZE = (1280, 800)
 OBSTACLE_HEIGHT = 0.40
 ROBOT_HEIGHT = 0.232
 
-BASE_TABLE_IMAGE = (
-    CONFIG_FILE_PATH + "../../resources/test/puck/puck_configuration_1.jpg"
-)
+BASE_TABLE_IMAGE = CONFIG_FILE_PATH + "../../resources/camera-config/image_0.jpg"
 
 DEFAULT_OHMMETER_POSITION = 160, 585
 

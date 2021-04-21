@@ -1,7 +1,9 @@
+from config.config import ROBOT_RADIUS
 from domain.CardinalOrientation import CardinalOrientation
 from domain.Color import Color
 from domain.Orientation import Orientation
 from domain.Position import Position
+from domain.Puck import Puck
 from domain.RobotPose import RobotPose
 from domain.UnitOfMeasure import UnitOfMeasure
 from domain.communication.Message import Message
@@ -61,6 +63,7 @@ class TransportPuckHandler(IStageHandler):
             self._rotate_robot_towards_corner(starting_zone_corner_index)
             self._go_forward_a_bit()
             self._drop_puck_on_corner(starting_zone_corner_index)
+            self._add_puck_as_obstacle(starting_zone_corner_index, puck)
             self._go_back_a_bit()
             self._go_to_starting_zone_center()
 
@@ -107,11 +110,11 @@ class TransportPuckHandler(IStageHandler):
 
     def _go_back_to_puck_zone(self):
         robot_pose = self._find_robot_pose()
-        movements_back_to_puck_zone = self._create_straight_movement(
-            Direction.BACKWARDS,
-            GameState.get_instance().get_game_table().get_puck_zone_center(),
-            robot_pose,
-        )
+        movements_back_to_puck_zone = [
+            Movement(
+                Direction.BACKWARDS, Distance(0.15, unit_of_measure=UnitOfMeasure.METER)
+            )
+        ]
         self._move_robot(movements_back_to_puck_zone)
 
     def _drop_puck_on_corner(self, starting_zone_corner_index):
@@ -211,3 +214,13 @@ class TransportPuckHandler(IStageHandler):
             )
         ]
         self._move_robot(movements)
+
+    def _add_puck_as_obstacle(self, starting_zone_corner_index: int, puck: Puck):
+        maze = GameState.get_instance().get_game_table().get_maze()
+        starting_zone = GameState.get_instance().get_game_table().get_starting_zone()
+        current_corner = GameState.get_instance().get_starting_zone_corners()[
+            starting_zone_corner_index
+        ]
+        corner_position = starting_zone.find_corner_position_from_letter(current_corner)
+        maze.add_puck_as_obstacle(corner_position)
+        maze.remove_puck_as_obstacle(puck.get_position())
