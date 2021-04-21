@@ -4,14 +4,12 @@ from application.ApplicationServer import ApplicationServer
 from application.CommunicationRunner import CommunicationRunner
 from config.config import (
     PING_PORT,
-    SOCKET_STATION_ADDRESS,
     GAME_CYCLE_PORT,
     STM_PORT_NAME,
     STM_BAUD_RATE,
     ROBOT_MAXIMUM_SPEED,
     SERVOING_CONSTANT,
     BASE_COMMAND_DURATION,
-    SOCKET_LOCAL_BASE_ADDRESS,
     CAMERA_HORIZONTAL_SERVO_ID,
     CAMERA_VERTICAL_SERVO_ID,
     SERVO_SPEED,
@@ -40,6 +38,9 @@ from config.config import (
     COMMAND_PANEL_VERTICAL_POSITION,
     COMMAND_PANEL_HORIZONTAL_POSITION,
     PUCK_ALIGNMENT_UP_THRESHOLD,
+    SOCKET_LOCAL_BASE_ADDRESS,
+    SOCKET_STATION_ADDRESS,
+    SOCKET_ANY_ADDRESS,
 )
 from domain.Position import Position
 from domain.alignment.CommandPanelAlignmentCorrector import (
@@ -158,16 +159,14 @@ class RobotContext:
     def _create_connectors(self):
         if self._local_flag:
             game_cycle_connector = ZmqReqRepConnector(
-                SOCKET_LOCAL_BASE_ADDRESS + GAME_CYCLE_PORT
+                SOCKET_ANY_ADDRESS + GAME_CYCLE_PORT
             )
             publisher_connector = ZmqPublisherConnector(
                 SOCKET_LOCAL_BASE_ADDRESS + PING_PORT
             )
             return game_cycle_connector, publisher_connector
 
-        game_cycle_connector = ZmqReqRepConnector(
-            SOCKET_STATION_ADDRESS + GAME_CYCLE_PORT
-        )
+        game_cycle_connector = ZmqReqRepConnector(SOCKET_ANY_ADDRESS + GAME_CYCLE_PORT)
         publisher_connector = ZmqPublisherConnector(SOCKET_STATION_ADDRESS + PING_PORT)
         return game_cycle_connector, publisher_connector
 

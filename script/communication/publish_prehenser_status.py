@@ -1,7 +1,7 @@
 import time
 from unittest.mock import MagicMock
 
-from config.config import GAME_CYCLE_PORT, SOCKET_LOCAL_BASE_ADDRESS, PING_PORT
+from config.config import GAME_CYCLE_PORT, SOCKET_ANY_ADDRESS, PING_PORT
 from infra.communication.robot_information.StmRobotInformation import (
     StmRobotInformation,
 )
@@ -12,8 +12,8 @@ from service.communication.CommunicationService import CommunicationService
 
 serial = MagicMock()
 
-game_cycle_connector = ZmqReqRepConnector(SOCKET_LOCAL_BASE_ADDRESS + GAME_CYCLE_PORT)
-publisher_connector = ZmqPublisherConnector(SOCKET_LOCAL_BASE_ADDRESS + PING_PORT)
+game_cycle_connector = ZmqReqRepConnector(SOCKET_ANY_ADDRESS + GAME_CYCLE_PORT)
+publisher_connector = ZmqPublisherConnector(SOCKET_ANY_ADDRESS + PING_PORT)
 
 robot_information = StmRobotInformation(serial)
 

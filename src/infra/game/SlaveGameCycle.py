@@ -1,5 +1,7 @@
+from domain.communication.Message import Message
 from domain.game.IGameCycle import IGameCycle
 from domain.game.Stage import Stage
+from domain.game.Topic import Topic
 from service.communication.CommunicationService import CommunicationService
 from service.game.StageService import StageService
 
@@ -14,6 +16,7 @@ class SlaveGameCycle(IGameCycle):
         self.stage_service = stage_service
 
     def run(self) -> None:
+        self._confirm_boot()
         self._wait_until_start_signal()
         print("\n")
         self._go_to_ohmmeter()
@@ -38,3 +41,7 @@ class SlaveGameCycle(IGameCycle):
 
     def _stop(self):
         self.stage_service.execute(Stage.STOP)
+
+    def _confirm_boot(self):
+        message = Message(Topic.BOOT, None)
+        self.communication_service.send_object(message)

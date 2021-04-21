@@ -1,10 +1,10 @@
 import zmq
 
-from config.config import GAME_CYCLE_PORT, SOCKET_STATION_ADDRESS
+from config.config import GAME_CYCLE_PORT, SOCKET_ANY_ADDRESS
 
 context = zmq.Context()
 receiver_socket = context.socket(zmq.REP)
-receiver_socket.connect(SOCKET_STATION_ADDRESS + GAME_CYCLE_PORT)
+receiver_socket.connect(SOCKET_ANY_ADDRESS + GAME_CYCLE_PORT)
 
 movements = receiver_socket.recv_pyobj()
 

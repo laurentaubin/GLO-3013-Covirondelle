@@ -1,9 +1,10 @@
 # Station communication
 import os
 
-SOCKET_DOCKER_BASE_ADDRESS = "tcp://covirondelle-station:"
-SOCKET_LOCAL_BASE_ADDRESS = "tcp://localhost:"
 PING_PORT = "5555"
+
+SOCKET_ANY_ADDRESS = "tcp://*:"
+SOCKET_LOCAL_BASE_ADDRESS = "tcp://localhost:"
 # TODO Replace with IP address of station when at the lab
 SOCKET_STATION_ADDRESS = "tcp://10.240.113.37:"
 

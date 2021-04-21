@@ -53,7 +53,7 @@ All the dependencies should be installed and the app is ready to run.
 To deactivate the virtual environment, just run ```deactivate``` in your command line.
 
 #### Configure communication between station and robot
-Navigate to `src/config/config.py` and update the `SOCKET_STATION_ADDRESS` field with the station's IP address when in the lab.
+Navigate to `src/config/config.py` and update the `SOCKET_ANY_ADDRESS` field with the station's IP address when in the lab.
 
 #### Run the app
 ```bash
