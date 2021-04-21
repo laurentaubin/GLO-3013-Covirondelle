@@ -110,6 +110,10 @@ class TransportPuckHandler(IStageHandler):
         self._movement_service.rotate(orientation.get_orientation_in_degree())
 
     def _align_with_puck(self, puck_color: Color) -> None:
+        current_image = self._vision_service.take_image()
+        self._puck_alignment_corrector.move_forward_until_puck_is_detected(
+            current_image, puck_color
+        )
         self._correct_horizontal_alignment_with_puck(puck_color)
         self._correct_vertical_alignment(puck_color)
 
