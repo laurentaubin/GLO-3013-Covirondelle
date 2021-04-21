@@ -10,7 +10,7 @@ from domain.vision.exception.PuckNotFoundException import PuckNotFoundException
 
 
 class OpenCvPuckDetector(IPuckDetector):
-    VERTICAL_CROP = (150, 430)
+    VERTICAL_CROP = (125, 430)
 
     def detect(self, image: np.ndarray, puck_color: Color) -> Position:
         cropped_image = self._cut_image(image)

@@ -122,6 +122,21 @@ class TransportPuckHandler(IStageHandler):
             )
             self._movement_service.execute_movement_command(movement_command)
             if movement_command.get_direction() == Direction.STOP:
+                if puck_color == Color.WHITE:
+                    self._movement_service.execute_movement_command(
+                        MovementCommand(
+                            Direction.BACKWARDS,
+                            Speed(ROBOT_ALIGNMENT_SPEED),
+                            CommandDuration(1.5),
+                        )
+                    )
+                    self._movement_service.execute_movement_command(
+                        MovementCommand(
+                            Direction.STOP,
+                            Speed(ROBOT_ALIGNMENT_SPEED),
+                            CommandDuration(0),
+                        )
+                    )
                 break
         self._correct_horizontal_alignment_with_puck(puck_color)
         self._correct_vertical_alignment(puck_color)
