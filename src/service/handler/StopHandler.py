@@ -38,6 +38,7 @@ class StopHandler(IStageHandler):
         self._wait_for_robot_confirmation(Topic.STAGE_COMPLETED)
 
         GameState.get_instance().end_game_cycle()
+        GameState.get_instance().set_current_stage(Stage.CYCLE_COMPLETED)
 
     def _move_to_starting_zone_center(self):
         robot_pose = GameState.get_instance().get_robot_pose()

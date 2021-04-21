@@ -11,3 +11,4 @@ class Stage(Enum):
     STOP = "stop"
     CYCLE_STARTED = "cycle_started"
     STAGE_COMPLETED = "stage_completed"
+    CYCLE_COMPLETED = "cycle_completed"

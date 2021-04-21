@@ -17,21 +17,21 @@ class MasterGameCycle(IGameCycle):
 
     def run(self):
         self._wait_for_robot_boot()
-        self._wait_for_input()
+        while True:
+            self._wait_for_input()
+            print("Start cycle")
+            self.stage_service.execute(Stage.START_CYCLE)
+            print("Go to ohmmeter \n")
+            self.stage_service.execute(Stage.GO_TO_OHMMETER)
+            print("Read command panel\n")
+            self.stage_service.execute(Stage.READ_COMMAND_PANEL)
+            print("Transport puck \n")
+            self.stage_service.execute(Stage.TRANSPORT_PUCK)
+            print("Stop \n")
+            self.stage_service.execute(Stage.STOP)
+            print("\n")
 
-        print("Start cycle")
-        self.stage_service.execute(Stage.START_CYCLE)
-        print("Go to ohmmeter \n")
-        self.stage_service.execute(Stage.GO_TO_OHMMETER)
-        print("Read command panel\n")
-        self.stage_service.execute(Stage.READ_COMMAND_PANEL)
-        print("Transport puck \n")
-        self.stage_service.execute(Stage.TRANSPORT_PUCK)
-        print("Stop \n")
-        self.stage_service.execute(Stage.STOP)
-        print("\n")
-
-        print("Game cycle complete!")
+            print("Game cycle complete!")
 
     def stop(self):
         pass

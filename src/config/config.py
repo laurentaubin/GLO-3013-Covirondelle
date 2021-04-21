@@ -46,8 +46,7 @@ WORLD_CAMERA_IMAGE_SIZE = (1280, 800)
 # in meter
 OBSTACLE_HEIGHT = 0.40
 ROBOT_HEIGHT = 0.232
-
-BASE_TABLE_IMAGE = CONFIG_FILE_PATH + "../../resources/camera-config/image_0.jpg"
+BASE_TABLE_IMAGE = CONFIG_FILE_PATH + "../../resources/camera-config/image_1.jpg"
 
 DEFAULT_OHMMETER_POSITION = 160, 585
 
