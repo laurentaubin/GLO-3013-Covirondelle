@@ -17,15 +17,17 @@ class SlaveGameCycle(IGameCycle):
 
     def run(self) -> None:
         self._confirm_boot()
-        self._wait_until_start_signal()
-        print("\n")
-        self._go_to_ohmmeter()
-        print("\n")
-        self._find_command_panel()
-        print("\n")
-        self._transport_puck()
-        print("\n")
-        self._stop()
+
+        while True:
+            self._wait_until_start_signal()
+            print("\n")
+            self._go_to_ohmmeter()
+            print("\n")
+            self._find_command_panel()
+            print("\n")
+            self._transport_puck()
+            print("\n")
+            self._stop()
 
     def _wait_until_start_signal(self):
         self.stage_service.execute(Stage.START_CYCLE)

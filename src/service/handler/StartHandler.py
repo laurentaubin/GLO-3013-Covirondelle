@@ -1,5 +1,6 @@
 from typing import Any
 
+from domain.communication.ILed import ILed
 from domain.communication.Message import Message
 from domain.game.IStageHandler import IStageHandler
 from domain.game.Stage import Stage
@@ -14,9 +15,11 @@ class StartHandler(IStageHandler):
         self,
         communication_service: CommunicationService,
         gripper_service: GripperService,
+        led: ILed,
     ):
         self._communication_service = communication_service
         self._gripper_service = gripper_service
+        self._led = led
 
     def execute(self):
         while True:
@@ -31,6 +34,7 @@ class StartHandler(IStageHandler):
 
         if topic == Topic.START_STAGE:
             self._gripper_service.elevate_gripper()
+            self._led.turn_off()
             self._send_confirmation_to_station(Topic.START_STAGE, Stage.STAGE_COMPLETED)
 
         else:

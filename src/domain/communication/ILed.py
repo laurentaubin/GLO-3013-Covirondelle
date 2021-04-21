@@ -4,3 +4,6 @@ class ILed:
 
     def toggle_led(self):
         pass
+
+    def turn_off(self):
+        pass

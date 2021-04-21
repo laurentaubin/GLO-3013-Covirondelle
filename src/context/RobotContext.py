@@ -106,6 +106,8 @@ class RobotContext:
         else:
             self._serial = MagicMock()
 
+        self._led = StmLed(self._serial)
+
         movement_command_factory = MovementCommandFactory(
             Speed(ROBOT_MAXIMUM_SPEED),
             Speed(SERVOING_CONSTANT),
@@ -181,7 +183,9 @@ class RobotContext:
     def _create_stage_handler_selector(
         self, movement_command_factory: MovementCommandFactory
     ):
-        start_handler = StartHandler(self._communication_service, self._gripper_service)
+        start_handler = StartHandler(
+            self._communication_service, self._gripper_service, self._led
+        )
         ohmmeter_alignment_corrector = self._create_ohmmeter_alignment_corrector(
             OpenCvStartingZoneLineDetector()
         )
@@ -212,7 +216,7 @@ class RobotContext:
         )
         self._transport_puck_handler = self._create_transport_puck_handler()
         stop_handler = StopHandler(
-            self._communication_service, self._movement_service, StmLed(self._serial)
+            self._communication_service, self._movement_service, self._led
         )
 
         return StageHandlerSelector(

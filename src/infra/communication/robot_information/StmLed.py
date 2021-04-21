@@ -15,3 +15,7 @@ class StmLed(ILed):
         command = bytes([StmCommand.TOGGLE_LED])
         self._serial.write(command)
         self._is_led_on = not self._is_led_on
+
+    def turn_off(self):
+        if self._is_led_on:
+            self.toggle_led()
