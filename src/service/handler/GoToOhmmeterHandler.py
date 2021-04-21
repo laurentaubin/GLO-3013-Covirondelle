@@ -81,6 +81,9 @@ class GoToOhmmeterHandler(IStageHandler):
         self._send_command_to_robot(Topic.READ_RESISTANCE, None)
         resistance = self._wait_for_robot_confirmation(Topic.READ_RESISTANCE)
         GameState.get_instance().set_resistance_value(resistance)
+        puck_colors = GameState.get_instance().get_resistance_value().get_colors()
+        print(puck_colors)
+        GameState.get_instance().set_puck_colors(puck_colors)
 
     def _end_stage(self):
         self._send_command_to_robot(Topic.STAGE_COMPLETED, None)

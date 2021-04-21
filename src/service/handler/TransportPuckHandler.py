@@ -36,9 +36,7 @@ class TransportPuckHandler(IStageHandler):
     def execute(self):
         GameState.get_instance().set_current_stage(Stage.TRANSPORT_PUCK)
 
-        puck_colors = GameState.get_instance().get_resistance_value().get_colors()
-        print(puck_colors)
-        GameState.get_instance().set_puck_colors(puck_colors)
+        puck_colors = GameState.get_instance().get_puck_colors()
 
         pucks_to_grab = [
             GameState.get_instance().get_game_table().get_puck(color)
