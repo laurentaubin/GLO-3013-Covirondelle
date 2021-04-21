@@ -49,10 +49,11 @@ class TransportPuckHandler(IStageHandler):
 
         for starting_zone_corner_index, puck in enumerate(pucks_to_grab):
             GameState.get_instance().set_current_puck(puck.get_color())
+            is_puck_in_a_corner = self._is_puck_in_a_corner(puck)
 
             self._go_to_puck_zone()
             self._go_to_puck_zone()
-            self._grab_puck(puck)
+            self._grab_puck(puck, is_puck_in_a_corner)
             self._go_back_to_puck_zone()
             self._go_to_starting_zone_center()
             self._go_to_starting_zone_center()
@@ -80,7 +81,7 @@ class TransportPuckHandler(IStageHandler):
         movements_to_puck_zone = self._find_movements_to_puck_zone(robot_pose)
         self._move_robot(movements_to_puck_zone)
 
-    def _grab_puck(self, puck: Puck):
+    def _grab_puck(self, puck: Puck, is_puck_in_a_corner: bool):
         puck_position = puck.get_position()
         if self._puck_is_close_to_center_middle(puck):
             self._move_robot([Movement(Direction.BACKWARDS, Distance(0.2))])
@@ -89,15 +90,12 @@ class TransportPuckHandler(IStageHandler):
         orientation_to_puck = self._find_orientation_to_puck(puck_position, robot_pose)
         self._rotation_service.rotate(orientation_to_puck)
 
-        # movements_to_puck = self._create_straight_movement(
-        #     Direction.FORWARD, puck_position, robot_pose
-        # )
-
-        movements_to_puck = [
-            Movement(
-                Direction.FORWARD, Distance(0.1, unit_of_measure=UnitOfMeasure.METER)
-            )
-        ]
+        distance_to_puck = (
+            Distance(0.2, unit_of_measure=UnitOfMeasure.METER)
+            if is_puck_in_a_corner
+            else Distance(0.1, unit_of_measure=UnitOfMeasure.METER)
+        )
+        movements_to_puck = [Movement(Direction.FORWARD, distance_to_puck)]
         print(
             movements_to_puck[0].get_direction(),
             movements_to_puck[0].get_distance().get_distance(),
@@ -109,7 +107,6 @@ class TransportPuckHandler(IStageHandler):
         self._wait_for_robot_confirmation(Topic.GRAB_PUCK)
 
     def _go_back_to_puck_zone(self):
-        robot_pose = self._find_robot_pose()
         movements_back_to_puck_zone = [
             Movement(
                 Direction.BACKWARDS, Distance(0.3, unit_of_measure=UnitOfMeasure.METER)
@@ -229,3 +226,10 @@ class TransportPuckHandler(IStageHandler):
         corner_position = starting_zone.find_corner_position_from_letter(current_corner)
         maze.add_puck_as_obstacle(corner_position)
         maze.remove_puck_as_obstacle(puck.get_position())
+
+    def _is_puck_in_a_corner(self, puck: Puck) -> bool:
+        pos_x, pos_y = puck.get_position().to_tuple()
+
+        if pos_x > 1100:
+            return pos_y < 250 or pos_y > 575
+        return False

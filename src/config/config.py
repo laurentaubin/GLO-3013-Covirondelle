@@ -19,7 +19,7 @@ STREAM_PI_FEED_PORT = "5557"
 # Pathfinding
 # TODO Test at lab to find right radii value
 ROBOT_RADIUS = 50
-OBSTACLE_RADIUS = 100
+OBSTACLE_RADIUS = 80
 
 # Vision
 CALIBRATION_FILE_PATH = CONFIG_FILE_PATH + "numpy-1280x800.npz"

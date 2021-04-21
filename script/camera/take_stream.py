@@ -74,6 +74,7 @@ if __name__ == "__main__":
                     (0, 0, 255),
                     10,
                 )
+                cv2.rectangle(image, (obstacle_position.get_x_coordinate() - 150, obstacle_position.get_y_coordinate() - 150), (obstacle_position.get_x_coordinate()  +150, obstacle_position.get_y_coordinate() + 150), (0, 0, 255), 3)
         except ObstacleNotFoundException:
             print("Robot not found")
             pass
