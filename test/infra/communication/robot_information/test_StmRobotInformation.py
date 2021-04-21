@@ -199,8 +199,8 @@ class TestStmRobotInformation(TestCase):
 
         self.robot_information.get_battery_time_left()
 
-        self.serial.write.assert_any_call(expected_command_first_call)
-        self.serial.write.assert_any_call(expected_command_second_call)
+        self.serial.write_and_readline.assert_any_call(expected_command_first_call)
+        self.serial.write_and_readline.assert_any_call(expected_command_second_call)
 
     def test_givenAReadLineCurrentValue_whenGetBatteryTimeLeft_thenTheRightValueIsReturned(
         self,
@@ -209,7 +209,7 @@ class TestStmRobotInformation(TestCase):
         expected_serial_response = bytes("8", encoding="utf-8") + bytes(
             "16000", encoding="utf-8"
         )
-        self.serial.readline.return_value = expected_serial_response
+        self.serial.write_and_readline.return_value = expected_serial_response
 
         actual_time_left = self.robot_information.get_battery_time_left()
 
@@ -221,7 +221,7 @@ class TestStmRobotInformation(TestCase):
         expected_serial_response = bytes("9", encoding="utf-8") + bytes(
             "16000", encoding="utf-8"
         )
-        self.serial.readline.return_value = expected_serial_response
+        self.serial.write_and_readline.return_value = expected_serial_response
         self.robot_information.get_battery_percentage()
         self.robot_information.get_battery_time_left()
         expected_battery_percentage = 67.14999999999998

@@ -81,8 +81,9 @@ class StmRobotInformation(IRobotInformation):
     def get_battery_time_left(self):
         self.total_time += 1
         command = bytes([StmCommand.ASK_CURRENT]) + bytes([StmPeripherals.BATTERY])
-        self._serial.write(command)
-        current_consumption = float(self._serial.readline()[1:].decode("utf-8"))
+        response = self._serial.write_and_readline(command)
+
+        current_consumption = float(response[1:].decode("utf-8"))
         battery_percentage = self.get_battery_percentage()
 
         self.current_consumption_total += current_consumption
@@ -98,9 +99,9 @@ class StmRobotInformation(IRobotInformation):
 
     def get_battery_percentage(self):
         command = bytes([StmCommand.ASK_VOLTAGE]) + bytes([StmPeripherals.BATTERY])
-        self._serial.write(command)
+        response = self._serial.write_and_readline(command)
 
-        battery_voltage = float(self._serial.readline()[1:].decode("utf-8"))
+        battery_voltage = float(response[1:].decode("utf-8"))
 
         battery_percentage = MOLSON_A * battery_voltage + MOLSON_B
         if battery_percentage > 100:
