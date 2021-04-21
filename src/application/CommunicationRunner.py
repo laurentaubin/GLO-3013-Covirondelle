@@ -11,8 +11,8 @@ class CommunicationRunner:
 
     def run(self):
         while True:
-            self._communication_service.send_battery_time_left()
             self._communication_service.send_battery_percentage()
+            self._communication_service.send_battery_time_left()
             self._communication_service.send_gripper_status()
             self._communication_service.send_current_consumption()
             self._communication_service.send_power_consumption()
