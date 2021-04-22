@@ -56,7 +56,7 @@ export const Dashboard = (props: any) => {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
             <Paper className={classes.smallPaper}>
-              <DataCard title={"Charge électrique de la batterie"} value={state.BatteryElectricCharge} unit={"Watt"} />
+              <DataCard title={"Charge électrique de la batterie"} value={state.BatteryElectricCharge} unit={"%"} />
             </Paper>
           </Grid>
           <Grid item xs={12} sm={6}>
