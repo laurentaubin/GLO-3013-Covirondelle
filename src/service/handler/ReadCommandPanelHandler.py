@@ -86,6 +86,7 @@ class ReadCommandPanelHandler(IStageHandler):
         self._movement_service.move(movements)
 
     def _read_command_panel(self, resistance: Resistance):
+        self._move_to_the_right()
         self._vision_service.make_camera_look_up()
         self._align_horizontally_with_command_panel()
         self._vision_service.take_image()
@@ -114,6 +115,9 @@ class ReadCommandPanelHandler(IStageHandler):
     def _correct_horizontal_position(self):
         self._move_to_the_left()
         self._move_to_the_right_until_can_read_all_nine_letters()
+
+    def _move_to_the_right(self):
+        self._movement_service.move([Movement(Direction.RIGHT, Distance(0.10))])
 
     def _move_to_the_left(self):
         self._movement_service.move([Movement(Direction.LEFT, Distance(0.20))])
