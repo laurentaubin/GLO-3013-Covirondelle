@@ -1,3 +1,4 @@
+import time
 from typing import List, Any
 
 from domain.Orientation import Orientation
@@ -86,7 +87,6 @@ class ReadCommandPanelHandler(IStageHandler):
         self._movement_service.move(movements)
 
     def _read_command_panel(self, resistance: Resistance):
-        self._move_to_the_right()
         self._vision_service.make_camera_look_up()
         self._align_horizontally_with_command_panel()
         self._vision_service.take_image()
@@ -101,6 +101,8 @@ class ReadCommandPanelHandler(IStageHandler):
         return command_panel_letters[letter_position]
 
     def _align_horizontally_with_command_panel(self):
+        self._move_to_the_left()
+        time.sleep(0.5)
         current_image = self._vision_service.take_image()
         horizontal_movement = (
             self._command_panel_alignment_corrector.calculate_horizontal_correction(
@@ -113,7 +115,6 @@ class ReadCommandPanelHandler(IStageHandler):
             self._correct_horizontal_position()
 
     def _correct_horizontal_position(self):
-        self._move_to_the_left()
         self._move_to_the_right_until_can_read_all_nine_letters()
 
     def _move_to_the_right(self):
