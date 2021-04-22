@@ -13,7 +13,7 @@ class GripperService:
 
     def close_gripper(self):
         self._gripper.close()
-        time.sleep(0.5)
+        time.sleep(1)
 
     def elevate_gripper(self):
         self._gripper.elevate()
