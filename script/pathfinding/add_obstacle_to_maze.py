@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 
-import GrabPuckIT
 from config.config import ROBOT_RADIUS, OBSTACLE_RADIUS, STARTING_ZONE_CENTER_POSITION
 from context.StationContext import StationContext
 from domain.Color import Color

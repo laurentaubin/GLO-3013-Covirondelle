@@ -3,8 +3,10 @@ from domain.Orientation import Orientation
 from domain.Position import Position
 from domain.Puck import Puck
 from domain.RobotPose import RobotPose
+from domain.StartingZoneCorner import StartingZoneCorner
 from domain.UnitOfMeasure import UnitOfMeasure
 from domain.communication.Message import Message
+from domain.exception.InvalidStartPointException import InvalidStartPointException
 from domain.game.GameState import GameState
 from domain.game.IStageHandler import IStageHandler
 from domain.game.Stage import Stage
@@ -55,10 +57,10 @@ class TransportPuckHandler(IStageHandler):
             self._go_to_puck_zone()
             self._grab_puck(puck, is_puck_in_a_corner)
             self._go_back_to_puck_zone()
-            self._go_to_starting_zone_center()
+            self._go_to_starting_zone_center(first_movement=True)
             self._go_to_starting_zone_center()
             self._rotate_robot_towards_corner(starting_zone_corner_index)
-            self._go_forward_a_bit()
+            self._go_forward_a_bit(starting_zone_corner_index)
             self._drop_puck_on_corner()
             self._add_puck_as_obstacle(starting_zone_corner_index, puck)
             self._go_back_a_bit()
@@ -67,24 +69,43 @@ class TransportPuckHandler(IStageHandler):
         self._send_command_to_robot(Topic.STAGE_COMPLETED, None)
         self._wait_for_robot_confirmation(Topic.STAGE_COMPLETED)
 
-    def _go_to_starting_zone_center(self):
+    def _go_to_starting_zone_center(self, first_movement=False):
         # TODO Maybe get this out of here to now look clanky at the beginning of the stage
         self._rotation_service.rotate(CardinalOrientation.EAST.value)
         robot_pose = self._find_robot_pose()
+        if first_movement:
+            pos_x = robot_pose.get_position().get_x_coordinate()
+            pos_y = robot_pose.get_position().get_y_coordinate() + 20
+            robot_pose = RobotPose(
+                Position(pos_x, pos_y), robot_pose.get_orientation_in_degree()
+            )
+
         movements_to_starting_zone = self._find_movements_to_starting_zone(robot_pose)
         self._move_robot(movements_to_starting_zone)
 
     def _go_to_puck_zone(self, rotate_west=True):
         if rotate_west:
             self._rotation_service.rotate(CardinalOrientation.WEST.value)
-        robot_pose = self._find_robot_pose()
-        movements_to_puck_zone = self._find_movements_to_puck_zone(robot_pose)
-        self._move_robot(movements_to_puck_zone)
+        while True:
+            try:
+                robot_pose = self._find_robot_pose()
+                movements_to_puck_zone = self._find_movements_to_puck_zone(robot_pose)
+                self._move_robot(movements_to_puck_zone)
+                break
+            except InvalidStartPointException:
+                continue
 
     def _grab_puck(self, puck: Puck, is_puck_in_a_corner: bool):
         puck_position = puck.get_position()
         if self._puck_is_close_to_center_middle(puck):
-            self._move_robot([Movement(Direction.BACKWARDS, Distance(0.2))])
+            self._move_robot(
+                [
+                    Movement(
+                        Direction.BACKWARDS,
+                        Distance(0.2, unit_of_measure=UnitOfMeasure.METER),
+                    )
+                ]
+            )
 
         robot_pose = self._find_robot_pose()
         orientation_to_puck = self._find_orientation_to_puck(puck_position, robot_pose)
@@ -198,12 +219,17 @@ class TransportPuckHandler(IStageHandler):
             puck_position, robot_pose
         )
 
-    def _go_forward_a_bit(self):
-        movements = [
-            Movement(
-                Direction.FORWARD, Distance(0.25, unit_of_measure=UnitOfMeasure.METER)
-            )
+    def _go_forward_a_bit(self, starting_zone_index: int):
+        distance = Distance(0.25, unit_of_measure=UnitOfMeasure.METER)
+        starting_zone_corner = GameState.get_instance().get_starting_zone_corners()[
+            starting_zone_index
         ]
+        if (
+            starting_zone_corner == StartingZoneCorner.B
+            or starting_zone_corner == StartingZoneCorner.A
+        ):
+            distance = Distance(0.22, unit_of_measure=UnitOfMeasure.METER)
+        movements = [Movement(Direction.FORWARD, distance)]
         self._move_robot(movements)
 
     def _go_back_a_bit(self):
@@ -215,7 +241,7 @@ class TransportPuckHandler(IStageHandler):
         self._move_robot(movements)
 
     def _puck_is_close_to_center_middle(self, puck: Puck):
-        return puck.get_position().get_x_coordinate() < 920
+        return puck.get_position().get_x_coordinate() < 940
 
     def _add_puck_as_obstacle(self, starting_zone_corner_index: int, puck: Puck):
         maze = GameState.get_instance().get_game_table().get_maze()
