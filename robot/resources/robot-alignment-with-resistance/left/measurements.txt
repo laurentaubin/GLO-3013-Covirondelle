@@ -1,0 +1,2 @@
+image-5.jpg: 2 cm trop à gauche
+image-6.jpg: 7 cm trop à gauche

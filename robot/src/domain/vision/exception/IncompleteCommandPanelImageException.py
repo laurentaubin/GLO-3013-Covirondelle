@@ -1,0 +1,2 @@
+class IncompleteCommandPanelImageException(Exception):
+    pass

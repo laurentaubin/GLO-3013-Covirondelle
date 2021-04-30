@@ -1,0 +1,2 @@
+class StartingZoneLineNotFoundException(Exception):
+    pass

@@ -1,0 +1,2 @@
+class StageComplete(RuntimeError):
+    pass
