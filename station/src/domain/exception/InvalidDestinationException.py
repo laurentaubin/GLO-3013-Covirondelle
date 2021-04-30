@@ -1,0 +1,2 @@
+class InvalidDestinationException(Exception):
+    pass

@@ -1,0 +1,2 @@
+class RobotNotFoundException(Exception):
+    pass

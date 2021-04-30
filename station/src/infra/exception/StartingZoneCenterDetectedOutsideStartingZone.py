@@ -1,0 +1,2 @@
+class StartingZoneCenterDetectedOutsideStartingZone(Exception):
+    pass
